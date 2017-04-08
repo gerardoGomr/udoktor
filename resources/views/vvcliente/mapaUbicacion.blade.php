@@ -1,0 +1,1 @@
+<div class="col-sm-12"><div id="mapidUb" style="width: 550px; height: 480px;"></div></div>

@@ -1,0 +1,14 @@
+/* tamaño de fuente */
+.flet-lab {
+  font-size: 0.9em;
+
+}
+
+.flet-correo-negrita {
+  font-weight: bold;
+}
+
+.flet-correo-cursiva {
+  font-style: italic;
+
+}
