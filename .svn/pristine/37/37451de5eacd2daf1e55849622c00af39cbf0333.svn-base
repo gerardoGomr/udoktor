@@ -1,0 +1,77 @@
+<?php $__env->startSection('titulo', 'Paises y estados'); ?>
+
+<?php $__env->startSection('contenido'); ?>
+    <input type="hidden" name="_token" value="<?php echo e(csrf_token()); ?>" id="token">
+    <input type="hidden" name="cadenaPaises" value="" id="cadenaPaises">
+    <input type="hidden" name="cadenaEstados" value="" id="cadenaEstados">
+    
+    <div class="row" style="font-size: 0.9em">
+        <div class="col-md-12">
+          <div class="portlet portlet-plain">
+            <div class="portlet-header">
+              <h3>
+                <?php echo e(trans("leng.Seleccione los países y departamentos que quiera activar")); ?>.
+              </h3>
+            </div>
+              <br>
+              <div class="col-md-12" id="divAgregarPaisEstado">
+               <div class="col-md-9" style="text-align: left">
+                  <div class="btn-group">
+                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
+                      <?php echo e(trans("leng.Agregar")); ?> <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="javascript:;" onclick="nuevoPais();"><?php echo e(trans("leng.Pais")); ?></a></li>
+                      <li><a href="javascript:;" onclick="nuevoEstado();"><?php echo e(trans("leng.Departamento")); ?></a></li>
+                    </ul>
+                  </div>
+                   <div class="btn-group">
+                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
+                      <?php echo e(trans("leng.Editar")); ?> <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                      <li><a href="javascript:;" onclick="editarPais();"><?php echo e(trans("leng.Pais")); ?></a></li>
+                      <li><a href="javascript:;" onclick="editarEstado();"><?php echo e(trans("leng.Departamento")); ?></a></li>
+                    </ul>
+                  </div>
+                  
+               </div>    
+                  <div class="col-md-5"></div>    
+            </div>
+              <div class="portlet-content" id="listaPaises"></div>
+              <div class="portlet-content" id="listaEstados" style="display: none"></div>
+          </div>
+            <br>
+            <div class="col-md-12" id="divBotonesPais">
+               <div class="col-md-7"></div>    
+               <div class="col-md-5" style="text-align: right">
+                  <button type="button" onclick="irAresumenAdmin()" style=" width: 180px;"class="btn btn-danger"><i class="fa fa-times-circle"></i>&nbsp;&nbsp;<?php echo e(trans("leng.Cancelar")); ?></button>
+                  <button type="button" onclick="irTabEstados()" style=" width: 180px;"class="btn btn-warning"><?php echo e(trans("leng.Elegir departamentos")); ?>&nbsp;&nbsp;<i class="fa fa-arrow-circle-right"></i></button>
+               </div>    
+            </div>
+            <div class="col-md-12" id="divBotonesEstado" style="display: none">
+               <div class="col-md-5"></div>    
+               <div class="col-md-7" style="text-align: right">
+                  <button type="button" onclick="irAresumenAdmin()" style=" width: 180px;"class="btn btn-danger"><i class="fa fa-times-circle"></i>&nbsp;&nbsp;<?php echo e(trans("leng.Cancelar")); ?></button>
+                  <button type="button" onclick="irTabPaises()" style=" width: 180px;"class="btn btn-warning"><i class="fa fa-arrow-circle-left"></i>&nbsp;&nbsp;<?php echo e(trans("leng.Volver a países")); ?></button>
+                  <button type="button" onclick="actualizarPaisesEstados()" style=" width: 180px;"class="btn btn-success"><i class="fa fa-check-circle"></i>&nbsp;&nbsp;<?php echo e(trans("leng.Guardar")); ?></button>
+               </div>    
+            </div>
+        </div>
+    </div>
+    
+    <div id="nuevoElemento"></div>
+    <br>
+    
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('piePagina'); ?>
+        
+<?php $__env->stopSection(); ?>
+
+
+<?php $__env->startSection('otrosScripts'); ?>
+    <?php echo Html::script('js/paisesEstadosAdmin.js'); ?>  
+<?php $__env->stopSection(); ?>
+    
+<?php echo $__env->make('layouts.admin', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

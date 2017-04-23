@@ -1,0 +1,50 @@
+<?php $__env->startSection('titulo', 'Vehículos'); ?>
+
+<?php $__env->startSection('contenido'); ?>
+    <h2 class="heading content-header-title"><?php echo e(trans('leng.misVehiculos')); ?></h2>
+
+    <button class="btn btn-primary" type="button" id="modalAgregarVehiculo"><i class="fa fa-plus-circle"></i> <?php echo e(trans("leng.Agregar nuevo vehículo")); ?></button>
+
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2" id="listadoVehiculos" data-url="<?php echo e(route('mis-vehiculos-eliminar')); ?>">
+            <?php echo $__env->make('vvtransportista.vehiculos_lista', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+        </div>
+    </div>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('piePagina'); ?>
+    <div id="modalVehiculos" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="formVehiculo" action="<?php echo e(route('mis-vehiculos')); ?>" class="form-horizontal">
+                    <?php echo e(csrf_field()); ?>
+
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h3 class="modal-title"><?php echo e(trans('leng.vehiculoAsigna')); ?></h3>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="vehiculo"><?php echo e(trans("leng.Descripción de vehículo")); ?>:</label>
+                            <div class="col-md-8">
+                                <input type="text" name="descripcion" id="descripcion" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="hidden" name="tipoAccion" id="tipoAccion">
+                        <input type="hidden" name="vehicleId" id="vehicleId">
+                        <button type="button" id="asignarVehiculo" class="center btn btn-primary"><strong id="accion"><?php echo e(trans("leng.Guardar")); ?></strong></button>
+                    </div>
+                </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('otrosScripts'); ?>
+    <script src="<?php echo e(asset('js/datatables.js')); ?>"></script>
+    <script src="<?php echo e(asset('js/validator/jquery.validate.min.js')); ?>"></script>
+    <script src="<?php echo e(asset('js/transportista/vehiculos.js')); ?>"></script>
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.transportista', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

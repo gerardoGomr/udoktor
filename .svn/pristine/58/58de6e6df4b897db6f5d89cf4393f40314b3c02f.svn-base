@@ -1,0 +1,175 @@
+<?php $__env->startSection('titulo', 'Buscar servicios'); ?>
+
+<?php $__env->startSection('contenido'); ?>
+	<input type="hidden" id="green" value="<?php echo e(url('/img/dot-green.png')); ?>">
+	<input type="hidden" id="red" value="<?php echo e(url('/img/dot-red.png')); ?>">
+    <input type="hidden" name="_token" value="<?php echo e(csrf_token()); ?>" id="token">
+    <h2 class="heading content-header-title"><?php echo e(trans('leng.Buscar servicios')); ?></h2>
+    <div class="row" style="font-size: 0.9em">    
+    <div class="col-md-12">
+    	<div id="defaultCountdown"></div>
+    	<div class="col-md-3">
+            <div class="portlet">
+                <div class="portlet-header">
+                    <label><?php echo e(trans('leng.Filtros de Búsqueda')); ?></label>
+		</div>
+		<div class="portlet-content">
+                    <form action="<?php echo e(route('buscar-servicios')); ?>" id="formBusqueda">
+                        <div class="form-group">
+                            <label for="paisRecoleccion" class="control-label"><?php echo e(trans('leng.Pais')); ?>:</label>
+                            <select name="paisRecoleccion" id="paisRecoleccion" class="form-control" data-url="<?php echo e(route('buscar-estados')); ?>">
+				<option value="0"><?php echo e(trans("leng.Todos")); ?></option>
+                                  <?php echo $vCombos["cadenaPaises"]; ?>
+                            </select>
+			</div>
+			<div class="form-group">
+                            <label for="estadoRecoleccion" class="control-label"><?php echo e(trans('leng.Estado')); ?>:</label>
+                            <select name="estadoRecoleccion" id="estadoRecoleccion" class="form-control" data-url="<?php echo e(route('buscar-ciudades')); ?>">
+                                <option value="0"><?php echo e(trans("leng.Todos")); ?></option>
+                                    <?php echo $vCombos["cadenaEstados"]; ?>
+                            </select>
+			</div>
+			<div class="form-group">
+                            <label for="ciudadRecoleccion" class="control-label"><?php echo e(trans('leng.Municipios')); ?>:</label>
+                            <select name="ciudadRecoleccion" id="ciudadRecoleccion" class="form-control">
+                                <option value="0"><?php echo e(trans("leng.Todos")); ?></option>
+                                    <?php echo $vCombos["cadenaCiudades"]; ?>
+                            </select>
+			</div>
+                        
+                        <div class="form-group">
+                            <label for="vEspecialidad" class="control-label"><?php echo e(trans('leng.Especialidad')); ?>:</label>
+                            <select name="vEspecialidad" id="vEspecialidad" class="form-control">
+                                <option value="0"><?php echo e(trans("leng.Todos")); ?></option>
+                                    <?php echo $vCombos["cadenaEspecialidad"]; ?>
+                            </select>
+			</div>
+                        <div class="form-group">
+                            <label for="vServicios" class="control-label"><?php echo e(trans('leng.Servicios')); ?>:</label>
+                            <select name="vServicios" id="vServicios" class="form-control">
+                                <option value="0"><?php echo e(trans("leng.Todos")); ?></option>
+                                    <?php echo $vCombos["cadenaServicio"] ?>
+                            </select>
+			</div>
+			<br>
+			<button type="button" id="buscar" class="btn btn-success"><i class="fa fa-search"></i> <?php echo e(trans('leng.Buscar servicios')); ?></button>
+                    </form>
+                </div>
+           </div>
+    	</div>
+    	<div class="col-md-9">
+            <div class="row">
+                <div class="portlet">
+                    <div class="portlet-header">
+                        <h3><?php echo e(trans("leng.Mapa")); ?></h3>
+                        <ul class="portlet-tools pull-right">
+                            <li>
+                                <input type="checkbox" id="ocultarMapa" checked="cheked" onclick="mostrarMapa()" /><?php echo e(trans('leng.Mostrar Mapa')); ?>
+
+		            </li>
+                        </ul>
+	            </div> 
+
+		    <div class="portlet-content" id="rutaMapaDetalle" data-url="<?php echo e(url('transportista/ofertas/id/detalle')); ?>">
+                        <div id="contenedorMapa" style="height:500px">
+                            <div id="mapaServicios" style="height:100%"></div>
+                        </div>
+                    </div>
+		</div>
+            </div>
+	    
+            <div class="portlet">
+                <div class="portlet-header">
+                    <h3><?php echo e(trans('leng.Resultado')); ?>: <label id="resultados"></label>  <?php echo e(trans('leng.Servicio(s)')); ?></h3>
+                </div>
+                <div class="portlet-content">
+                    <div class="table-responsive">
+                        <table  id="listadoOfertas" class="table table-striped table-bordered table-hover table-highlight table-checkable" style="width: 100%">
+                            <thead>
+                                <tr>
+                                    <th><?php echo e(trans("leng.Compania")); ?></th>
+                                    <th><?php echo e(trans("leng.Prestador del servicio")); ?></th>
+                                    <th><?php echo e(trans("leng.Ubicación")); ?></th>
+                                    <th><?php echo e(trans("leng.Teléfono")); ?></th>
+                                    <th>&nbsp;</th>
+                                </tr>
+	                    </thead>
+                            <tbody>
+	                    </tbody>
+	                </table>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+    </div>
+</div>
+  
+  
+<?php echo Form::hidden('latitudUsuario',$person->latitude,array('id'=>'latitudUsuario')); ?>
+
+<?php echo Form::hidden('longitudUsuario',$person->longitude,array('id'=>'longitudUsuario')); ?>
+
+
+    
+    <!-- Datos origen 
+    <?php echo Form::hidden('latitudOrigen','',array('id'=>'latitudOrigen')); ?>
+
+    <?php echo Form::hidden('longitudOrigen','',array('id'=>'longitudOrigen')); ?>
+
+    <?php echo Form::hidden('numeroOrigen','',array('id'=>'numeroOrigen')); ?>
+
+    <?php echo Form::hidden('calleOrigen','',array('id'=>'calleOrigen')); ?>
+
+    <?php echo Form::hidden('coloniaOrigen','',array('id'=>'coloniaOrigen')); ?>
+
+    <?php echo Form::hidden('municipioOrigen','',array('id'=>'municipioOrigen')); ?>
+
+    <?php echo Form::hidden('estadoOrigen','',array('id'=>'estadoOrigen')); ?>
+
+    <?php echo Form::hidden('paisOrigen','',array('id'=>'paisOrigen')); ?>
+
+    <?php echo Form::hidden('cpOrigen','',array('id'=>'cpOrigen')); ?>
+
+    -->
+ 
+    
+    <!-- Datos Destino 
+    <?php echo Form::hidden('latitudDestino','',array('id'=>'latitudDestino')); ?>
+
+    <?php echo Form::hidden('longitudDestino','',array('id'=>'longitudDestino')); ?>
+
+    <?php echo Form::hidden('numeroDestino','',array('id'=>'numeroDestino')); ?>
+
+    <?php echo Form::hidden('calleDestino','',array('id'=>'calleDestino')); ?>
+
+    <?php echo Form::hidden('coloniaDestino','',array('id'=>'coloniaDestino')); ?>
+
+    <?php echo Form::hidden('municipioDestino','',array('id'=>'municipioDestino')); ?>
+
+    <?php echo Form::hidden('estadoDestino','',array('id'=>'estadoDestino')); ?>
+
+    <?php echo Form::hidden('paisDestino','',array('id'=>'paisDestino')); ?>
+
+    <?php echo Form::hidden('cpDestino','',array('id'=>'cpDestino')); ?>
+
+    -->
+
+<?php $__env->stopSection(); ?>
+
+
+<?php $__env->startSection('piePagina'); ?>
+		<div id="modalCargando" class="modal fade">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<span><i class="fa fa-spinner fa-spin fa-5x"></i></span>
+				</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
+<?php $__env->stopSection(); ?>
+
+
+<?php $__env->startSection('otrosScripts'); ?>
+	<script src="<?php echo e(asset('js/validator/jquery.validate.min.js')); ?>"></script>
+     <?php echo Html::script('js/cliente/servicios.js'); ?>   
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.cliente', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

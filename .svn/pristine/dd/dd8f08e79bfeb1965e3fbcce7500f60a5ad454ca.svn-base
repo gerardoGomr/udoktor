@@ -1,0 +1,138 @@
+<?php $__env->startSection('titulo', 'Verificar cuenta'); ?>
+
+<?php $__env->startSection('contenido'); ?>
+
+<input type="hidden" id="usuarioid" value="<?php echo e($datosUsuario["idUsuario"]); ?>">
+<input type="hidden" id="personid" value="<?php echo e($datosUsuario["idPerson"]); ?>">
+<input type="hidden" id="tipo" value="<?php echo e($datosUsuario["estransportista"]); ?>">
+
+<h2 class="heading content-header-title"><?php echo e(trans('leng.Verificar cuenta')); ?></h2>
+
+      <div class="row" style="font-size: 0.9em">
+
+        <div class="col-md-12">
+
+          <div class="row">
+
+            <div class="col-md-3 col-sm-5">
+
+              
+                <?php if(trim($datosUsuario["imagen"])==""){ ?>
+                    <img src="/img/logousuario.png" style="max-height: 200px;" alt="Profile Picture" />
+                <?php }else{ ?>
+                    <img src="<?php echo asset($datosUsuario["imagen"]); ?>" style="max-height: 200px;" alt="Profile Picture" />
+                <?php } ?>
+                
+              
+              <br/>
+            </div> <!-- /.col -->
+
+
+            <div class="col-md-8 col-sm-7">
+                <h3><?php echo e($datosUsuario["cuenta"]); ?></h3>
+                <br>
+                
+                <?php if($datosUsuario["compania"]!=""){ ?>
+                          <div class="row">
+                             <div class="form-group col-md-6">
+                                <label for="text-input"><?php echo e(trans("leng.Compania")); ?></label>
+                                <input type="text" id="text-input" class="form-control" value="<?php echo e($datosUsuario["compania"]); ?>" disabled>
+                             </div>
+                              <div class="form-group col-md-6">
+                                 <label for="text-input"><?php echo e(trans("leng.Contacto")); ?></label>
+                                 <input type="text" id="text-input" class="form-control" value="<?php echo e($datosUsuario["contacto"]); ?>" disabled>
+                              </div>
+                            </div>
+                            
+               <?php } else{ ?>
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label for="text-input"><?php echo e(trans("leng.Contacto")); ?></label>
+                                    <input type="text" id="text-input" class="form-control" value="<?php echo e($datosUsuario["contacto"]); ?>" disabled>
+                                </div>
+                            </div>
+               <?php }  ?>
+                
+               <div class="row">
+                   <?php if($datosUsuario["dni"]!=""){ ?>
+                          <div class="form-group col-md-6">
+                                <label for="text-input"><?php echo e(trans("leng.DNI")); ?></label>
+                                <input type="text" id="text-input" class="form-control" value="<?php echo e($datosUsuario["dni"]); ?>" disabled>
+                          </div>
+                  <?php } ?>
+                   
+                   <?php if($datosUsuario["ruc"]!=""){ ?>
+                           <div class="form-group col-md-6">
+                              <label for="text-input"><?php echo e(trans("leng.RUC")); ?></label>
+                              <input type="text" id="text-input" class="form-control" value="<?php echo e($datosUsuario["ruc"]); ?>" disabled>
+                          </div>
+                   <?php } ?>
+                          <div class="form-group col-md-6">
+                            <label for="text-input"><?php echo e(trans("leng.Correo")); ?></label>
+                            <input type="text" id="text-input" class="form-control" value="<?php echo e($datosUsuario["correo"]); ?>" disabled>
+                          </div>
+                      </div>
+                
+                <?php if($datosUsuario["estransportista"]==1){ ?>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                            <label for="text-input"><?php echo e(trans("leng.Direccion")); ?></label>
+                            <input type="text" id="text-input" class="form-control" value="<?php echo e($datosUsuario["direccion"]); ?>" disabled>
+                          </div>
+                   <div class="form-group col-md-6">
+                            <label for="text-input"><?php echo e(trans("leng.Ciudad")); ?></label>
+                            <input type="text" id="text-input" class="form-control" value="<?php echo e($datosUsuario["ciudad"]); ?>" disabled>
+                          </div>
+                    
+                    <div class="form-group col-md-6">
+                            <label for="text-input"><?php echo e(trans("leng.Departamento")); ?></label>
+                            <input type="text" id="text-input" class="form-control" value="<?php echo e($datosUsuario["nombreEstado"]); ?>" disabled>
+                          </div>
+                    
+                    <div class="form-group col-md-6">
+                            <label for="text-input"><?php echo e(trans("leng.Pais")); ?></label>
+                            <input type="text" id="text-input" class="form-control" value="<?php echo e($datosUsuario["nombrePais"]); ?>" disabled>
+                          </div>
+                    
+                    <div class="form-group col-md-6">
+                            <label for="text-input"><?php echo e(trans("leng.Telefono")); ?></label>
+                            <input type="text" id="text-input" class="form-control" value="<?php echo e($datosUsuario["telefono"]); ?>" disabled>
+                          </div>
+                    
+                    <div class="form-group col-md-6">
+                            <label for="text-input"><?php echo e(trans("leng.Código postal")); ?></label>
+                            <input type="text" id="text-input" class="form-control" value="<?php echo e($datosUsuario["postal"]); ?>" disabled>
+                          </div>
+                </div>
+                <?php } ?>
+                
+               
+               <br><br>
+                        
+                    <button type="button" class="btn btn-success btn" onclick="verficarCuentaActivar();"><i class="fa fa-check"></i>&nbsp;<?php echo e(trans("leng.Activar cuenta")); ?></button>    
+                    <button type="button" class="btn btn-danger btn" onclick="verificarCuentaDesactivar()"><i class="fa fa-times"></i>&nbsp;<?php echo e(trans("leng.Desactivar cuenta")); ?></button>
+                    <?php if($datosUsuario["estransportista"]==0){ ?>
+                        <a href="<?php echo url("/admin/clientes")?>" class="btn btn-secondary btn"><i class="fa fa-bars"></i> <?php echo e(trans("leng.Volver a clientes")); ?></a>
+                    <?php } else { ?>
+                        <a href="<?php echo url("/admin/transportistas")?>" class="btn btn-secondary btn"><i class="fa fa-bars"></i> <?php echo e(trans("leng.Volver a transportistas")); ?></a>
+                     <?php }?>
+                        
+            </div> <!-- /.col -->
+
+          </div> <!-- /.row -->
+
+        </div> <!-- /.col -->
+
+      </div> <!-- /.row -->        
+
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('piePagina'); ?>
+<?php $__env->stopSection(); ?>
+
+
+<?php $__env->startSection('otrosScripts'); ?>
+
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.admin', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

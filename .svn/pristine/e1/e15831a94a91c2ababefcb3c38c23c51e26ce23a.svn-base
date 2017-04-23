@@ -1,0 +1,31 @@
+<?php if(count($shipper->vehicles()->get()) > 0 ): ?>
+    <input type="hidden" id="url-eliminar" value="<?php echo e(route('mis-vehiculos-eliminar')); ?>">
+    <input type="hidden" id="url-activar" value="<?php echo e(route('mis-vehiculos-activar')); ?>">
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th role="columnheader"><?php echo e(trans("leng.No")); ?>.</th>
+            <th role="columnheader"><?php echo e(trans("leng.Descripción")); ?></th>
+            <th role="columnheader">&nbsp;</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach($shipper->vehicles()->get() as $vehicle): ?>
+            <tr>
+                <td class="id"><?php echo e($vehicle->id); ?></td>
+                <td class="description"><?php echo e($vehicle->description); ?></td>
+                <td>
+                    <button data-id="<?php echo e($vehicle->id); ?>" class="editar btn btn-default" type="button" title="Editar"><i class="fa fa-edit"></i></button>
+                    <?php if($vehicle->active): ?>
+                        <button data-id="<?php echo e($vehicle->id); ?>" class="eliminar btn btn-default" type="button" title="Desactivar"><i class="fa fa-times-circle"></i></button>
+                    <?php else: ?>
+                        <button data-id="<?php echo e($vehicle->id); ?>" class="activar btn btn-default" type="button" title="Activar"><i class="fa fa-reply"></i></button>
+                    <?php endif; ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+<?php else: ?>
+    <h3><?php echo e(trans("leng.Aún no se han agregado vehículos")); ?>.</h3>
+<?php endif; ?>

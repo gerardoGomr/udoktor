@@ -1,0 +1,80 @@
+<input type="hidden" name="_token" value="<?php echo e(csrf_token()); ?>" id="token">
+<input type="hidden" name="imagenModificada" value="0" id="imagenModificada">
+<br>
+      <font style="color: #b9261e"><h3 class="title"><?php echo e(trans("leng.Información del usuario")); ?></h3></font>
+      <br>
+      <div class="col-md-12" style="font-size: 0.9em">
+          <label for="text-input">&nbsp;<?php echo e(trans('leng.Foto de perfil')); ?></label>
+          <div class="row">
+            <div class="col-sm-6">
+                <?php
+                    $vDiv="fileupload fileupload-new";
+                    $imagenPer="";
+                    if(trim($datosUsuario["imagen"])!=""){
+                      $vDiv="fileupload fileupload-exists";
+                      $imagenPer=asset($datosUsuario["imagen"]);
+                    }
+                ?>
+                
+                <div class="<?php echo $vDiv; ?>" data-provides="fileupload"><input type="hidden">
+                      <div class="fileupload-new thumbnail" style="width: 150px; height: 150px;">
+                      </div>
+
+                      <div id="imgPerfil" class="fileupload-preview fileupload-exists thumbnail" style="width: 150px; height: 150px; line-height: 50px;">
+                          <?php if(trim($datosUsuario["imagen"])!=""){ ?>
+                                <img id="i1" style="width: 150px;" src="<?php echo e($datosUsuario["imagen"]); ?>">
+                          <?php } ?>
+                      </div>
+                      <span class="btn btn-default btn-file">
+                        <span class="fileupload-new"><?php echo e(trans('leng.Buscar imagen')); ?></span>
+                        <span class="fileupload-exists"><?php echo e(trans('leng.Cambiar')); ?></span>
+                        <input type="file" accept="image/*">
+                      </span>
+
+                    <a href="#" class="btn btn-default fileupload-exists" onclick="quitarImagenPerfilCliente()" data-dismiss="fileupload"><?php echo e(trans('leng.Quitar')); ?></a>
+                </div>
+                
+                
+                </div> 
+              
+            </div>
+              
+        <div class="row">
+                <div class="col-sm-6">
+                    <label for="text-input"><span style="color:#b9261e">*</span>&nbsp;<?php echo e(trans('leng.Primer nombre')); ?></label>
+                  <input type="text" id="primerNombre" class="form-control" value="<?php echo e($datosUsuario['nombre1']); ?>">
+                </div>
+                <div class="col-sm-6">
+                  <label for="text-input"><?php echo e(trans('leng.Segundo nombre')); ?></label>
+                  <input type="text" id="segundoNombre" class="form-control" value="<?php echo e($datosUsuario['nombre2']); ?>">
+                </div>
+        </div>
+          <br>
+        <div class="row">
+                <div class="col-sm-6">
+                  <label for="text-input"><span style="color:#b9261e">*</span>&nbsp;<?php echo e(trans('leng.Primer apellido')); ?></label>
+                  <input type="text" id="primerApellido" class="form-control" value="<?php echo e($datosUsuario['apellido1']); ?>">
+                </div>
+
+                <div class="col-sm-6">
+                  <label for="text-input"><?php echo e(trans('leng.Segundo apellido')); ?></label>
+                  <input type="text" id="segundoApellido" class="form-control" value="<?php echo e($datosUsuario['apellido2']); ?>">
+                </div>
+
+        </div>
+        <br><br>
+        <div class="row">
+                <div class="col-sm-6">
+                    <button type="button" class="btn btn-success" onclick="guardarPerfilPersonalCliente()"><i class="fa fa-check-circle"></i>&nbsp;<?php echo e(trans("leng.Guardar cambios")); ?></button>
+                    <button type="button" class="btn btn-danger" onclick="$('#elementosPerfil').html('');$('#back-to-top').click();"><i class="fa fa-times-circle"></i>&nbsp;<?php echo e(trans("leng.Cancelar")); ?></button>
+                </div>
+
+                
+
+        </div>
+     </div>
+              
+        
+
+
+    

@@ -1,0 +1,40 @@
+<div class="col-md-12" style="font-size: 0.9em;" >
+    <input type="hidden" value="<?php echo $idPregunta  ?>" id="idPregunta">
+    <input type="hidden" name="_token" value="<?php echo e(csrf_token()); ?>" id="token">
+    <div class="row">
+        <table>
+            <tr>
+                <td class="flet-lab" style="vertical-align:top; width: 90px;"><?php echo e(trans("leng.Transportista")); ?>:</td>
+                <td class="flet-lab" style="vertical-align:top"><?php echo e($transportista); ?></td>
+            </tr>
+            <tr>
+                <td class="flet-lab" style="vertical-align:top"><?php echo e(trans("leng.Envío")); ?>:</td>
+                <td class="flet-lab" style="vertical-align:top"><?php echo e($tituloEnvio); ?></td>
+            </tr>
+            <tr>
+                <td class="flet-lab" style="vertical-align:top"><b><?php echo e(trans('leng.Pregunta')); ?> : </b></td>
+                <td class="flet-lab" style="vertical-align:top"><b><?php echo e($textoPregunta); ?>?</b></td>
+            </tr>
+        </table>    
+    </div>
+    <br>
+    <div class="row">
+            <div class="form-group">
+                <label style="font-size: 0.9em;" for="textarea-input"><?php echo e(trans("leng.Respuesta")); ?>&nbsp;&nbsp;&nbsp;<?php echo e($fechaRespuesta); ?></label>
+                <textarea style="font-size: 0.9em;" id="textoRespuesta" cols="7" rows="4" maxlength="200" class="form-control" <?php if($respuesta!="")echo "disabled";?> ><?php echo e($respuesta); ?></textarea>
+            </div>
+    </div>
+    <center><p><a href="/cliente/verOfertasEnvio/<?php echo e($idEnvio); ?>"><i class="fa fa-external-link-square"></i>&nbsp;<?php echo e(trans('Ir al envío')); ?></a></p></center>
+    
+    <div class="row">
+        <div class="col-md-10">
+            <?php if($respuesta==""){ ?>
+                 <button type="button" class="btn btn-success" onclick="responderPreguntaAccionListado()"><i class='fa fa-edit'></i>&nbsp;<?php echo e(trans("leng.Responder")); ?></button>&nbsp;
+            <?php } ?>
+            <button type="button" class="btn btn-primary" onclick="$('#divMostrarPreguntaTransportista').dialog('close');"><i class="fa fa-times"></i>&nbsp;<?php echo e(trans("leng.Cancelar")); ?></button>
+        </div>
+    </div>
+    
+</div>
+    
+         

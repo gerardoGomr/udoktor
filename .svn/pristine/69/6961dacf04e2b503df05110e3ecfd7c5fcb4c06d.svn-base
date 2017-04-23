@@ -1,0 +1,32 @@
+<div class="col-md-12" style="font-size: 0.9em;" >
+    <input type="hidden" value="<?php echo $idOferta  ?>" id="idOferta">
+    <input type="hidden" name="_token" value="<?php echo e(csrf_token()); ?>" id="token">
+    
+    <br>
+    <div class="row">
+        <div class="col-md-12">
+            <h4><?php echo e(trans("leng.Estás segura/o de aceptar la oferta del transportista?")); ?></h4>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-12">
+            <?php if($mensajeAdvertencia!=""){ ?>
+            <p><b><?php echo e(trans("leng.Advertencia")); ?>:</b>&nbsp;<?php echo e($mensajeAdvertencia); ?>.</p>
+            <?php } ?>
+        </div>
+    </div>
+    <?php if($mensajeAdvertencia==""){ ?>
+    <br>
+    <?php } ?>
+    <br><br>
+    <div class="row">
+        <div class="col-md-10">
+            <button type="button" class="btn btn-success" onclick="aceptarOfertaAccion()"><i class="fa fa-check"></i>&nbsp;<?php echo e(trans("leng.Aceptar")); ?></button>&nbsp;
+            <button type="button" class="btn btn-primary" onclick="$('#divListadoEliminar').dialog('close');"><i class="fa fa-times"></i>&nbsp;<?php echo e(trans("leng.Cancelar")); ?></button>
+        </div>
+    </div>
+    
+</div>
+    
+         

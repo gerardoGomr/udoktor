@@ -1,0 +1,12 @@
+<?php
+
+namespace T1;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Address extends Model
+{
+    protected $table='address';
+    protected $fillable=['street1','street2','cityid','stateid','personid','postalcode','telephone'];
+    public $timestamps = false;
+}

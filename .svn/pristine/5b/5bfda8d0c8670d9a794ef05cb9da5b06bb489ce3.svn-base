@@ -1,0 +1,421 @@
+<?php $__env->startSection('titulo', 'Consultar envío'); ?>
+<?php $__env->startSection('contenido'); ?>    
+
+<input type="hidden" id="latitudRecoger" value="<?php echo $datos["latitudRecoger"]?>">
+    <input type="hidden" id="longitudRecoger" value="<?php echo $datos["longitudRecoger"]?>">
+    <input type="hidden" id="latitudEntregar" value="<?php echo $datos["latitudEntregar"]?>">
+    <input type="hidden" id="longitudEntregar" value="<?php echo $datos["longitudEntregar"]?>">
+    
+    <input type="hidden" id="idEnvioC" value="<?php echo $datos["id"]?>">
+    <input type="hidden" id="distancia" value="<?php echo $datos["distancia"]?>">
+    <input type="hidden" id="tiempo" value="<?php echo $datos["tiempo"]?>">
+    
+    <h4 class="heading"><?php echo $datos["titulo"]; ?></h4>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="col-md-7"></div>
+            <div class="col-md-5"  style="text-align: right">
+                <a href="/cliente/nuevoenvio" class="btn btn-success btn-sm" style="width: 140px;"><i class="fa fa-plus"></i> <?php echo e(trans("leng.nuevoenvio")); ?></a>
+                <a href="/cliente/misenvios" class="btn btn-secondary btn-sm" style="width: 140px;"><i class="fa fa-bars"></i> <?php echo e(trans("leng.ir a mis envios")); ?></a>
+            </div>
+       </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4 col-sm-5">
+            <div>
+                    <div class="portlet-content">
+                      <h4 class="heading"><?php echo e(trans('leng.Informacion del anuncio')); ?>.</h4>
+                      <table>
+                            <tr>
+                                <td style="width: 150px;"><font class="flet-lab"><b><?php echo e(trans('leng.Num de envio')); ?>:</b></font></td>
+                                <td><font class="flet-lab"><?php echo $datos["id"]; ?></td>
+                            </tr>
+                            <tr>
+                                <td><font class="flet-lab"><b><?php echo e(trans('leng.cliente')); ?>:</b></font></td>
+                                <td><font class="flet-lab"><?php echo $datos["cliente"];?></td>
+                            </tr>
+                            <tr>
+                                <td><font class="flet-lab"><b><?php echo e(trans('leng.fecha de publicacion')); ?>:</b></font></td>
+                                <td><font class="flet-lab"><?php echo $datos["publicacion"]; ?></td>
+                            </tr>
+                            <tr>
+                                <td><font class="flet-lab"><b><?php echo e(trans('leng.fecha de expiracion')); ?>:</b></font></td>
+                                <td><font class="flet-lab"><?php echo $datos["fechaExpiracion"]; ?></td>
+                            </tr>
+                            <tr>
+                                <td><font class="flet-lab"><b><?php echo e(trans('leng.Tipo de costo')); ?>:</b></font></td>
+                                <td><font class="flet-lab"><?php echo e(trans('leng.'.$datos["tipoCosto"])); ?></td>
+                            </tr>
+                            <tr>
+                                <td><font class="flet-lab"><b><?php echo e(trans('leng.Costo')); ?>:</b></font></td>
+                                <td><font class="flet-lab">S/ <?php echo $datos["costo"] ?></td>
+                            </tr>
+                            <tr>
+                                <td><font class="flet-lab"><b><?php echo e(trans('leng.Ahorro')); ?>:</b></font></td>
+                                <td><font class="flet-lab"><?php echo $datos["descuento"] ?></td>
+                            </tr>
+                            <tr>
+                                <td><font class="flet-lab"><b><?php echo e(trans('leng.Tipo de envío')); ?>:</b></font></td>
+                                <td><font class="flet-lab"><?php echo $datos["tipoEnvio"] ?></td>
+                            </tr>
+                            <tr>
+                                <td style="vertical-align:top"><font class="flet-lab"><b><?php echo e(trans('leng.Grupos')); ?>:</b></font></td>
+                                <td style="vertical-align:top"><font class="flet-lab"><?php echo $datos["gruposEnvio"] ?></td>
+                            </tr>
+                      </table><br>
+                      
+                      <!-- RECOGER *******************************************  -->     
+                      
+                      <h4 class="heading"><?php echo e(trans('leng.Informacion de recojo')); ?>.</h4>
+                      <table>
+                            <tr>
+                                <td style="width: 155px;vertical-align:top"><font class="flet-lab"><b><?php echo e(trans('leng.Recoger')); ?>:</b></font></td>
+                                <?php 
+                                    $mostrarFecha=$datos["fecharecoger"];
+                                    if($datos["fecharecogerhasta"]!=""){
+                                        $mostrarFecha= trans("leng.Desde"). " " .$mostrarFecha."<br>" .trans("leng.Hasta")." " .$datos["fecharecogerhasta"];
+                                    }else{
+                                        $mostrarFecha= trans("leng.El"). " " .$mostrarFecha;
+                                    }
+                                ?>
+                                <td><font class="flet-lab"><?php echo  $mostrarFecha ; ?></font></td>
+                            </tr>
+                            
+                            <tr>
+                                <td style="width: 155px;vertical-align:top"><font class="flet-lab"><b><?php echo e(trans('leng.Horario')); ?>:</b></font></td>
+                                <td><font class="flet-lab"><?php echo  $datos["horarioRecoger"] ; ?></font></td>
+                            </tr>
+                            
+                            <tr>
+                                <td style="vertical-align:top"><font class="flet-lab"><b><?php echo e(trans('leng.Lugar')); ?>:</b></font></td>
+                                <?php
+                                $mostarLugarRecoger="";
+                                   switch($datos["lugarRecoger"]){
+                                       case "1": $mostarLugarRecoger=trans('leng.Casa');break;
+                                       case "2": $mostarLugarRecoger=trans('leng.Empresa');break;
+                                       case "3": $mostarLugarRecoger=trans('leng.Puerto');break;
+                                       case "4": $mostarLugarRecoger=trans('leng.Area de construccion');break;
+                                       case "5": $mostarLugarRecoger=trans('leng.Aeropuerto');break;
+                                       case "6": $mostarLugarRecoger=$datos["otroLugarRecoger"];break;
+                                       
+                                   }
+                                   
+                                   
+                                ?>
+                                <td style="vertical-align:top"><font class="flet-lab"><?php echo  $mostarLugarRecoger ; ?></font></td>
+                            </tr>
+                            
+                            <tr>
+                                <td style="vertical-align:top"><font class="flet-lab"><b><?php echo e(trans('leng.Contacto')); ?>:</b></font></td>
+                                <td><font class="flet-lab"><?php echo  $datos["contactoRecoger"] ; ?></font></td>
+                            </tr>
+                            <tr>
+                                <td><font class="flet-lab"><b><?php echo e(trans('leng.Telefono')); ?>:</b></font></td>
+                                <td><font class="flet-lab"><?php echo  $datos["telefonoRecoger"] ; ?></font></td>
+                            </tr>
+                            
+                            <tr>
+                                <td><font class="flet-lab"><b><?php echo e(trans('leng.recoger en interior')); ?>:</b></font></td>
+                                <?php
+                                   $recogerDentro=trans('leng.No');
+                                   if($datos["recogerDentro"]==true){
+                                       $recogerDentro= trans('leng.Si');
+                                   }
+                                ?>
+                                <td><font class="flet-lab"><?php echo  $recogerDentro; ?></font></td>
+                            </tr>
+                            
+                            
+                            <tr>
+                                <td><font class="flet-lab"><b><?php echo e(trans('leng.Requiere elevador')); ?>:</b></font></td>
+                                <?php
+                                   $requiereMontacarga=trans('leng.No');
+                                   if($datos["elevadorRecoger"]==true){
+                                       $requiereMontacarga=trans('leng.Si');
+                                   }
+                                ?>
+                                <td><font class="flet-lab"><?php echo  $requiereMontacarga; ?></font></td>
+                            </tr>
+                         </table>
+                      <br>
+                      
+                 <!-- ENTREGA ****************************** -->     
+                      
+                        <h4 class="heading"><?php echo e(trans('leng.Informacion de entrega')); ?>.</h4>
+                      <table>
+                            
+                            <tr>
+                                <td style="width: 155px;vertical-align:top"><font class="flet-lab"><b><?php echo e(trans('leng.Entregar')); ?>:</b></font></td>
+                                <?php 
+                                    
+                                    $mostrarFecha=$datos["fechaentregar"];
+                                    if($datos["fechaentregarhasta"]!=""){
+                                        $mostrarFecha= trans("leng.Desde"). " " .$mostrarFecha."<br>" .trans("leng.Hasta")." " .$datos["fechaentregarhasta"];
+                                    }else{
+                                        $mostrarFecha= trans("leng.El"). " " .$mostrarFecha;
+                                    }
+                                ?>
+                                
+                                <td style="width: 155px;vertical-align:top"><font class="flet-lab"><?php echo $mostrarFecha ?></font></td>
+                            </tr>
+                            <tr>
+                                <td style="width: 155px;vertical-align:top"><font class="flet-lab"><b><?php echo e(trans('leng.Horario')); ?>:</b></font></td>
+                                <td><font class="flet-lab"><?php echo  $datos["horarioEntrega"]; ?></font></td>
+                            </tr>
+                            <tr>
+                                <td style="vertical-align:top"><font class="flet-lab"><b><?php echo e(trans('leng.Lugar')); ?>:</b></font></td>
+                                <?php
+                                $mostarLugarEntregar="";
+                                   switch($datos["lugarEntregar"]){
+                                       case "1": $mostarLugarEntregar=trans('leng.Casa');break;
+                                       case "2": $mostarLugarEntregar=trans('leng.Empresa');break;
+                                       case "3": $mostarLugarEntregar=trans('leng.Puerto');break;
+                                       case "4": $mostarLugarEntregar=trans('leng.Area de construccion');break;
+                                       case "5": $mostarLugarEntregar=trans('leng.Aeropuerto');break;
+                                       case "6": $mostarLugarEntregar=$datos["otroLugarEntregar"];break;
+                                   }
+                                ?>
+                                <td style="vertical-align:top"><font class="flet-lab"><?php echo $mostarLugarEntregar; ; ?></font></td>
+                            </tr>
+                            
+                            <tr>
+                                <td style="vertical-align:top"><font class="flet-lab"><b><?php echo e(trans('leng.Contacto')); ?>:</b></font></td>
+                                <td><font class="flet-lab"><?php echo  $datos["contactoEntregar"] ; ?></font></td>
+                            </tr>
+                            <tr>
+                                <td><font class="flet-lab"><b><?php echo e(trans('leng.Telefono')); ?>:</b></font></td>
+                                <td><font class="flet-lab"><?php echo  $datos["telefonoEntregar"] ; ?></font></td>
+                            </tr>
+                            
+                            <tr>
+                                <td><font class="flet-lab"><b><?php echo e(trans('leng.entregar en interior')); ?>:</b></font></td>
+                                <?php
+                                   $entregarDentro=trans('leng.No');
+                                   if($datos["entregarDentro"]==true){
+                                       $entregarDentro=trans('leng.Si');
+                                   }
+                                   
+                                ?>
+                                <td><font class="flet-lab"><?php echo  $entregarDentro; ?></font></td>
+                            </tr>
+                            
+                            <tr>
+                                <td><font class="flet-lab"><b><?php echo e(trans('leng.Requiere elevador')); ?>:</b></font></td>
+                                <?php
+                                   $requiereMontacarga=trans('leng.No');
+                                   if($datos["elevadorEntregar"]==true){
+                                       $requiereMontacarga=trans('leng.Si');
+                                   }
+                                ?>
+                                <td><font class="flet-lab"><?php echo  $requiereMontacarga; ?></font></td>
+                            </tr>
+                      </table>
+                    </div> <!-- /.portlet-content -->
+          </div>
+        </div> 
+        <!--MAPA ****************************** -->     
+        
+        <div class="col-md-8 col-sm-7">
+            <div class="col-md-12">
+            <div>
+                 <div class="portlet-content">
+                    <h4 class="heading"><?php echo e(trans('leng.Origen, destino e información de la ruta')); ?>.</h4>
+                    <div class="col-sm-12"><div id="mapid" style="width: 650px; height: 410px;"></div></div>
+                </div> <!-- /.portlet-content -->
+              </div><br>
+            <div class="col-sm-12">
+                <br>
+                    <div class="col-sm-12">
+                        <table style="width: 100%">
+                               <tr>
+                                   <td style="width: 120px;">&nbsp;<img src="/img/dot-green.png" width='14px;'>&nbsp;<b><font class="flet-lab"><?php echo e(trans('leng.Origen')); ?>:&nbsp;</font></b></td>
+                                   <td><font class="flet-lab"><?php  echo $datos["calleRecoger"] . " , " . $datos["ciudadRecoger"]. " , ".$datos["estadoRecoger"]?>.</font></td>
+                               </tr>
+                               <tr>
+                                   <td>&nbsp;<img src="/img/dot-red.png" width='14px;'>&nbsp;<b><font class="flet-lab"><?php echo e(trans('leng.Destino')); ?>:&nbsp;</font></b></td>
+                                   <td><font class="flet-lab"><?php  echo $datos["calleEntrega"] . " , " . $datos["ciudadEntrega"]. " , ".$datos["estadoEntrega"]?>.</font></td>
+                               </tr>
+                               <tr>
+                                   <td>&nbsp;<i class="fa fa-truck"></i>&nbsp;<b><font class="flet-lab"><?php echo e(trans('leng.Ruta')); ?>:&nbsp;</font></b></td>
+                                   <td><div id="divkm"></div></td>
+                               </tr>
+
+                        </table>
+                    </div>
+            </div>
+        </div> 
+            <br><br>
+            <div class="col-md-12">
+            <div>
+                 <div class="portlet-content">
+                    <h4 class="heading"><?php echo e(trans('leng.Información de pago')); ?>.</h4>
+                        <table style="width: 100%">
+                               <tr>
+                                   <td style="width: 90px;vertical-align:top">&nbsp;<b><font class="flet-lab"><?php echo e(trans('leng.Método')); ?>:&nbsp;</font></b></td>
+                                   <td style="vertical-align:top"><font class="flet-lab"><?php  echo $datos["metodoPago"]?>.</font></td>
+                               </tr>
+                               <tr>
+                                   <td style="width: 90px;vertical-align:top">&nbsp;<b><font class="flet-lab"><?php echo e(trans('leng.Condiciones')); ?>:&nbsp;</font></b></td>
+                                   <td style="vertical-align:top"><font class="flet-lab"><?php  echo $datos["condicionesPago"]?>.</font></td>
+                               </tr>
+
+                        </table>
+                </div> 
+              </div>
+            </div> 
+        </div> 
+    </div>
+
+    
+  <div class="row">
+        <div class="col-md-12">
+            <div>
+                    <div class="portlet-content">
+                      <h4 class="heading"><?php echo e(trans('leng.Articulos a enviar')); ?>.</h4>
+                      <font class="flet-lab"><b><?php echo e(trans('leng.Numero total de articulos')); ?>:</b></font> <font class="flet-lab">&nbsp; <?php echo e(count($infoArticulos)); ?> </font><br>
+                      <?php 
+                        $cadenaTonelada="";
+                            if($datos["pesoTotal"]>1000){
+                                $pesoTonelada=round(($datos["pesoTotal"]/1000),3);
+                                $cadenaTonelada= "(".$pesoTonelada ." ". trans("leng.tn").")";
+                            }
+                      ?>
+                      
+                      <font class="flet-lab"><b><?php echo e(trans('leng.Peso total')); ?>:</b></font> <font class="flet-lab">&nbsp;<?php echo $datos["pesoTotalFormato"]; ?>&nbsp;<?php echo e(trans("leng.kg")); ?> &nbsp; <?php echo $cadenaTonelada ?> </font>
+                      <br><br>
+                      <div class="table-responsive">
+                            <table>
+                                <?php 
+                                if(count($infoArticulos)>0){
+                                      for($k=0;$k<count($infoArticulos);$k++){ ?>
+                                        <tr>
+                                            <?php if(count($infoArticulos[$k]["imagenes"])==0){ ?>
+                                                      <td style="width: 250px;vertical-align:top">
+                                                          &nbsp;
+                                                    </td>
+                                                    <?php  }else if(count($infoArticulos[$k]["imagenes"])==1){ ?>
+                                                            <td style="width: 250px;vertical-align:top">
+                                                              <div class="form-group">
+                                                                  <div class="thumbnail">
+                                                                        <div class="thumbnail-view">
+                                                                          <a class="thumbnail-view-hover ui-lightbox" href="<?php echo "/".$infoArticulos[$k]["imagenes"][0]  ?>">
+                                                                          </a>
+                                                                            <img src="<?php echo "/".$infoArticulos[$k]["imagenes"][0]  ?>" width="110px;" height="110px;"  />
+                                                                        </div>
+                                                                      </div>
+                                                              </div>
+                                                          </td>
+                                                    <?php  }else{ ?>
+                                                                <td style="width: 250px;vertical-align:top">
+                                                                  <div class="form-group">
+                                                                    <div class="thumbnail">
+                                                                        <div class="thumbnail-view">
+                                                                          <a class="thumbnail-view-hover ui-lightbox" href="<?php echo "/".$infoArticulos[$k]["imagenes"][0]  ?>">
+                                                                          </a>
+                                                                            <img src="<?php echo "/".$infoArticulos[$k]["imagenes"][0]  ?>" width="110px;" height="110px;"  />
+                                                                        </div>
+                                                                          <div class="thumbnail-view">
+                                                                          <a class="thumbnail-view-hover ui-lightbox" href="<?php echo "/".$infoArticulos[$k]["imagenes"][1]  ?>">
+                                                                          </a>
+
+                                                                          <img src="<?php echo "/".$infoArticulos[$k]["imagenes"][1]  ?>" width="110px;" height="110px;"  />
+                                                                        </div>
+                                                                      </div>
+                                                                      
+                                                                  </div>
+                                                              </td>
+                                                    <?php } ?>
+                                           <td style="width: 20px; vertical-align:top">
+                                              
+                                          </td>
+                                          <td style="width: 300px; vertical-align:top">
+                                              <b><font class="flet-lab"><?php echo e(trans('leng.Articulo')); ?> <?php echo $k+1; ?></font></b>
+                                              <br>
+                                              <font class="flet-lab"><b><?php echo e(trans('leng.Número de unidades')); ?>: </b>&nbsp;<?php echo $infoArticulos[$k]["cantidad"]; ?></font>
+                                              <br>
+                                              <font class="flet-lab"><b><?php echo e(trans('leng.Empaquetado')); ?>: </b>&nbsp;<?php echo trans('leng.'.$infoArticulos[$k]["descripcion"]); ?></font>
+                                              <br>
+                                              <font class="flet-lab"><b><?php echo e(trans('leng.Peso total del artículo')); ?>:</b>&nbsp;<?php echo $infoArticulos[$k]["pesototal"] . " " . trans('leng.'.$infoArticulos[$k]["unidadpeso"]); ?></font>
+                                          </td>
+                                          <td style="width: 250px; vertical-align:top">
+                                              <b><font class="flet-lab"><?php echo e(trans('leng.Dimensiones unitarias')); ?></font></b>
+                                              <br>
+                                              <font class="flet-lab"><b><?php echo e(trans('leng.Largo')); ?>: </b>&nbsp;<?php echo $infoArticulos[$k]["largo"] . " " . trans('leng.'.$infoArticulos[$k]["unidaddimension"]); ?></font>
+                                              <br>
+                                              <font class="flet-lab"><b><?php echo e(trans('leng.Alto')); ?>: </b>&nbsp;<?php echo $infoArticulos[$k]["alto"] . " " . trans('leng.'.$infoArticulos[$k]["unidaddimension"]); ?></font>
+                                              <br>
+                                              <font class="flet-lab"><b><?php echo e(trans('leng.Ancho')); ?>: </b>&nbsp;<?php echo $infoArticulos[$k]["ancho"] . " " . trans('leng.'.$infoArticulos[$k]["unidaddimension"]); ?></font>
+                                              <br>
+                                              <font class="flet-lab"><b><?php echo e(trans('leng.Peso')); ?>: </b>&nbsp;<?php echo $infoArticulos[$k]["peso"] . " " . trans('leng.'.$infoArticulos[$k]["unidadpeso"]);?></font>
+                                          </td>
+                                          <td style="width: 250px; vertical-align:top">
+                                              <b><font class="flet-lab"><?php echo e(trans('leng.Detalles')); ?></font></b>
+                                              <br>
+                                              <font class="flet-lab"><b><?php echo e(trans('leng.Apilable')); ?>: </b>&nbsp;<?php echo $infoArticulos[$k]["apilable"]; ?></font>
+                                              <br>
+                                              <font class="flet-lab"><b><?php echo e(trans('leng.Material peligroso')); ?>: </b>&nbsp;<?php echo $infoArticulos[$k]["peligroso"]; ?></font>
+                                              <br>
+                                              <font class="flet-lab"><b><?php echo e(trans('leng.Perecedero')); ?>: </b>&nbsp;<?php echo $infoArticulos[$k]["perecedero"]; ?></font>
+                                          </td>
+                                      </tr>
+                                      <?php if($infoArticulos[$k]["detalle"]!=""){ ?>
+                                        <tr>
+                                            <td>&nbsp;</td>
+                                            <td colspan="4" style="vertical-align:top"><font class="flet-lab"><b> <?php echo $infoArticulos[$k]["detalle"]; ?></b></font><br></td>
+                                        </tr>
+                                      <?php } ?>
+                                      <tr>
+                                          <td colspan="5"><h4 class="heading"></h4></td>
+                                      </tr>
+                                      
+                                <?php }
+                                }
+                                ?>
+                                      
+                                <?php 
+                                   $cadenaServicios="";
+                                   if($datos["llamarAntesEntrega"]==true)$cadenaServicios.=trans('leng.Llamar antes de la entrega').", ";
+                                   //if($datos["horarioEntrega"]==true)$cadenaServicios.=trans('leng.Es necesario acordar un horario para la entrega').", ";
+                                   if($datos["proteccionFrio"]==true)$cadenaServicios.=trans('leng.Los articulos deben protegerse contra el frio').", ";
+                                   if($datos["ordernar"]==true)$cadenaServicios.=trans('leng.Ordenar y separar').", ";
+                                   if($datos["personainvidente"]==true)$cadenaServicios.=trans('leng.Es necesario coordinarse con una persona invidente').", ";
+                                   
+                                   if($cadenaServicios!=""){
+                                       $cadenaServicios=  substr($cadenaServicios,0,-2); ?>
+                                        <tr>
+                                            <td style="vertical-align:top"><font class="flet-lab"><b><?php echo e(trans('Servicios adicionales')); ?>:</b></font></td>
+                                            <td colspan="4" style="vertical-align:top"><font class="flet-lab"><?php echo $cadenaServicios; ?>.</font></td>
+                                        </tr>                                   
+                                     <?php } ?>
+                                
+                                 
+                                      
+                            </table><br>
+                        </div>
+                    </div> <!-- /.portlet-content -->
+          </div>
+        </div> 
+    </div>    
+    
+
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('piePagina'); ?>
+        
+<?php $__env->stopSection(); ?>
+
+
+<?php $__env->startSection('otrosScripts'); ?>
+    <?php echo Html::script('js/enviosCliente.js'); ?>  
+    <script>
+        $(document).ready(function(){
+            cargarMapaDetalle();
+            var id=$("#idEnvioC").val();
+            enviarMailTransportistas(id);
+        });
+
+</script>
+
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.principal', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

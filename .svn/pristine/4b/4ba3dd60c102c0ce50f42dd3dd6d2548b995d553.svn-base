@@ -1,0 +1,104 @@
+      <div class="row" style="font-size: 0.9em">
+
+        <div class="col-md-12">
+
+          <div class="row">
+
+            <div class="col-md-4 col-sm-5">
+
+              <div class="thumbnail">
+                <?php if(trim($datosUsuario["imagen"])==""){ ?>
+                    <img src="/img/logousuario.png" style="max-height: 200px;" alt="Profile Picture" />
+                <?php }else{ ?>
+                    <img src="<?php echo asset($datosUsuario["imagen"]); ?>" style="max-height: 200px;" alt="Profile Picture" />
+                <?php } ?>
+                
+              </div> <!-- /.thumbnail -->
+                <button type="button" onclick="agregarTransportista(<?php echo $datosUsuario["idTra"]?>);$('#divElmentosGrupo').dialog('close');"  class="btn btn-secondary btn-xs"><?php echo e(trans("leng.Agregar")); ?></button>
+              <br/>
+            </div> <!-- /.col -->
+
+
+            <div class="col-md-8 col-sm-7">
+                    <h4><?php echo e($datosUsuario["compania"]); ?></h4>
+                    <h5><?php echo e($datosUsuario["nombre1"]); ?>&nbsp;<?php echo e($datosUsuario["nombre2"]); ?>&nbsp;<?php echo e($datosUsuario["apellido1"]); ?>&nbsp;<?php echo e($datosUsuario["apellido2"]); ?>&nbsp;</h5>
+                    <h6>
+                    <?php if($datosUsuario["ruc"]!="") { ?>
+                        <b><?php echo e(trans("leng.RUC")); ?>:&nbsp;</b><?php echo e($datosUsuario["ruc"]); ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <?php } ?>
+                        
+                    <?php if($datosUsuario["dni"]!="") { ?>
+                    <b><?php echo e(trans("leng.DNI")); ?>:&nbsp;</b><?php echo e($datosUsuario["dni"]); ?>
+
+                    <?php } ?>
+                    </h6>
+                    
+                    <?php
+                                $entero="";
+                                $decimal="";
+                                $posPunto = strpos($datosUsuario["estrellas"],".");
+                                if($posPunto===false){
+                                    $entero= $datosUsuario["estrellas"];
+                                    $decimal=0;
+                                }else{
+                                    $entero= substr($datosUsuario["estrellas"],0,$posPunto);
+                                    $decimal=  substr($datosUsuario["estrellas"],$posPunto);
+                                    $decimal=$decimal*100;
+                                }
+                                
+                                $cadenaEstrellas="<h3 class='pull-left'>";
+                                for($k=0;$k<$entero;$k++){
+                                   $cadenaEstrellas.= "<i class='fa fa-star '></i>";
+                                }
+                                
+                                if($decimal>50){
+                                    $cadenaEstrellas.= "<i class='fa fa-star-half-full'></i>";
+                                    $blancas=5-$entero-1;
+                                }else{
+                                    $blancas=5-$entero;
+                                }
+                                
+                                for($k=0;$k<($blancas);$k++){
+                                   $cadenaEstrellas.= "<i class='fa fa-star-o'></i>";
+                                }
+                                
+                                $cadenaEstrellas.="</h3>";
+                                
+                                
+                            ?>
+                    <table>
+                        
+                        <?php if($datosUsuario["estrellas"]==-1){ ?>
+                        <tr>
+                            <td colspan="3"><b><?php echo e(trans("leng.Sin calificación")); ?>.</b></td>
+                        </tr>
+                        <?php } else {?>
+                        <tr>
+                            <td style="width: 100px;"><b><?php echo e(trans("leng.Calificación")); ?>:</b></td>
+                            <td><?php echo $cadenaEstrellas; ?></td>
+                            <td><b>&nbsp;&nbsp;&nbsp;(<?php echo $datosUsuario["estrellas"] . " " . trans("leng.estrellas") ?>)</b></td>
+                        </tr>
+                        <?php } ?>
+                    </table>
+                    <table>
+                        <tr>
+                            <td style="width: 20px;"><i class="icon-li fa fa-envelope"></i></td>
+                            <td><?php echo e($datosUsuario["correo"]); ?></td>
+                        </tr>
+                        <tr>
+                            <td><i class="icon-li fa fa-map-marker"></i> </td>
+                            <td><?php echo e($datosUsuario["direccion"]); ?>,&nbsp;<?php echo e($datosUsuario["ciudad"]); ?>,&nbsp;<?php echo e($datosUsuario["nombreEstado"]); ?>,&nbsp;<?php echo e($datosUsuario["nombrePais"]); ?></td>
+                        </tr>
+                        <tr>
+                            <td><i class="fa fa-phone"></i> </td>
+                            <td><?php echo e($datosUsuario["telefono"]); ?></td>
+                        </tr>
+                    </table>
+                        <br>
+            </div> <!-- /.col -->
+
+          </div> <!-- /.row -->
+
+        </div> <!-- /.col -->
+
+      </div> <!-- /.row -->        

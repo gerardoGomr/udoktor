@@ -1,0 +1,10 @@
+<?php
+
+namespace T1;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Ciudad extends Model
+{
+    protected $table='city';
+}

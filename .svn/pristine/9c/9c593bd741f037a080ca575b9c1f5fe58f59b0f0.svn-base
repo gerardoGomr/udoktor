@@ -1,0 +1,32 @@
+<html>
+    <body class="flet-lab">
+        <p><?php echo e(trans("leng.Hola")); ?>&nbsp;<b><?php echo e($usuario); ?></b>.</p>
+        <?php if($tipo==1){ ?>
+        
+                <p><b><?php echo e(trans("leng.Bienvenido a Efletex")); ?></b>&nbsp;<?php echo e(trans("leng.su cuenta ha sido activada")); ?>.</p>
+                 <?php if($estransportista==1)$mensaje="leng.Para ver los envios, ofertar o preguntar ingrese a";
+                       else $mensaje="leng.Para publicar envios ingrese a";
+                 ?>   
+            
+            <p><b><?php echo e(trans($mensaje)); ?>:</b>&nbsp;<a href="http://efletex.com">www.efletex.com</a>.</p>
+            
+            
+        <?php }else if($tipo==2){ ?>
+            
+            <p><b><?php echo e(trans("leng.Bienvenido a Efletex")); ?></b>&nbsp;<?php echo e(trans("leng.su cuenta ha sido verficada")); ?>.</p>
+                 <?php if($estransportista==1)$mensaje="leng.Para ver los envios, ofertar o preguntar ingrese a";
+                       else $mensaje="leng.Para publicar envios ingrese a";
+                 ?>   
+            
+            <p><b><?php echo e(trans($mensaje)); ?>:</b>&nbsp;<a href="http://efletex.com">www.efletex.com</a>.</p>
+            
+         <?php }else if($tipo==3){ ?>
+            
+                <p><?php echo e(trans("leng.Su cuenta ha sido desactivada por al administrador")); ?>.</p>
+            
+         <?php }?>
+    </body>
+</html>
+    
+
+

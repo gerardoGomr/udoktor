@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+  <title>Crea tu cuenta - efletex</title>
+
+  <meta charset="utf-8">
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width">
+
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,700italic,400,600,700">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Oswald:400,300,700">
+  
+  <?php echo Html::style('Theme/css/font-awesome.min.css'); ?>
+
+  <?php echo Html::style('Theme/js/libs/css/ui-lightness/jquery-ui-1.9.2.custom.min.css'); ?>
+
+  <?php echo Html::style('Theme/js/libs/css/ui-lightness/jquery-ui-1.9.2.custom.css'); ?>
+
+  <?php echo Html::style('Theme/css/bootstrap.min.css'); ?>
+
+  
+  <?php echo Html::style('Theme/css/target-admin.css'); ?>
+
+  <?php echo Html::style('Theme/css/custom.css'); ?>
+
+  
+  
+
+  <script>
+       function waitingDialog() { 
+                $("#loadingScreen").dialog({
+                    autoOpen: false,
+                    title: "Espere un momento..",
+                    modal:true,
+                    width: 300,
+                    height: 150,
+                    buttons: {},
+                    draggable: false,
+                    resizable: false,
+                    close: function(event,ui){
+                        $("#loadingScreen").html('');
+                        $("#loadingScreen").dialog('destroy');
+                    },
+                    open:function(event,ui){
+                        $(this).parent().children().children('.ui-dialog-titlebar-close').hide();
+                        $("#loadingScreen").html("<br><div class='progress progress-striped active'><div class='progress-bar progress-bar-primary' role='progressbar' aria-valuenow='100' aria-valuemin='0' aria-valuemax='100' style='width: 100%'><span class='sr-only'></span></div></div>");
+                    }
+                    });
+                $("#loadingScreen").dialog('open');
+            }
+        function closeWaitingDialog() {
+                $("#loadingScreen").dialog('close');
+         }
+  </script>
+
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+</head>
+<div id="loadingScreen"></div>
+<?php
+
+
+
+
+$paisArreglo=Array();
+$estadoArreglo=Array();
+$pais=$pais; // recibimos del controlador
+
+
+foreach($pais as $rowPais){
+      $paisArreglo[$rowPais->id]=$rowPais->name;
+  }
+
+?>
+
+
+
+
+
+<body class="account-bg fondoimg">
+
+    <div class="navbar">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <i class="fa fa-cogs"></i>
+          </button>
+
+          
+
+        </div> <!-- /.navbar-header -->
+
+        <div class="navbar-collapse collapse">
+
+          <ul class="nav navbar-nav navbar-right">   
+
+            <li>
+              <a href="../login/">
+                <i class="fa fa-angle-double-left"></i> 
+                &nbsp;Volver al inicio
+              </a>
+            </li> 
+
+          </ul>
+        </div> <!--/.navbar-collapse -->
+      </div> <!-- /.container -->
+    </div> <!-- /.navbar -->
+
+   <br><br>
+      <center>
+        <div style="width: 47%">
+        
+
+        <div id="divPrincipal" class="account-body">
+          <center><img src="../img/efletex_logo.png" height="100px;"></center>
+          <br>
+            <h4 class="heading">Crea tu cuenta como..</h4>
+            <div class="row">
+                <div class="btn-group">
+                    <button id='botonCliente' style="width: 300px;" onclick="tipoCuenta(1)" type="button" class="btn btn-default btn-lg"><?php echo e(trans("leng.Cliente que envía")); ?></button>
+                    <button id='botonTransportista' style="width: 300px;" onclick="tipoCuenta(2)" type="button" class="btn btn-default btn-lg"><?php echo e(trans("leng.Transportista")); ?></button>
+                  </div>
+            </div>
+            <br>
+            <div id="cargaTipoCuenta">
+                
+            </div>
+            
+            <p>
+            ¿Tienes una cuenta? &nbsp;
+            <a href="../login/" class="">Ingresa con tu cuenta!</a>
+            </p>
+        </div>
+            
+        <div id="divRespuesta" class="account-body" style="display:none">
+          <h4 class="heading" id="labelRespuesta"></h4>
+          <p>
+            <a href="../login/" class="">Ingresa con tu cuenta!</a>
+            </p>
+        </div>
+         
+         
+        
+
+          <div class="account-footer">
+            
+          </div> <!-- /.account-footer -->
+
+    </div> <!-- /.account-wrapper -->
+  </center>
+    <?php echo Html::script('Theme/js/libs/jquery-1.10.1.min.js'); ?>
+
+    <?php echo Html::script('Theme/js/libs/jquery-ui-1.9.2.custom.min.js'); ?>
+
+    <?php echo Html::script('Theme/js/libs/bootstrap.min.js'); ?>
+
+
+    <?php echo Html::script('Theme/js/target-admin.js'); ?>
+
+    <?php echo Html::script('Theme/js/target-account.js'); ?>
+
+
+    <?php echo Html::script('js/login.js'); ?>  
+    <?php echo Html::script('js/general.js'); ?>  
+
+
+</body>
+</html>

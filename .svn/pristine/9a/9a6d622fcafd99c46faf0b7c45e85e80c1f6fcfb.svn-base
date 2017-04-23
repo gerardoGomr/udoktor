@@ -1,0 +1,77 @@
+<?php
+/* Controlador para el inicio de sesion
+ * Autor: OT
+ * Fecha: 17-06-2016
+*/
+namespace T1\Http\Controllers;
+use Illuminate\Http\Request;
+use T1\Http\Requests;
+use T1\User;
+use T1\V_person;
+use Session;
+use Redirect;
+use Response;
+use Auth;
+use T1\Http\Controllers\Controller;
+
+class LoginController extends Controller
+{
+    /* Reedireciona al login
+     * Autor: OT
+     * Fecha: 17-06-2016
+    */
+    public function index(){
+        return view('login.login');
+    }
+    
+    /* Valida que exista un usuario con los datos envadios desde el login
+     * Autor: OT
+     * Fecha: 17-06-2016
+    */
+    public function inicio(Request $request){
+            $usuario=trim($request["usuario"]);
+            $pass=$request["password"];
+            $origen=$request["origen"];
+            
+            if(Auth::attempt(['email'=>$usuario,'password'=>$pass,'confirmationtoken'=>'1'])){
+                
+                $activo=  User::where('email',$usuario)->where('active',true)->count();
+                if($activo==0){
+                    return view('login.login')->with('cuentainactiva','si');
+                }
+                
+                
+                $idPerson = Auth::user()->personid;
+                $dataPerson=V_person::find($idPerson);
+
+                if(count($dataPerson)>0){
+                    if($origen==0){
+                        if($dataPerson->isserviceprovider==true){
+                            return redirect('prestadorServicios');
+                        }else if($dataPerson->isclient==true){
+                            return redirect('cliente');
+                        }else if($dataPerson->isadmin==true){
+                            return redirect('admin');
+                        }else{
+                            return redirect('cliente');
+                        }
+                    }else{
+                        return response()->json(['usuarioexiste' => true, 'id' => $idPerson, 'nombre'=>$dataPerson->firstname . " " . $dataPerson->lastname]);
+                    }
+                }else{
+                    if($origen==0){
+                        return view('login.login')->with('usuarioInvalido','si');
+                    }else{
+                        return response()->json(['usuarioexiste' => false, 'id' => 0,'nombre'=>'']);
+                    }
+                }
+            }else{
+                
+                if($origen==0){
+                    return view('login.login')->with('usuarioInvalido','si');
+                }else{
+                    return response()->json(['usuarioexiste' => false, 'id' => 0,'nombre'=>'']);
+                }
+            }
+    }
+}

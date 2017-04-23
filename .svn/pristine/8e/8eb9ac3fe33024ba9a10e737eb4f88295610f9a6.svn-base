@@ -1,0 +1,647 @@
+<?php $__env->startSection('titulo', 'Nuevo envío'); ?>
+
+<?php $__env->startSection('contenido'); ?>
+
+<?php
+$cadenaPais="";
+foreach($pais as $rowPais){
+      $cadenaPais.="<option value='$rowPais->id'>$rowPais->name</option>";
+  }
+?>
+    
+    <input type="hidden" name="_token" value="<?php echo e(csrf_token()); ?>" id="token">
+    
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <center><h2 class="content-header-title"><?php echo e(trans('leng.Anuncie su envio')); ?></h2></center>
+        </div>
+        <div class="col-md-2">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8"></div>
+        <div class="col-md-2">
+            <h4><?php echo e(trans('leng.Paso')); ?><label id="pasoEnvio">&nbsp;1 / 5</label></h4>
+        </div>
+    </div>
+    <br>
+    
+    
+    <div class="col-md-12" style="font-size: 0.9em;" >
+          <ul id="TabEnviosCliente" class="nav nav-tabs">
+            <li id="liTab1"  class="active">
+                <a id="t1" href="#art"  data-toggle="tab"><?php echo e(trans('leng.Articulos')); ?></a>
+            </li>
+            
+            <li id="liTab11" style="display: none">
+                <a id="t11" href="javascript:;"><?php echo e(trans('leng.Articulos')); ?></a>
+            </li>
+                        
+            <li class="" id="liTab2" style="display: none">
+                <a id="t2" href="#recoger"  data-toggle="tab"><?php echo e(trans('leng.Recoger en')); ?>..</a>
+            </li>
+            
+            <li class="" id="liTab21">
+                <a id="t21" href="javascript:;"><?php echo e(trans('leng.Recoger en')); ?>..</a>
+            </li>
+            
+            <li class="" id="liTab3" style="display: none">
+                <a id="t3" href="#entregar" data-toggle="tab"><?php echo e(trans('leng.Entregar en')); ?>..</a>
+            </li>
+            
+            <li class="" id="liTab31">
+                <a id="31" href="javascript:;"><?php echo e(trans('leng.Entregar en')); ?>..</a>
+            </li>
+            
+            <li class="" id="liTab4" style="display: none">
+                <a id="t4" href="#serviciosadcioanles" data-toggle="tab"><?php echo e(trans('leng.Servicios adicionales')); ?></a>
+            </li>
+            
+            <li class="" id="liTab41">
+                <a id="t41" href="javascript:;"><?php echo e(trans('leng.Servicios adicionales')); ?></a>
+            </li>
+            
+            <li class="" id="liTab5" style="display: none">
+                <a id="t5" href="#publicarenvio" data-toggle="tab"><?php echo e(trans('leng.Publicar envio')); ?></a>
+            </li>
+            
+            <li class="" id="liTab51">
+                <a id="t51" href="javascript:;"><?php echo e(trans('leng.Publicar envio')); ?></a>
+            </li>
+            
+          </ul>
+        
+
+          <div id="ContenidoTabEnvio" class="tab-content">
+              
+            <!--  TAB DE ARTICULOS -->  
+            <div class="tab-pane fade active in" id="art">
+                       <div class="table-responsive col-md-12">
+                            <table class="table table-bordered" id="listaProductos">
+                              <thead>
+                                <tr>
+                                    <th style="width: 75px;"><?php echo e(trans('leng.Imagen')); ?></th>
+                                    <th style="width: 120px;"><?php echo e(trans('leng.Articulo')); ?></th>
+                                    <th style="width: 150px;"><?php echo e(trans('leng.Dimensiones (LxAxA) - Unidad')); ?></th>
+                                    <th style="width: 80px;"><?php echo e(trans('leng.Peso unitario')); ?></th>
+                                    <th style="width: 80px;"><?php echo e(trans('leng.Unidades')); ?></th>
+                                    <th style="width: 80px;"><?php echo e(trans('leng.Peso total')); ?></th>
+                                    <th style="width: 30px;">&nbsp;</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                              </tbody>
+                            </table>
+                        </div>
+                   <?php if($cuentaVerificada){ ?>
+                    <div class="col-md-12">
+                        <button type="button" class="btn btn-success" onclick="agregarArticulo();"><i class="fa fa-plus"></i>&nbsp;<?php echo e(trans('leng.Agregar articulo')); ?></button>
+                    </div>
+                    <br>
+                    
+                   <div class="col-md-12">
+                        <div class="col-md-7">
+                        </div>    
+                       <div class="col-md-5" style="text-align: right">
+                           <button type="button" onclick="salirDelEnvio()" style=" width: 150px;"class="btn btn-danger"><i class="fa fa-times-circle"></i>&nbsp;&nbsp;<?php echo e(trans("leng.Cancelar")); ?></button>
+                           <button type="button" onclick="irTabRecoger()" style=" width: 150px;"class="btn btn-warning"><?php echo e(trans("leng.Siguiente")); ?>&nbsp;&nbsp;<i class="fa fa-arrow-circle-right"></i></button>
+                        </div>    
+                    </div>
+                   <?php } ?>
+            </div>
+            
+            
+            <!--  TAB RECOGER EN.. -->  
+            <div class="tab-pane fade" id="recoger">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <div class="row">
+                                <h4><?php echo e(trans("leng.Ubicación")); ?></h4>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <b><font style="size: 0.7em;color: red">*</font><?php echo e(trans('leng.Pais')); ?></b>
+                                        <select class="form-control" id="idPaisOrigen" onchange="buscarEstadoEnvio(this.value,1);">
+                                                    <option selected value="0"><?php echo e(trans('leng.Seleccione')); ?></option>
+                                                    <?php echo $cadenaPais; ?>
+                                                </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <b><font style="size: 0.7em;color: red">*</font><?php echo e(trans('leng.Departamento')); ?></b>
+                                        <select class="form-control" id="idEstadoOrigen" onchange="limpiarMapa(1);">
+                                                    <option selected value="0"><?php echo e(trans('leng.Seleccione')); ?></option>
+                                                </select>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <b><font style="size: 0.7em;color: red">*</font><?php echo e(trans('leng.Ciudad')); ?></b>
+                                        <input class="form-control" id="ciudadOrigen" type="text">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <b><font style="size: 0.7em;color: red">*</font><?php echo e(trans('leng.Calle o Lugar')); ?></b>
+                                        <input class="form-control" id="direccionOrigen" type="text" onblur="buscarDireccion(1);return;" onkeypress="presionarEnter(this,1);return;">
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <h4><?php echo e(trans("leng.Fechas")); ?></h4>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <b><font style="size: 0.7em;color: red">*</font><?php echo e(trans('leng.Recoger el')); ?>...</b>
+                                        <div id="cal1" class="input-group date" data-auto-close="true"  data-date-format="dd-mm-yyyy" data-date-autoclose="true">
+                                             <input class="form-control" type="text" id="fechaRecoger">
+                                             <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <b><?php echo e(trans('leng.Hasta el')); ?>...<?php echo e(trans('leng.(opcional)')); ?></b>
+                                        <div id="cal2" class="input-group date" data-auto-close="true"  data-date-format="dd-mm-yyyy" data-date-autoclose="true">
+                                            <input class="form-control" type="text" id="fechaHastaRecoger" disabled>
+                                           <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <h4><?php echo e(trans("leng.Horario")); ?></h4>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <b><?php echo e(trans('leng.Recoger desde')); ?>...</b>
+                                        <div class="input-group bootstrap-timepicker">
+                                            <input id="hora1" type="text" class="form-control input-group-addon" disabled>
+                                            <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+                                        </div>
+                                        <small><a href="javascript:;" onclick="quitarHora(1)"><i class="fa fa-eraser"></i>&nbsp;<?php echo e(trans("leng.Borrar hora")); ?></a></small>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <b><?php echo e(trans('leng.Recoger hasta')); ?>...</b>
+                                        <div class="input-group bootstrap-timepicker">
+                                            <input id="hora2" type="text" class="form-control input-group-addon" disabled>
+                                            <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+                                        </div>
+                                        <small><a href="javascript:;" onclick="quitarHora(2)"><i class="fa fa-eraser"></i>&nbsp;<?php echo e(trans("leng.Borrar hora")); ?></a></small>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <h4><?php echo e(trans("leng.Contacto")); ?></h4>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <b><font style="size: 0.7em;color: red">*</font><?php echo e(trans('leng.Nombre')); ?></b>
+                                        <input class="form-control" id="contactoOrigen" type="text">
+                                    </div>
+                                </div>
+                                
+                                <br>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <b><font style="size: 0.7em;color: red">*</font><?php echo e(trans('leng.Telefono')); ?></b>
+                                                <input class="form-control" id="telefonoOrigen" type="text" onkeypress='javascript:return validarNumero(event);'>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <b><font style="size: 0.7em;color: red">*</font><?php echo e(trans('leng.Lugar')); ?></b>
+                                            <select class="form-control" id="idLugarOrigen" onchange="validarLugar(this.value,1);">
+                                                    <option selected value="0"><?php echo e(trans('leng.Seleccione')); ?></option>
+                                                    <option value="4"><?php echo e(trans('leng.Area de construccion')); ?></option>
+                                                    <option value="5"><?php echo e(trans('leng.Aeropuerto')); ?></option>
+                                                    <option value="1"><?php echo e(trans('leng.Casa')); ?></option>
+                                                    <option value="2"><?php echo e(trans('leng.Empresa')); ?></option>
+                                                    <option value="3"><?php echo e(trans('leng.Puerto')); ?></option>
+                                                    <option value="6"><?php echo e(trans('leng.Otro')); ?></option>
+                                                </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" style="display: none" id="divOtroLugarRecoger">
+                                    <div class="col-md-12">
+                                        <b><?php echo e(trans('leng.Especifique el lugar')); ?></b>
+                                        <input class="form-control" id="otroLugarRecoger" maxlength="100" type="text">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <span><?php echo e(trans('leng.Para usar el Mapa, deberá seleccionar el País, Estado, Ciudad y Calle/Lugar; despúes arrastre el punto a la ubicación real. La búsqueda es aproximada.')); ?></span>
+                            <br>
+                            <div id="mapaOrigen" style="width: 100%; height: 450px"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <br>
+                     <div class="col-sm-12">
+                        <h4 class="heading"><?php echo e(trans('leng.Servicios al recoger')); ?></h4>
+                           <div class="form-group">
+                               <div class="col-sm-12">
+                                    <div class="row"> 
+                                         <label class="checkbox-inline">
+                                              <input type="checkbox" id="elevadorRecoger"> <?php echo e(trans('leng.Elevador necesario al recoger')); ?>.
+                                         </label>
+                                         <small><p class="text-info"><?php echo e(trans('leng.Seleccione esta opción si el lugar de recojo no consta con un elevador. Usualmente se requiere un elevador para mercancía que exceda 50 kg')); ?>.</p></small>
+                                    </div>
+                                    <div class="row">
+                                         <label class="checkbox-inline">
+                                          <input type="checkbox" id="servicioRecogerInterior" > <?php echo e(trans('leng.Recoger en interior')); ?>.
+                                        </label>
+                                         <small> <p class="text-info"><?php echo e(trans('leng.Seleccione está opción si el transportista tiene que entrar a sus predios (más allá de la puerta de entrada)')); ?>.</p></small>
+                                     </div>
+                                </div>
+                           </div>
+                     </div>
+                </div>
+                
+                <br>
+                    <div class="col-md-12">
+                        <div class="col-md-5">
+                        </div>    
+                       <div class="col-md-7" style="text-align: right">
+                           <button type="button" onclick="salirDelEnvio()" style=" width: 150px;"class="btn btn-danger"><i class="fa fa-times-circle"></i>&nbsp;&nbsp;<?php echo e(trans("leng.Cancelar")); ?></button>
+                           <button type="button" onclick="volveraArticulos()" style=" width: 150px;"class="btn btn-warning"><i class="fa fa-arrow-circle-left"></i>&nbsp;&nbsp;<?php echo e(trans("leng.Atras")); ?></button>
+                           <button type="button" onclick="irTabEntregar()" style=" width: 150px;"class="btn btn-warning"><?php echo e(trans("leng.Siguiente")); ?>&nbsp;&nbsp;<i class="fa fa-arrow-circle-right"></i></button>
+                        </div>    
+                    </div>
+            </div>
+         
+            
+            <!--  TAB ENTREGAR EN.. -->  
+            <div class="tab-pane fade" id="entregar">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <div class="row">
+                                <h4><?php echo e(trans("leng.Ubicación")); ?></h4>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <b><font style="size: 0.7em;color: red">*</font><?php echo e(trans('leng.Pais')); ?></b>
+                                        <select class="form-control" id="idPaisDestino" onchange="buscarEstadoEnvio(this.value,2);">
+                                                    <option selected value="0"><?php echo e(trans('leng.Seleccione')); ?></option>
+                                                    <?php echo $cadenaPais; ?>
+                                                </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <b><font style="size: 0.7em;color: red">*</font><?php echo e(trans('leng.Departamento')); ?></b>
+                                        <select class="form-control" id="idEstadoDestino" onchange="limpiarMapa(2);">
+                                                    <option selected value="0"><?php echo e(trans('leng.Seleccione')); ?></option>
+                                                </select>
+                                    </div>
+                                </div>
+
+                                <br>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <b><font style="size: 0.7em;color: red">*</font><?php echo e(trans('leng.Ciudad')); ?></b>
+                                        <input class="form-control" id="ciudadDestino" type="text">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <b><font style="size: 0.7em;color: red">*</font><?php echo e(trans('leng.Calle o Lugar')); ?></b>
+                                        <input class="form-control" id="direccionDestino" type="text" onblur="buscarDireccion(2);return;" onkeypress="presionarEnter(this,2);return;">
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <h4><?php echo e(trans("leng.Fechas")); ?></h4>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <b><font style="size: 0.7em;color: red">*</font><?php echo e(trans('leng.Entregar el')); ?>..</b>
+                                        <div id="cal3" class="input-group date" data-auto-close="true"  data-date-format="dd-mm-yyyy" data-date-autoclose="true">
+                                             <input class="form-control" type="text" id="fechaEntregar">
+                                             <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <b><?php echo e(trans('leng.Hasta el')); ?>.. <?php echo e(trans('leng.(opcional)')); ?></b>
+                                        <div id="cal4" class="input-group date" data-auto-close="true"  data-date-format="dd-mm-yyyy" data-date-autoclose="true">
+                                           <input class="form-control" type="text" id="fechaEntregarHasta" disabled>
+                                           <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <h4><?php echo e(trans("leng.Horario")); ?></h4>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <b><?php echo e(trans('leng.Entregar desde')); ?>...</b>
+                                        <div class="input-group bootstrap-timepicker">
+                                            <input id="hora3" type="text" class="form-control input-group-addon" disabled>
+                                            <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+                                        </div>
+                                        <small><a href="javascript:;" onclick="quitarHora(3)"><i class="fa fa-eraser"></i>&nbsp;<?php echo e(trans("leng.Borrar hora")); ?></a></small>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <b><?php echo e(trans('leng.Entregar hasta')); ?>...</b>
+                                        <div class="input-group bootstrap-timepicker">
+                                            <input id="hora4" type="text" class="form-control input-group-addon" disabled>
+                                            <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+                                        </div>
+                                        <small><a href="javascript:;" onclick="quitarHora(4)"><i class="fa fa-eraser"></i>&nbsp;<?php echo e(trans("leng.Borrar hora")); ?></a></small>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <br>
+                            <div class="row">
+                                <h4><?php echo e(trans("leng.Contacto")); ?></h4>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <b><font style="size: 0.7em;color: red">*</font><?php echo e(trans('leng.Nombre')); ?></b>
+                                        <input class="form-control" id="contactoDestino" type="text">
+                                    </div>
+                                </div>
+                                
+                                <br>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <b><font style="size: 0.7em;color: red">*</font><?php echo e(trans('leng.Telefono')); ?></b>
+                                            <input class="form-control" id="telefonoDestino" type="text" onkeypress='javascript:return validarNumero(event);'>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <b><font style="size: 0.7em;color: red">*</font><?php echo e(trans('leng.Lugar')); ?></b>
+                                                <select class="form-control" id="idLugarDestino" onchange="validarLugar(this.value,2);">
+                                                    <option selected value="0"><?php echo e(trans('leng.Seleccione')); ?></option>
+                                                    <option value="4"><?php echo e(trans('leng.Area de construccion')); ?></option>
+                                                    <option value="5"><?php echo e(trans('leng.Aeropuerto')); ?></option>
+                                                    <option value="1"><?php echo e(trans('leng.Casa')); ?></option>
+                                                    <option value="2"><?php echo e(trans('leng.Empresa')); ?></option>
+                                                    <option value="3"><?php echo e(trans('leng.Puerto')); ?></option>
+                                                    <option value="6"><?php echo e(trans('leng.Otro')); ?></option>
+                                                </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" style="display: none" id="divOtroLugarEntregar">
+                                    <div class="col-md-12">
+                                        <b><?php echo e(trans('leng.Especifique el lugar')); ?></b>
+                                        <input class="form-control" id="otroLugarEntregar" maxlength="100" type="text">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <span><?php echo e(trans('leng.Para usar el Mapa, deberá seleccionar el País, Estado, Ciudad y Calle/Lugar; despúes arrastre el punto a la ubicación real. La búsqueda es aproximada.')); ?></span>
+                            <br>
+                            <div id="mapaDestino" style="width: 100%; height: 450px"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                
+                <div class="row">
+                    <br>
+                     <div class="col-sm-12">
+                        <h4 class="heading"><?php echo e(trans('leng.Servicios al entregar')); ?></h4>
+                        
+                            <div class="form-group">
+                              <label class="checkbox-inline">
+                               <input type="checkbox" id="llamarEntrega"> <?php echo e(trans('leng.Llamar antes de la entrega')); ?>.
+                              </label>
+                              <small><p class="text-info"><?php echo e(trans('leng.Seleccione esta opción si desea que el transportista se comuníque con el contacto de entrega')); ?>.</p></small>
+                              <label class="checkbox-inline">
+                                <input type="checkbox" id="elevadorEntrega"> <?php echo e(trans('leng.Elevador necesario en la entrega')); ?>.
+                              </label>
+                              <small><p class="text-info"><?php echo e(trans('leng.Seleccione esta opción si el lugar de entrega no consta con un elevador. Usualmente se requiere un elevador para mercancía que exceda 50 kg')); ?>.</p></small>
+                       
+                              <label class="checkbox-inline">
+                                <input type="checkbox" id="servicioEntregarInterior" > <?php echo e(trans('leng.Entrega en interior')); ?>.
+                              </label>
+                              <small> <p class="text-info"><?php echo e(trans('leng.Seleccione está opción si el transportista tiene que entrar a sus predios (más allá de la puerta de entrada)')); ?>.</p></small>
+                          </div>
+                        
+                     </div>
+                </div>
+                
+                <br>
+                    <div class="col-md-12">
+                        <div class="col-md-5">
+                        </div>    
+                       <div class="col-md-7" style="text-align: right">
+                           <button type="button" onclick="salirDelEnvio()" style=" width: 150px;"class="btn btn-danger"><i class="fa fa-times-circle"></i>&nbsp;&nbsp;<?php echo e(trans("leng.Cancelar")); ?></button>
+                           <button type="button" onclick="volveraRecoger()" style=" width: 150px;"class="btn btn-warning"><i class="fa fa-arrow-circle-left"></i>&nbsp;&nbsp;<?php echo e(trans("leng.Atras")); ?></button>
+                           <button type="button" onclick="irTabOtrosServicios()" style=" width: 150px;"class="btn btn-warning"><?php echo e(trans("leng.Siguiente")); ?>&nbsp;&nbsp;<i class="fa fa-arrow-circle-right"></i></button>
+                        </div>    
+                    </div>
+                
+            </div>
+            
+            <!--  TAB SERVICIOS ADICIONALES.. -->  
+            <div class="tab-pane fade" id="serviciosadcioanles">
+                <div class="col-sm-12">
+                   <div class="form-group">
+                       <div class="row">
+                          <label class="checkbox-inline">
+                            <input type="checkbox" id="servicioFrio"> <?php echo e(trans('leng.Proteccion contra el frio')); ?>.
+                          </label>
+                           <small> <p class="text-info"><?php echo e(trans('leng.Elija esta opción si su carga no puede alcanzar temperaturas bajo 0ºC (32ºF)')); ?>.</p></small>
+                       </div>
+                       <div class="row">
+                           <label class="checkbox-inline">
+                            <input type="checkbox" id="servicioClasificar"> <?php echo e(trans('leng.Clasificar y separar')); ?>.
+                          </label>
+                           <small> <p class="text-info"><?php echo e(trans('leng.Previa solicitud, el transportista ordenará y separá la mercancía por tipo de marca, símbolo, tamaño, etc')); ?>.</p></small>
+                       </div>
+                       <div class="row">
+                           <label class="checkbox-inline">
+                            <input type="checkbox" id="servicioCoordinar" > <?php echo e(trans('leng.Coordinación con persona invidente')); ?>.
+                          </label>
+                       </div>
+                    </div>
+               </div>
+               <br>
+                    <div class="col-md-12">
+                        <div class="col-md-5">
+                        </div>    
+                       <div class="col-md-7" style="text-align: right">
+                           <button type="button" onclick="salirDelEnvio()" style=" width: 150px;"class="btn btn-danger"><i class="fa fa-times-circle"></i>&nbsp;&nbsp;<?php echo e(trans("leng.Cancelar")); ?></button>
+                           <button type="button" onclick="volveraEntregar()" style=" width: 150px;"class="btn btn-warning"><i class="fa fa-arrow-circle-left"></i>&nbsp;&nbsp;<?php echo e(trans("leng.Atras")); ?></button>
+                           <button type="button" onclick="irTabGuardarEnvio()" style=" width: 150px;"class="btn btn-warning"><?php echo e(trans("leng.Siguiente")); ?>&nbsp;&nbsp;<i class="fa fa-arrow-circle-right"></i></button>
+                        </div>    
+                    </div>
+                
+            </div>
+
+            
+            <!--  TAB PUBLICAR ENVIO.. -->  
+            <div class="tab-pane fade" id="publicarenvio">
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-12">
+                        <div class="row">
+                              <label class="col-md-2"><font style="size: 0.7em;color: red">*</font><?php echo e(trans('leng.Titulo')); ?></label>
+                                <div class="col-md-7">
+                                    <input id="tituloEnvio" class="form-control" value="" maxlength="100" />
+                                </div>
+                        </div>
+                            <br>
+                            <div class="row">
+                              <label class="col-md-2"><font style="size: 0.7em;color: red">*</font><?php echo e(trans('leng.Tipo de costo')); ?></label>
+                                <div class="col-md-3">
+                                    <select id="tipoCosto" class="form-control" onchange="tipoCosto(this.value)">
+                                      <option value="0" selected=><?php echo e(trans('leng.Seleccione')); ?></option>
+                                      <option value="1"><?php echo e(trans('leng.Fijo')); ?></option>
+                                      <option value="2"><?php echo e(trans('leng.Libre')); ?></option>
+                                  </select>
+                                </div>
+                            </div>
+                            
+                            <div id="costoEnvio" style="display: none">
+                                <br>
+                                <div class="row">
+                                    <label class="col-md-2"><font style="size: 0.7em;color: red">*</font><?php echo e(trans('leng.Costo de envio')); ?></label>
+                                    <div class="col-md-3">
+                                        <input type="text" id="costoEnvioM" value="" onblur="validarCaja(this.value,this.id);" class="form-control"/>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                        <div class="col-md-12">
+                                                <input type="checkbox" id="descuentoOferta" > <?php echo e(trans('leng.Descuento a la primera oferta')); ?>.
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                                <div id="divDescuento" class="row" style="display: none">
+                                    <label class="col-md-2"><font style="size: 0.7em;color: red">*</font><?php echo e(trans('leng.% Descuento')); ?></label>
+                                    <div class="col-md-3">
+                                        <input type="text" id="porcentajeDescuento" value="" onblur="validarCaja(this.value,this.id);" class="form-control"/>
+                                    </div>
+                                    <br><br>
+                                </div>
+                            <div class="row">
+                                <label class="col-md-2"><?php echo e(trans('leng.Fecha Expiración')); ?></label>
+                                <div class="col-md-3">
+                                    <div id="calExpiracion" class="input-group date" data-auto-close="true"  data-date-format="dd-mm-yyyy" data-date-autoclose="true">
+                                       <input class="form-control" type="text" id="fechaExpiracion" readonly="readonly">
+                                       <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <label class="col-md-2"><?php echo e(trans('leng.Hora Expiración')); ?></label>
+                                <div class="col-md-3">
+                                    <div class="input-group bootstrap-timepicker">
+                                        <input id="horaExpiracion" type="text" class="form-control input-group-addon" readonly="readonly">
+                                        <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                    <label class="col-md-2"><?php echo e(trans('leng.Método de pago')); ?></label>
+                                    <div class="col-md-3">
+                                        <select name="metodoPago" id="metodoPago" class="form-control">
+                                            <option value="0"><?php echo e(trans('leng.Seleccione')); ?></option>
+                                            <option value="1"><?php echo e(trans('leng.Efectivo')); ?></option>
+                                            <option value="2"><?php echo e(trans('leng.Depósito o transferencia')); ?></option>
+                                            <option value="3"><?php echo e(trans('leng.Cheque')); ?></option>
+                                            <option value="4"><?php echo e(trans('leng.Tarjeta de crédito')); ?></option>
+                                        </select>
+                                    </div>
+                             </div>
+                            <br>
+                            <div class="row">
+                                <label for="condiciones" class="control-label col-md-2"><?php echo e(trans('leng.Condiciones de pago')); ?></label>
+                                <div class="col-md-3">
+                                    <textarea name="informacionPago" maxlength="200" id="informacionPago" rows="3" class="form-control"></textarea>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                              <label class="col-md-2"><font style="size: 0.7em;color: red">*</font><?php echo e(trans('leng.Tipo de envio')); ?></label>
+                                <div class="col-md-3">
+                                    <select id="tipoEnvio" class="form-control" onchange="tipoEnvio(this.value)">
+                                      <option value="0" selected=><?php echo e(trans('leng.Seleccione')); ?></option>
+                                      <option value="1"><?php echo e(trans('leng.Público')); ?></option>
+                                      <option value="2"><?php echo e(trans('leng.Privado')); ?></option>
+                                  </select>
+                                </div>
+                            </div>
+                            <div class="row" id="divTipoEnvio" style="display: none;">
+                                <br>
+                              <label class="col-md-2"><font style="size: 0.7em;color: red">*</font><?php echo e(trans('leng.Grupos')); ?></label>
+                                <div class="col-md-4">
+                                    <select id="gruposCliente" class="form-control" multiple="multiple">
+                                  </select>
+                                </div>
+                            </div>
+                            <br><br>
+                            </div>
+                          </div>
+                    </div>
+                    <br><br>
+                    
+                    <br>
+                    <div class="col-md-12">
+                        <div class="col-md-5">
+                        </div>    
+                       <div class="col-md-7" style="text-align: right">
+                           <button type="button" onclick="salirDelEnvio()" style=" width: 150px;"class="btn btn-danger"><i class="fa fa-times-circle"></i>&nbsp;&nbsp;<?php echo e(trans("leng.Cancelar")); ?></button>
+                           <button type="button" onclick="volveraOtrosServicios()" style=" width: 150px;"class="btn btn-warning"><i class="fa fa-arrow-circle-left"></i>&nbsp;&nbsp;<?php echo e(trans("leng.Atras")); ?></button>
+                           <button type="button" class="btn btn-success" onclick="guardarEnvioCliente()"><?php echo e(trans('leng.Publicar envio')); ?>&nbsp;&nbsp;<i class="fa fa-check-circle"></i></button>
+                        </div>    
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        <div class="row"><br><br></div>
+        <div id="dialogoArticulos"></div>
+        
+        
+        
+    
+    <!-- Datos origen -->
+    <?php echo Form::hidden('latitudOrigen','',array('id'=>'latitudOrigen')); ?>
+
+    <?php echo Form::hidden('longitudOrigen','',array('id'=>'longitudOrigen')); ?>
+
+    <?php echo Form::hidden('dirOrigen','',array('id'=>'dirOrigen')); ?>
+
+    <?php echo Form::hidden('dirOrigen2','',array('id'=>'dirOrigen2')); ?>
+
+    <?php echo Form::hidden('puntoOrigenRef','',array('id'=>'puntoOrigenRef')); ?>
+
+    
+ 
+    <!-- Datos Destino -->
+    <?php echo Form::hidden('latitudDestino','',array('id'=>'latitudDestino')); ?>
+
+    <?php echo Form::hidden('longitudDestino','',array('id'=>'longitudDestino')); ?>
+
+    <?php echo Form::hidden('dirDestino','',array('id'=>'dirDestino')); ?>
+
+    <?php echo Form::hidden('dirDestino2','',array('id'=>'dirDestino2')); ?>
+
+    <?php echo Form::hidden('puntoDestinoRef','',array('id'=>'puntoDestinoRef')); ?>
+
+    
+    
+
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('piePagina'); ?>
+        
+<?php $__env->stopSection(); ?>
+
+
+<?php $__env->startSection('otrosScripts'); ?>
+    <?php echo Html::script('js/enviosCliente.js'); ?>  
+<?php $__env->stopSection(); ?>
+    
+<?php echo $__env->make('layouts.principal', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

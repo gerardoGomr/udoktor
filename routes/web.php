@@ -13,10 +13,6 @@ use Udoktor\Pais;
 |
 */
 
-Route::get('test', function () {
-    return view('welcome');
-});
-
 Route::get('/', function () {
     return view('login.login');
 });
@@ -81,14 +77,8 @@ Route::get('login/inicio/{varificado?}', function ($verificado = "") {
 
 });
 
-
-/* =============== CREAR CUENTA ================ */
-
-/* Muestra el menu para crear cuenta de usuario
- * Autor: OT
- * Fecha: 05-12-2016
-*/
-Route::get('crearcuenta/', 'CrearCuentaController@crearCuenta');
+// ruta para crear una nueva cuenta
+Route::get('crear-cuenta', 'CrearCuentaController@crearCuenta');
 
 
 /* Muestra el mapa para buscar ubicacion del prestador de servicios
@@ -96,7 +86,7 @@ Route::get('crearcuenta/', 'CrearCuentaController@crearCuenta');
  * Fecha: 06-12-2016
 */
 
-Route::get('crearcuenta/verMapaUbicacion', function () {
+Route::get('crear-cuenta/verMapaUbicacion', function () {
 
         return view('login.mapaUbicacion');
 });
@@ -106,7 +96,7 @@ Route::get('crearcuenta/verMapaUbicacion', function () {
  * Autor: OT
  * Fecha: 07-12-2016
 */
-Route::get('crearcuenta/nuevoServicio', 'CrearCuentaController@nuevoServicio');
+Route::get('crear-cuenta/nuevoServicio', 'CrearCuentaController@nuevoServicio');
 
 
 /* Muestra el formulario para crear la cuenta del cliente
@@ -120,14 +110,14 @@ Route::get('cuentacliente/', 'CrearCuentaController@crearCuentaCliente');
  * Autor: OT
  * Fecha: 05-12-2016
 */
-Route::post('crearcuenta/cliente', 'CrearCuentaController@cuentaCliente');
+Route::post('crear-cuenta/cliente', 'CrearCuentaController@cuentaCliente');
 
 
 /* Ruta para crear cuenta del prestador de servicios
  * Autor: OT
  * Fecha: 06-12-2016
 */
-Route::post('crearcuenta/prestadorServicio', 'CrearCuentaController@prestadorServicio');
+Route::post('crear-cuenta/prestadorServicio', 'CrearCuentaController@prestadorServicio');
 
 
 
@@ -135,14 +125,14 @@ Route::post('crearcuenta/prestadorServicio', 'CrearCuentaController@prestadorSer
  * Autor: OT
  * Fecha: 01-07-2016
 */
-Route::post('crearcuenta/confirmarPassword', 'CrearCuentaController@confirmarPassword');
+Route::post('crear-cuenta/confirmarPassword', 'CrearCuentaController@confirmarPassword');
 
 
 /* Muestra el formulario enviar mail de recuperacion de contraseña
  * Autor: OT
  * Fecha: 01-07-2016
 */
-Route::get('crearcuenta/olvidoCuenta', function () {
+Route::get('crear-cuenta/olvidoCuenta', function () {
     return view('login.olvidoCuenta');
 });
 
@@ -151,7 +141,7 @@ Route::get('crearcuenta/olvidoCuenta', function () {
  * Autor: OT
  * Fecha: 02-07-2016
 */
-Route::get('/crearcuenta/solicitarContrasena/{correo?}', [
+Route::get('/crear-cuenta/solicitarContrasena/{correo?}', [
     'uses' => 'CrearCuentaController@solicitarContrasena'
 ]);
 
@@ -161,7 +151,7 @@ Route::get('/crearcuenta/solicitarContrasena/{correo?}', [
  * Fecha: 02-07-2016
 */
 
-Route::get('/crearcuenta/reestablecerContrasena/{correo?}/{pass?}', [
+Route::get('/crear-cuenta/reestablecerContrasena/{correo?}/{pass?}', [
     'uses' => 'CrearCuentaController@reestablecerContrasena'
 ]);
 

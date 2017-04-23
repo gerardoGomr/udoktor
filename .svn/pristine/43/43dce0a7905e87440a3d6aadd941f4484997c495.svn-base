@@ -1,0 +1,57 @@
+<html>
+    <body class="flet-lab">
+               <p><?php echo e(trans("leng.Hola")); ?>&nbsp;<b><?php echo e($nombreRecibe); ?></b>.</p>
+               
+        <?php if($tipo==1){ ?>
+               
+                <p>Le han solicitado una cita</p>
+                <table><tr><td><?php echo e(trans("leng.Cliente")); ?> :</td><td><?php echo e($nombreCliente); ?></td></tr>
+                <tr><td><?php echo e(trans("leng.Fecha cita")); ?> :</td><td><?php echo e($fechaCita); ?></td></tr>
+                <tr><td><?php echo e(trans("leng.Hora cita")); ?> :</td><td><?php echo e($horaCita); ?></td></tr>
+                </table>
+                
+                
+        <?php }else if($tipo==2){ ?>
+                <p>Su cita ha sido confirmada por <?php echo e($nombrePrestador); ?> </p>
+                <table><tr><td><?php echo e(trans("leng.Fecha cita")); ?> :</td><td><?php echo e($fechaCita); ?></td></tr>
+                <tr><td><?php echo e(trans("leng.Hora cita")); ?> :</td><td><?php echo e($horaCita); ?></td></tr>
+                </table>
+             
+                
+        <?php } else if($tipo==3){  ?>
+                <p>Su cita ha sido rechazada por <?php echo e($nombrePrestador); ?> </p>
+                <table><tr><td><?php echo e(trans("leng.Fecha cita")); ?> :</td><td><?php echo e($fechaCita); ?></td></tr>
+                <tr><td><?php echo e(trans("leng.Hora cita")); ?> :</td><td><?php echo e($horaCita); ?></td></tr>
+                <tr><td><?php echo e(trans("leng.Motivo")); ?> :</td><td><?php echo e($texto); ?></td></tr>
+                </table>
+        <?php } else if($tipo==4){  ?>
+                <p>Cita cancelada por el cliente <?php echo e($nombreCliente); ?> </p>
+                <table>
+                <tr><td><?php echo e(trans("leng.Fecha cita")); ?> :</td><td><?php echo e($fechaCita); ?></td></tr>
+                <tr><td><?php echo e(trans("leng.Hora cita")); ?> :</td><td><?php echo e($horaCita); ?></td></tr>
+                </table>
+                
+       <?php } else if($tipo==5){  ?>
+                
+        <?php } else if($tipo==6){  ?>
+                
+        <?php } else if($tipo==7){  ?>
+                
+        <?php } else if($tipo==8){  ?>
+                
+        <?php } else if($tipo==9){ ?>
+                
+        <?php } else if($tipo==10){ ?>
+                
+        <?php } else if($tipo==11){ ?>
+        
+        <?php } else if($tipo==14){ ?>
+        
+        <?php } ?>
+         <br>
+         <!--<p><b><?php echo e(trans("leng.Para mayor información ingrese a")); ?>:</b>&nbsp;<a href="http://efletex.com">www.efletex.com</a>.</p> -->
+    </body>
+</html>
+    
+
+

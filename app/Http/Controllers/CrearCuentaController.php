@@ -29,24 +29,24 @@ class CrearCuentaController extends Controller
 {
     //funcion que llena los combos del login
     public function crearCuenta(){
-        
-        
+
+
         $sWhere1="deleted is null and active=true";
         $servicios = V_service::whereRaw(DB::raw($sWhere1))->orderBy("name")->get();
-        
+
         $sWhere2="deleted is null and active=true";
         $clasificaciones = V_classifications::whereRaw(DB::raw($sWhere2))->orderBy("name")->get();
-        
-        
+
+
         $paises = Pais::where("active",1)->orderBy("name")->get();
-        
-        return view('login.crearcuenta')
+
+        return view('login.crear_cuenta')
                 ->with("servicios",$servicios)
                 ->with("clasificaciones",$clasificaciones)
                 ->with("paises",$paises)
             ;
     }
-    
+
     /* Muestra el formulario para crear la cuenta del cliente
      * Autor: OT
      * Fecha: 21-07-2016
@@ -54,7 +54,7 @@ class CrearCuentaController extends Controller
     public function crearCuentaCliente(){
         return view('login.crearCuentaCliente');
     }
-    
+
     /* Guarda el servicio
      * Autor: OT
      * Fecha: 06-12-2016
@@ -64,11 +64,11 @@ class CrearCuentaController extends Controller
         $serviciosid=$request["serviciosid"];
         $_fecha=date("Y-m-d H:i:s");
         $cadenaServicios="";
-        
+
         $existeServicio = V_service::whereRaw(DB::raw("upper(name)='".strtoupper($nuevoServicio)."'"))->count();
-        
+
         if($existeServicio>0)return response()->json(['error' => 1,'servicios'=>$cadenaServicios]);
-        
+
         try{
                 DB::beginTransaction();
                 $servicio=V_service::create([
@@ -78,46 +78,46 @@ class CrearCuentaController extends Controller
                     'updated'=>$_fecha,
                     'active'=>TRUE,
                 ]);
-                
+
                 $idInsertado=$servicio->id;
-                
+
                 DB::commit();
-                
+
                 if($serviciosid==null){
                     $arregloServicios=array();
                 }else{
                     $arregloServicios=$serviciosid;
                 }
-                
+
                 $arregloServicios[]=$idInsertado;
-                        
+
                 $serviciosActivos = V_service::whereRaw(DB::raw("deleted is null and active=true"))->orderBy('name')->get();
-                
+
                 foreach($serviciosActivos as $rowServicio){
-                    
+
                     if (in_array($rowServicio->id, $arregloServicios)) {
                         $cadenaServicios.="<option selected value='$rowServicio->id'>$rowServicio->name</option>";
                     }else{
                         $cadenaServicios.="<option value='$rowServicio->id'>$rowServicio->name</option>";
                     }
                 }
-                
+
                 return response()->json(['error' => 0,'servicios'=>$cadenaServicios]);
-                
+
         }catch (Exception $ex) {
             DB::rollback();
             return response()->json(['error' => 2,'servicios'=>$cadenaServicios]);
         }
     }
-    
-    
+
+
     /* Crea la cuenta del cliente
      * Autor: OT
      * Fecha: 06-12-2016
     */
     public function cuentaCliente(Request $request){
         $_fecha=date("Y-m-d H:i:s");
-        
+
         if($request->ajax()){
             $nombreCompleto=trim($request["nombreCompleto"]);
             $emailCuenta=trim($request["emailCuenta"]);
@@ -129,12 +129,12 @@ class CrearCuentaController extends Controller
             $paisCuenta=$request["paisCuenta"];
             $estadoCuenta=$request["estadoCuenta"];
             $ciudadCuenta=$request["ciudadCuenta"];
-            
+
             $existeUsuario = User::whereRaw(DB::raw("upper(email)='".strtoupper($emailCuenta)."'"))->count();
-            
+
             if($existeUsuario>0)return response()->json(['error' => 1]);
-            
-            
+
+
             $secret = '6Lc9piUTAAAAAMLydHhGLzKHkvBPMwx41iO47R61';
             $verifyResponse = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.$secret.'&response='.$valorCaptcha);
             $responseData = json_decode($verifyResponse);
@@ -167,11 +167,11 @@ class CrearCuentaController extends Controller
                             'confirmationdate'=>TRUE,
                             'rejectiondate'=>TRUE,
                             'canceldate'=>FALSE,
-                            
+
                         ]);
 
                         $idInsertado=$person->id;
-                        
+
                          $dir=Address::create([
                             'streeUdoktor'=>'',
                             'cityid'=>$ciudadCuenta,
@@ -203,16 +203,16 @@ class CrearCuentaController extends Controller
                             'verifiedaccount'=>TRUE,
                             'isverified'=>TRUE
                         ]);
-                        
+
                         $usuarioInsertado=$usuario->id;
-                        
+
                         $usuarioRol=  RolUsuario::create([
                             'created_at'=>$_fecha,
                             'updated_at'=>$_fecha,
                             'userid'=>$usuarioInsertado,
                             'roleid'=>1,
                         ]);
-                        
+
 
                         $datosCorreo=array();
                         $datosCorreo["clienteNombre"]=$nombreCompleto;
@@ -236,8 +236,8 @@ class CrearCuentaController extends Controller
                 return response()->json(['error' => $error]);
         }
     }
-    
-    
+
+
     /* Crea la cuenta del prestador de servicios
      * Autor: OT
      * Fecha: 06-12-2016
@@ -245,7 +245,7 @@ class CrearCuentaController extends Controller
     public function prestadorServicio(Request $request){
         $_fecha=date("Y-m-d H:i:s");
         if($request->ajax()){
-            
+
             $nombreCompleto=trim($request["nombreCompleto"]);
             $emailCuenta=trim($request["emailCuenta"]);
             $companiaCuenta=trim($request["companiaCuenta"]);
@@ -262,12 +262,12 @@ class CrearCuentaController extends Controller
             $paisCuenta=$request["paisCuenta"];
             $estadoCuenta=$request["estadoCuenta"];
             $ciudadCuenta=$request["ciudadCuenta"];
-            
+
             $existeUsuario = User::whereRaw(DB::raw("upper(email)='".strtoupper($emailCuenta)."'"))->count();
-            
+
             if($existeUsuario>0)return response()->json(['error' => 1]);
-            
-            
+
+
             $secret = '6Lc9piUTAAAAAMLydHhGLzKHkvBPMwx41iO47R61';
             $verifyResponse = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.$secret.'&response='.$valorCaptcha);
             $responseData = json_decode($verifyResponse);
@@ -275,7 +275,7 @@ class CrearCuentaController extends Controller
                 DB::beginTransaction();
                 try{
                     if($existeUsuario==0){
-                        
+
                         $person=V_person::create([
                             'fullname'=>$nombreCompleto,
                             'company'=>$companiaCuenta,
@@ -310,7 +310,7 @@ class CrearCuentaController extends Controller
                         ]);
 
                         $idInsertado=$person->id;
-                        
+
                         //guardamos servicios
                         if(count($serviciosid)>0){
                             for($k=0;$k<count($serviciosid);$k++){
@@ -321,7 +321,7 @@ class CrearCuentaController extends Controller
                                 ]);
                             }
                         }
-                        
+
                         $dir=Address::create([
                             'streeUdoktor'=>'',
                             'cityid'=>$ciudadCuenta,
@@ -380,8 +380,8 @@ class CrearCuentaController extends Controller
                               'paymentbankbranchnumber'=>'',
                               'paymentbankroutingnumber'=>''
                         ]);
-                        
-                        
+
+
                          $cuenta =  ShipperAccount::create([
                            'balance'=>0.00,
                            'available'=>0.00,
@@ -390,7 +390,7 @@ class CrearCuentaController extends Controller
                            'shipperid'=>$shipper->id,
                            'updated'=>$_fecha,
                           ]);*/
-                        
+
 
                         $datosCorreo=array();
                         $datosCorreo["clienteNombre"]=$nombreCompleto;
@@ -419,15 +419,15 @@ class CrearCuentaController extends Controller
             return response()->json(['error' => $error]);
         }
     }
-    
-    
-    
-    
+
+
+
+
     /*
      * Establece el password de la cuenta
      * Autor: OT
      * Fecha: 01-07-2016
-     
+
     */
     public function confirmarPassword(Request $request){
         $pass1=trim($request["pass1"]);
@@ -436,7 +436,7 @@ class CrearCuentaController extends Controller
         $nombreUsuario=$request["nombreUsuario"];
         $correoUsuario=$request["correoUsuario"];
         $passTemp=$request["passTemp"];
-        
+
         $fechaActual=date("Y-m-d H:i:s");
            DB::table('users')->where('id', $idUsuario)
                         ->update(['password' =>bcrypt($pass1),
@@ -444,20 +444,20 @@ class CrearCuentaController extends Controller
                                   'updated_at'=>$fechaActual,
                                   'tokentemp'=>'',
                                 ]);
-        
-        
+
+
         return redirect('login/inicio/1');
     }
-    
-    
-    
-    
-    
+
+
+
+
+
     /*
      * Muestra la pantalla para verificar la cuenta del cliente
      * Autor: OT
      * Fecha: 02-07-2016
-     
+
     */
     public function solicitarContrasena($correo=""){
         $correo=trim($correo);
@@ -466,30 +466,30 @@ class CrearCuentaController extends Controller
         if($correo==""){
             return "correonoencontrado" ;
         }
-        
+
         $datosUsuario=DB::table('users')->select("users.id","users.email","users.confirmationtoken","person.fullname")
                      ->leftJoin('person', 'person.id', '=', 'users.personid')
                      ->where('users.email','=',$correo)
                      ->get();
-        
+
         if(count($datosUsuario)==0){
             return "correonoencontrado";
         }
-        
+
         foreach($datosUsuario as $rowUsuario){
             $idUsuario=$rowUsuario->id;
             $cliente=ucwords($rowUsuario->fullname);
         }
-        
+
         $tokenEncriptado=$cliente.rand(1,100000);
         $tokenEncriptado=bcrypt($tokenEncriptado);
         $tokenEncriptado=  str_replace("/","", $tokenEncriptado);
-        
+
         $datosCorreo=array();
         $datosCorreo["clienteNombre"]=$cliente;
         $datosCorreo["token"]=$tokenEncriptado;
         $datosCorreo["correo"]=$correo;
-        
+
         DB::table('users')->where('id', $idUsuario)->update(['tokentemp' =>$tokenEncriptado]);
 
 
@@ -497,42 +497,42 @@ class CrearCuentaController extends Controller
                 $msj->subject("Efletex - Reestablecer contraseña");
                 $msj->to($correo);
          });
-        
+
          return "ok";
     }
-    
+
     /*
      * Muestra la pantalla reestablecer la contraseña del usuario
      * Autor: OT
      * Fecha: 01-07-2016
-     
+
     */
     public function reestablecerContrasena($correo="",$pass=""){
         $idUsuario="";
         $cliente="";
         $cuentaVerificada="0";
-        
+
         if($pass=="" || $correo==""){
             return redirect('/login');
         }
-        
+
         $datosUsuario=DB::table('users')->select("users.id","users.email","users.confirmationtoken","person.fullname")
                      ->leftJoin('person', 'person.id', '=', 'users.personid')
                      ->where('users.tokentemp','=',$pass)
                      ->where('users.email','=',$correo)
                      ->get();
-        
+
         if(count($datosUsuario)==0){
             return redirect('/login');
         }
-        
+
         foreach($datosUsuario as $rowUsuario){
             $idUsuario=$rowUsuario->id;
             $cliente=ucwords($rowUsuario->fullname);
             $cuentaVerificada=$rowUsuario->confirmationtoken;
         }
-        
-        
+
+
         return view('login.verificarCuenta')
                 ->with("error",0)
                 ->with("idUsuariol",$idUsuario)
@@ -540,6 +540,6 @@ class CrearCuentaController extends Controller
                 ->with("nombreCliente",$cliente)
                 ->with("correoCliente",$correo)
                 ->with("passCliente",$pass);
-        
+
     }
 }

@@ -1,0 +1,34 @@
+<?php
+
+namespace T1;
+
+use Illuminate\Database\Eloquent\Model;
+
+class ShippingItem extends Model
+{
+    /**
+     * @var string
+     */
+    protected $table = 'shippingitem';
+
+    /**
+     * @var bool
+     */
+    public $timestamps = false;
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function shippingRequest()
+    {
+        return $this->belongsTo('T1\ShippingRequest', 'shippingrequestid');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function image()
+    {
+        return $this->hasMany('T1\ImagenArticuloEnvio', 'shippingitemid');
+    }
+}

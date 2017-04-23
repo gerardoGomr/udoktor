@@ -1,0 +1,30 @@
+<?php
+namespace T1;
+
+use Illuminate\Database\Eloquent\Model;
+
+class PaymentMethod extends Model
+{
+    /**
+     * @var string
+     */
+    protected $table = 'paymentmethod';
+
+    /**
+     * @var bool
+     */
+    public $timestamps = false;
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function serviceOffers()
+    {
+        return $this->hasMany('T1\ServiceOffer', 'paymentmethodid');
+    }
+
+    public function shippingRequest()
+    {
+        return $this->hasMany('T1\ShippingRequest', 'paymentmethodid');
+    }
+}

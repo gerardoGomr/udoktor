@@ -1,0 +1,66 @@
+<?php $__env->startSection('titulo', 'Mis calificaciones'); ?>
+
+<?php $__env->startSection('contenido'); ?>
+    <style>
+        div.calificacion, div.row-stat {
+            cursor: pointer;
+        }
+    </style>
+    <h2 class="heading content-header-title"><?php echo e(trans('leng.calificaciones')); ?></h2>
+
+    <div class="row">
+        <div class="col-md-3">
+            <h2><?php echo e(isset($shipper->person->company) ? $shipper->person->company : ''); ?></h2>
+            <h4><?php echo e($shipper->person->firstname . ' ' . $shipper->person->lastname); ?></h4>
+            <hr>
+            <table>
+                <tbody>
+                    <tr>
+                        <td style="width:100px;"><strong><?php echo e(trans("leng.Promedio")); ?>:</strong> </td>
+                        <td>
+                            <h4 class="pull-left">
+                                <?php 
+                                for ($i = 1; $i <= 5; $i++) { 
+                                    echo ($i <= $shipper->person->starrating) ? '<i class="fa fa-star"></i>' : '<i class="fa fa-star-o"></i>';
+                                }
+                                ?>
+                            </h4>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-9">
+            <div class="row" id="calificaciones">
+                <?php if(count($shipmentRatings) > 0): ?>
+                    <?php foreach($shipmentRatings as $shipmentRating): ?>
+                        <div class="col-md-2 calificacion" data-id="<?php echo e($shipmentRating->starrating); ?>">
+                            <div class="row-stat">
+                                <p class="row-stat-label"><?php echo e(trans("leng.Calificaciones")); ?>: </p>
+                                <p class="row-stat-label">
+                                    <?php
+                                        for ($i = 1; $i <= $shipmentRating->starrating; $i++) {
+                                            echo '<i class="fa fa-star fa-2x"></i>';
+                                        }
+                                    ?>
+                                </p>
+                                <h3 class="row-stat-value text-primary">Total: <?php echo e($shipmentRating->total); ?></h3>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+    <hr>
+
+    <div id="tablaResultados" data-url="<?php echo e(url('transportista/mis-calificaciones')); ?>" data-token="<?php echo csrf_token(); ?>">
+
+    </div>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('otrosScripts'); ?>
+    <script src="<?php echo e(asset('js/datatables.js')); ?>"></script>
+    <script src="<?php echo e(asset('js/transportista/calificaciones.js')); ?>"></script>
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.transportista', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

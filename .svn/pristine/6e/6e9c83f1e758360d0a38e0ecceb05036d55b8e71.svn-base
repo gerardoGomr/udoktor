@@ -1,0 +1,137 @@
+<div class="col-sm-12"><div id="mapidEnvio" style="width: 650px; height: 510px;"></div></div>
+<input type="hidden" id="idEnvio" value="<?php echo e($idEnvio); ?>">
+<input type="hidden" id="tipo" value="<?php echo e($tipo); ?>">
+
+<script>
+    
+ $(document).ready(function(){
+    var maps_defaultLatitude=24.05718;
+    var maps_defaultLongitude=-104.53320;
+    var map, polyline, markers2 = new Array();
+    var bounds  = null;//autocenter
+    var idEnvio=$("#idEnvio").val();
+    var tipo=$("#tipo").val();
+    document.getElementById("mapidEnvio").style.display = null;
+    
+    $.ajax({
+	type:"GET",
+        dataType: "json",
+	data:{'idEnvio':idEnvio,'tipo':tipo},
+	url:"/cliente/obtenerPuntosEnvio",
+	success:function(respuesta){
+            var marcadores=respuesta;
+             bounds  = new google.maps.LatLngBounds(); //reseteamos los puntos
+                    if(marcadores!=null && marcadores.length!=undefined) {
+                        map = new google.maps.Map(document.getElementById('mapidEnvio'), {
+                         zoom: 8,
+                         center: new google.maps.LatLng(24.039054, -104.658557),
+                         mapTypeId: google.maps.MapTypeId.ROADMAP
+                       });
+                       
+                       if(tipo==0){ // tracking
+                           var infowindow = new google.maps.InfoWindow();
+                            var marker, i;
+                            // definimos el evento para la ruta
+                             /*polyline = new google.maps.Polyline({
+                                 strokeColor: 'red',
+                                 strokeWeight: 1,
+                                 map: map
+                             });*/
+                             var arrayPuntos=new Array();
+                             
+                            for (i = 0; i < marcadores.length; i++) {
+                                 var vlatLng = new google.maps.LatLng(marcadores[i][1], marcadores[i][2]);
+                                 
+                                 arrayPuntos.push(vlatLng);
+                                 
+                                 if(i==0){
+                                         marker = new google.maps.Marker({
+                                           position: vlatLng,
+                                           map: map,
+                                           icon: "/img/dot-green.png",
+                                         });
+                                         
+                                         google.maps.event.addListener(marker, 'click', (function(marker, i) {
+                                            return function() {
+                                                infowindow.setContent(marcadores[i][0]);
+                                                infowindow.open(map, marker);
+                                            }
+                                        })(marker, i));
+                                }
+                                
+                                if(i==(marcadores.length-1)){
+                                         marker = new google.maps.Marker({
+                                           position: vlatLng,
+                                           map: map,
+                                           icon: "/img/dot-red.png",
+                                         });
+                                         
+                                         google.maps.event.addListener(marker, 'click', (function(marker, i) {
+                                      return function() {
+                                          infowindow.setContent(marcadores[i][0]);
+                                          infowindow.open(map, marker);
+                                      }
+                                  })(marker, i));
+                                }
+                                 
+                                //markers2.push(marker);
+                                /*polyline.getPath().setAt(markers2.length - 1, vlatLng);*/
+
+
+                                   bounds.extend(vlatLng);
+                                  
+                            }
+                            var ruta = new google.maps.Polyline({
+                                    path: arrayPuntos,
+                                    geodesic: true,
+                                    strokeColor: '#FF0000',
+                                    strokeOpacity: 1.0,
+                                    strokeWeight: 2
+                                  });
+
+                                  ruta.setMap(map);
+                                  map.panToBounds(bounds);     // auto-center
+                                  map.fitBounds(bounds);
+
+                             
+                             
+                       }else if(tipo==1){ // checks
+                           var infowindow = new google.maps.InfoWindow();
+                            var marker, i;
+
+                            for (i = 0; i < marcadores.length; i++) {
+                                 var vlatLng = new google.maps.LatLng(marcadores[i][1], marcadores[i][2]);
+                                 if(marcadores[i][3]!=""){
+                                      marker = new google.maps.Marker({
+                                        position: vlatLng,
+                                        map: map,
+                                        icon: marcadores[i][3],
+                                      });
+                                 }else{
+                                      marker = new google.maps.Marker({
+                                        position: vlatLng,
+                                        map: map,
+                                      });
+                                 }
+
+                                   bounds.extend(vlatLng);
+
+                                  google.maps.event.addListener(marker, 'click', (function(marker, i) {
+                                      return function() {
+                                          infowindow.setContent(marcadores[i][0]);
+                                          infowindow.open(map, marker);
+                                      }
+                                  })(marker, i));
+                            }
+                             map.panToBounds(bounds);     // auto-center
+                             map.fitBounds(bounds);
+                       }
+                     }else{
+                         setTimeout(function(){swal("","No se encontraron puntos para el envío.","warning");},100);
+                         $("#divMapaEnvio").dialog('close');
+                     }
+    	}
+    });
+
+ });
+    </script>

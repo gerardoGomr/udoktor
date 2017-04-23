@@ -1,0 +1,42 @@
+<div class="header">
+    <div class="col-md-12" style="font-size: 0.9em;" >
+        <input type="hidden" id="idPersonaEnvia" value="<?php echo e($idPersonaEnvia); ?>">
+        <input type="hidden" id="idPersonaRecibe" value="<?php echo e($idPersonaRecibe); ?>">
+        <input type="hidden" id="idEnvio" value="<?php echo e($idEnvio); ?>">
+        <input type="hidden" id="idOferta" value="">
+        <input type="hidden" name="_token" value="<?php echo e(csrf_token()); ?>" id="token">
+        <div class="row">
+                <div class="col-md-12">
+                <table>
+                    <tr>
+                        <td class="flet-lab" style="width: 65px;"><b><?php echo e(trans('leng.Para')); ?> : </b></td>
+                        <td class="flet-lab"><?php echo e($nombreRecibe); ?></td>
+                    </tr>
+                    <tr>
+                        <td class="flet-lab" style="vertical-align:top"><b><?php echo e(trans('leng.Envío')); ?> : </b></td>
+                        <td class="flet-lab" style="vertical-align:top"><?php echo e($tituloEnvio); ?></td>
+                    </tr>
+                </table>
+            </div>
+            
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-10">
+                <div class="form-group">
+                    <label class="flet-lab" for="textarea-input"><?php echo e(trans("leng.Mensaje")); ?></label>
+                    <textarea  id="textoMensaje" cols="7" rows="4" maxlength="200" class="form-control"></textarea>
+                </div>
+            </div>
+        </div>
+        <br><br>
+        <div class="row">
+            <div class="col-md-10">
+                <button type="button" class="btn btn-success" onclick="enviarMensajeAccion()"><i class='fa fa-envelope-o'></i>&nbsp;<?php echo e(trans("leng.Enviar")); ?></button>&nbsp;
+                <button type="button" class="btn btn-secondary" onclick="$('#divEnviarMensaje').dialog('close');"><i class="fa fa-times"></i>&nbsp;<?php echo e(trans("leng.Cancelar")); ?></button>
+            </div>
+        </div>
+
+    </div>
+</div>
+         

@@ -1,0 +1,33 @@
+<?php
+namespace T1;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Preference extends Model
+{
+    /**
+     * @var string
+     */
+    protected $table = 'preferences';
+
+    /**
+     * @var bool
+     */
+    public $timestamps = false;
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function administrativeUnit()
+    {
+    	return $this->belongsTo('T1\AdministrativeUnit', 'administrativeunitid');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function person()
+    {
+    	return $this->belongsTo('T1\Person', 'personid');
+    }
+}

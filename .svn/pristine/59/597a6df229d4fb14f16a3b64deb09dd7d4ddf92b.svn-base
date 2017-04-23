@@ -1,0 +1,15 @@
+<html>
+    <body class="flet-lab">
+        <p><?php echo e(trans("leng.Hola")); ?>&nbsp;<b><?php echo e($nombreRecibe); ?></b>&nbsp;<?php echo e(trans("leng.el cliente")); ?>&nbsp;<?php echo e($nombreCliente); ?>&nbsp;<?php echo e(trans("leng.publicó un nuevo envío")); ?>.</p>
+        <table><tr><td><?php echo e(trans("leng.Título")); ?> :</td><td><?php echo e($tituloenvio); ?>.</td></tr>
+        <tr><td><?php echo e(trans("leng.Recoger en")); ?> :</td><td><?php echo e($recogerEn); ?>.</td></tr>
+        <tr><td><?php echo e(trans("leng.Entregar en")); ?> :</td><td><?php echo e($entregarEn); ?>.</td></tr>
+        <tr><td><?php echo e(trans("leng.Fecha de rocojo")); ?> :</td><td><?php echo e($fechaRocoger); ?>.</td></tr>
+        <tr><td><?php echo e(trans("leng.Fecha de entrega")); ?>:</td><td><?php echo e($fechaEntregar); ?>.</td></tr>
+        <tr><td><?php echo e(trans("leng.Fecha de expiración")); ?>:</td><td><?php echo e($fechaExpiracion); ?>.</td></tr>
+        <tr><td><?php echo e(trans("leng.Precio")); ?> :</td><td>S/ <?php echo e($precio); ?></td></tr></table>
+        
+        <p><b><?php echo e(trans("leng.Para más detalles")); ?>:</b>&nbsp;<a href="<?php echo e(url($ruta)); ?>"><?php echo e(trans("leng.click aqui")); ?></a>.</p>
+          
+    </body>
+</html>

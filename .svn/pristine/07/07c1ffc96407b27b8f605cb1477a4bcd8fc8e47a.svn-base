@@ -1,0 +1,79 @@
+<?php $__env->startSection('titulo', 'Detalle grupo'); ?>
+
+<?php $__env->startSection('contenido'); ?>
+    <input type="hidden" name="_token" value="<?php echo e(csrf_token()); ?>" id="token">
+    <h2 class="heading content-header-title"><?php echo e(trans('leng.Datos del grupo')); ?></h2>
+    <div class="col-md-12" style="font-size: 0.9em">
+        <div class="col-md-5">
+            <div class="row">
+                    <div class="form-group">
+                        <label for="text-input"><?php echo e(trans("leng.Nombre del grupo")); ?></label>
+                        <input type="text" id="nombreGrupo" maxlength="150" value="<?php echo $nombreGrupo; ?>" disabled class="form-control">
+                  </div>
+            </div>
+       </div>
+        <div class="col-md-1"></div>
+        <div class="col-md-5">
+            <div class="row">
+                  <div class="form-group">
+                    <label for="text-input"><?php echo e(trans("leng.Cliente")); ?></label>
+                    <input type="text" id="nombreCliente" maxlength="150" value="<?php echo $clienteGrupo; ?>" disabled class="form-control">
+                  </div>
+            </div>
+       </div>
+        
+        <div class="col-md-5">
+            <div class="row">
+                    <div class="form-group">
+                        <label for="text-input"><?php echo e(trans("leng.Prioridad")); ?></label>
+                        <input type="text" id="nombreGrupo" maxlength="150" value="<?php echo $prioridad; ?>" disabled class="form-control">
+                  </div>
+            </div>
+       </div>
+    </div>
+    <div class="col-md-12">
+      <br>
+      <h4><?php echo e(trans("leng.Transportistas en el grupo")); ?>&nbsp;&nbsp;( <?php echo e($totalTransportistas); ?> )</h4><br>
+      <table class="table table" id="tablaListaTransportista">
+              <tr>
+                <th style='width: 100px;'><?php echo e(trans("leng.RUC")); ?></th>
+                <th style='width: 380px;'><?php echo e(trans("leng.Transportista")); ?></th>
+             </tr>
+      </table>
+                    <div class="row" style="overflow-y: auto;max-height: 330px;">
+                            <div class="table-responsive col-md-12" style="font-size: 0.9em">
+                                <table class="table table" id="tablaListaTransportista">
+                                  <tbody>
+                                      <?php echo $tablaTransportistas; ?>
+                                  </tbody>
+                                </table>
+                            </div>
+                    </div>
+    </div>
+    
+    <div class="col-md-10">
+      <br><br>
+      <div class="row">
+        <a href="<?php echo url("/admin/nuevoGrupo")?>" class="btn btn-secondary btn-sm" style="width: 160px;"><i class="fa fa-plus"></i> <?php echo e(trans("leng.Nuevo grupo")); ?></a>
+        <a href="<?php echo url("/admin/editarGrupo/".$idG)?>" class="btn btn-secondary btn-sm" style="width: 160px;"><i class="fa fa-edit"></i> <?php echo e(trans("leng.Editar grupo")); ?></a>
+        <a href="<?php echo url("/admin/misGrupos")?>" class="btn btn-secondary btn-sm" style="width: 160px;"><i class="fa fa-bars"></i> <?php echo e(trans("leng.Volver a mis grupos")); ?></a>
+      </div>
+    </div>
+    <div class="row">
+        <br><br><br><br>
+      </div>
+    
+    <div id="divElmentosGrupo"></div>
+    
+
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('piePagina'); ?>
+<?php $__env->stopSection(); ?>
+
+
+<?php $__env->startSection('otrosScripts'); ?>
+    <?php echo Html::script('js/grupos.js'); ?>  
+<?php $__env->stopSection(); ?>
+    
+<?php echo $__env->make('layouts.admin', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

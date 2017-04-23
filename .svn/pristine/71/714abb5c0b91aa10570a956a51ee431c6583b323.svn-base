@@ -1,0 +1,118 @@
+<?php $__env->startSection('titulo', 'Prioridad grupos'); ?>
+
+<?php $__env->startSection('contenido'); ?>
+  
+  
+  
+  <style>
+  #sortable1, #sortable2 {
+    border:none;
+    
+    min-height: 20px;
+    list-style-type: none;
+    margin: 0;
+    padding: 5px 0 0 0;
+    float: left;
+    margin-right: 10px;
+  }
+  #sortable1 li, #sortable2 li {
+    margin: 0 5px 5px 5px;
+    padding: 5px;
+    font-size: 1.0em;
+    color: #000;
+    
+    border: 1px solid #000;
+  }
+  </style>
+  
+  
+ <?php echo Html::script('Theme/js/libs/jquery-1.12.4_drag.js'); ?> 
+ <?php echo Html::script('Theme/js/libs/jquery-ui_drag.js'); ?>
+
+ 
+  
+  <script>
+  $( function() {
+    $( "#sortable1" ).sortable({
+      connectWith: ".connectedSortable"
+    }).disableSelection();
+  } );
+  </script>
+  
+  
+  <input type="hidden" name="_token" value="<?php echo e(csrf_token()); ?>" id="token">
+    <h2 class="heading content-header-title"><?php echo e(trans('leng.Prioridad de grupo')); ?>.</h2>
+    
+    <div class="col-md-12 flet-lab">
+            <div class="row">
+                <h4 style="color: #b9261e"><?php echo e(trans('leng.Arrastre el recuadro con el nombre del grupo para ordenarlo y definir su prioridad')); ?>.</h4>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-1">
+                    <b><?php echo e(trans("leng.Prioridad")); ?></b>
+                    <ul id="sortable2">
+                        <?php echo $contador; ?>
+                      </ul>
+                </div>
+                <div class="col-md-8">
+                    <br>
+                    <ul id="sortable1" class="connectedSortable">
+                        <?php echo $cadenaGrupos; ?>
+                      </ul>
+                </div>
+                <div class="col-md-3">
+                </div>
+            </div>
+            <br><br>
+            <div class="row">
+                    <div class="col-md-7">
+                        <button type="button"  class="btn btn-success btn-sm" onclick="guardarPrioridades();"><i class="fa fa-check"></i>&nbsp;<?php echo e(trans('leng.Guardar')); ?></button>
+                        <a  href="<?php echo url('/admin/misGrupos'); ?>" class="btn btn-danger btn-sm"><i class="fa fa-times"></i>&nbsp;<?php echo e(trans('leng.Salir')); ?></a>
+                    </div>
+                </div>
+
+    </div>
+      
+
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('piePagina'); ?>
+<?php $__env->stopSection(); ?>
+
+
+<?php $__env->startSection('otrosScripts'); ?>
+<script>
+    function guardarPrioridades(){
+      var token=$("#token").val();
+      var cadenaGrupos="";
+        var lgrupo = document.getElementsByName("lgrupo");
+        var i;
+        for (i = 0; i < lgrupo.length; i++) {
+            cadenaGrupos=cadenaGrupos+lgrupo[i].id+",";
+        }
+       if(cadenaGrupos==""){
+           swal("","No hay grupos dados de alta.","error");
+           return;
+       }
+        waitingDialog();
+                $.ajax({
+                   headers:{'X-CSRF-TOKEN':token},
+                   type:"POST",
+                   data:{'cadenaGrupos':cadenaGrupos},
+                   url:"/admin/guardarPrioridadGrupo",
+                   success:function(respuesta){
+                       setTimeout(function(){closeWaitingDialog();},100);
+                       if(respuesta=="ok"){
+                           setTimeout(function(){swal("","Proceso realizado correctamente.","success");},100);
+                       }else{
+                           setTimeout(function(){swal("","Ocurrio un error durante el proceso.","error");},100);
+                       }
+                   }
+                });
+    }
+    
+</script>    
+<?php $__env->stopSection(); ?>
+    
+<?php echo $__env->make('layouts.admin', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

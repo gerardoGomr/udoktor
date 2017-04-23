@@ -1,0 +1,54 @@
+<br>
+<input type="hidden" name="_token" value="<?php echo e(csrf_token()); ?>" id="token">
+<input type="hidden" name="idServicio" id="idServicio" value="<?php echo e($datosServicio["id"]); ?>">
+
+    <div class="col-md-12 flet-lab">
+            <div class="row flet-lab">
+                <div class="col-sm-10">
+                    <div class="form-group">
+                        <label><?php echo e(trans('leng.Nombre')); ?>&nbsp;<font style="size: 0.7em;color: red">*</font></label>
+                        <input type="text" id="nombreServicio" maxlength="100" class="form-control" value="<?php echo e($datosServicio["name"]); ?>">
+                    </div>
+
+                    <div class="form-group">
+                        <label><?php echo e(trans('leng.Descripción')); ?>&nbsp;<font style="size: 0.7em;color: red">*</font></label>
+                        <textarea name="descripcionServicio" id="descripcionServicio" maxlength="200" cols="10" rows="3" class="form-control"><?php echo e($datosServicio["description"]); ?></textarea>
+                    </div>
+                </div>
+            </div>
+        <div class="row flet-lab">
+                    <div class="col-sm-5">
+                        <div class="form-group">
+                            <label><?php echo e(trans('leng.Precio mínimo')); ?>&nbsp;<font style="size: 0.7em;color: red">*</font></label>
+                            <input type="text" id="minimo" maxlength="100" class="form-control" value="<?php echo e($datosServicio["minimo"]); ?>" onkeypress="return soloNumerosConDecimal(event);">
+                        </div>
+                    </div>
+                    <div class="col-sm-5">
+                        <div class="form-group">
+                            <label><?php echo e(trans('leng.Precio máximo')); ?>&nbsp;<font style="size: 0.7em;color: red">*</font></label>
+                            <input type="text" id="maximo" maxlength="100" class="form-control" value="<?php echo e($datosServicio["maximo"]); ?>" onkeypress="return soloNumerosConDecimal(event);">
+                        </div>
+                    </div>
+            </div>
+        <div class="row flet-lab">
+                <div class="col-sm-5">
+                        <div class="form-group">
+                            <label><?php echo e(trans('leng.Precio sugerido')); ?>&nbsp;<font style="size: 0.7em;color: red">*</font></label>
+                            <input type="text" id="sugerido" maxlength="100" class="form-control" value="<?php echo e($datosServicio["sugerido"]); ?>" onkeypress="return soloNumerosConDecimal(event);">
+                        </div>
+                    </div>
+            </div>
+        <br>
+            <div class="row flet-lab">
+                <div class="col-md-9">
+                   <button type="button"  class="btn btn-success btn-sm" onclick="guardarServcioAdmin();"><i class="fa fa-check"></i>&nbsp;<?php echo e(trans('leng.Aceptar')); ?></button>
+                   <button type="button" class="btn btn-danger btn-sm" onclick="$('#divModal').dialog('close');"><i class="fa fa-times"></i>&nbsp;<?php echo e(trans('leng.Cancelar')); ?></button>
+                </div>
+            </div>
+        
+    </div>    
+
+    
+    
+   
+    

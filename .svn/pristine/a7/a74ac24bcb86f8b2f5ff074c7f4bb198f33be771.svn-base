@@ -1,0 +1,67 @@
+<?php foreach($serviceOffers as $serviceOffer): ?>
+    <?php
+    $labelEstatus = '';
+    $estatus      = '';
+
+    switch ($serviceOffer->status) {
+        case 1:
+            $labelEstatus = 'label-info';
+            $estatus      = trans('leng.Activa');
+            break;
+
+        case 2:
+            $labelEstatus = 'label-success';
+            $estatus      = trans('leng.Aceptada');
+            break;
+
+        case 3:
+            $labelEstatus = 'label-danger';
+            $estatus      = trans('leng.Rechazada');
+            break;
+
+        case 4:
+            $labelEstatus = 'label-warning';
+            $estatus      = trans("leng.Cancelada");
+            break;
+    }
+    
+    $recogerAtiempo=  \T1\Funciones::validadFechasOferta($serviceOffer->id,1);
+    $entregarAtiempo=  \T1\Funciones::validadFechasOferta($serviceOffer->id,2);
+                                                               
+    if($recogerAtiempo==0){
+        $celendarioRecoger=url("img/calendario_verde.png");
+    }else{
+        $celendarioRecoger=url("img/calendario_rojo.png");
+    }
+                                                               
+    if($entregarAtiempo==0){
+       $celendarioEntregar=url("img/calendario_verde.png");
+    }else{
+       $celendarioEntregar=url("img/calendario_rojo.png");
+   }
+                                                               
+    ?>
+    <tr>
+        <td><?php echo e($serviceOffer->shippingRequest->title); ?></td>
+        <td><?php echo e(!is_null($serviceOffer->shippingRequest->person->company) ? $serviceOffer->shippingRequest->person->company : $serviceOffer->shippingRequest->person->firstname . ' ' . $serviceOffer->shippingRequest->person->middlename . ' ' . $serviceOffer->shippingRequest->person->lastname); ?></td>
+        <td>S/ <?php echo e(number_format($serviceOffer->shipmentcost, 2)); ?></td>
+        <td><?php echo e(T1\Funciones::fechaF1Hora($serviceOffer->createdat)); ?></td>
+        <td>
+            <img style="width: 22px;" src="<?php echo $celendarioRecoger; ?>">
+            <?php echo e(T1\Funciones::fechaF1Hora($serviceOffer->collectiondate)); ?> <?php echo e(strlen($serviceOffer->collectionuntildate) > 0 ? ' :: ' . T1\Funciones::fechaF1Hora($serviceOffer->collectionuntildate) : ''); ?>
+
+        </td>
+        <td>
+            <img style="width: 22px;" src="<?php echo $celendarioEntregar; ?>">
+            <?php echo e(T1\Funciones::fechaF1Hora($serviceOffer->deliverydate)); ?> <?php echo e(strlen($serviceOffer->deliveryuntildate) > 0 ? ' :: ' . T1\Funciones::fechaF1Hora($serviceOffer->deliveryuntildate) : ''); ?>
+
+        </td>
+        <td><span class="label <?php echo e($labelEstatus); ?> ui-popover" <?php echo $serviceOffer->status === 3 ? 'data-toggle="tooltip" data-placement="right" data-trigger="hover" data-content="' . $serviceOffer->reasonrejection . '" title="Motivo de rechazo"' : ''; ?>><?php echo e($estatus); ?></span></td>
+        <td>
+            <a href="<?php echo e($serviceOffer->status === 2?url('transportista/mis-envios/' . $serviceOffer->shippingRequest->id. '/detalle'):url('transportista/ofertas/' . $serviceOffer->shippingRequest->id . '/detalle')); ?>" class="btn btn-info" title="Ver envío" target="_blank"><i class="fa fa-eye"></i></a>
+            <?php if($serviceOffer->status === 1): ?>
+                <button data-id="<?php echo e($serviceOffer->id); ?>" type="button" class="cancelarOferta ul-tooltip btn btn-primary" title="Cancelar oferta" data-toggle="tooltip" data-original-title="Cancelar oferta" data-placement="top"><i class="fa fa-trash-o"></i></button>
+            <?php endif; ?>
+        </td>
+    </tr>
+<?php endforeach; ?>

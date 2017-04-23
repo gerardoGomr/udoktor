@@ -1,0 +1,33 @@
+<?php
+$cadenaServicios="";
+
+foreach ($serviciosTodos as $serv){
+    $cadenaServicios.="<option value='$serv->id'>$serv->name</option>";
+}
+?>
+
+<div class="row" style="font-size: 0.9em">
+            <div class="col-sm-12">
+                <div class="col-sm-4">
+                    <label for="text-input">{{ trans('leng.Servicios') }}</label>
+                    <select class="form-control" id="serviciosid" multiple>
+                        <?php echo $cadenaServicios; ?>
+                    </select>
+                </div>
+                <div class="col-sm-2">
+                    
+                </div>
+                <div class="col-sm-4"></div>
+            </div>
+ </div> 
+
+<br><br><br>
+<div class="row" style="font-size: 0.9em">
+   <div class="col-sm-12">
+       <div class="col-sm-12">
+        <button type="button" onclick="agregarServicioUsuario();" style="width: 110px;" class="btn btn-success btn-xs"><i class="fa fa-plus-circle"></i>&nbsp;{{trans("leng.Agregar")}}</button>
+        <button type="button" onclick="$('#divModal').dialog('close');" style="width: 110px;" class="btn btn-danger btn-xs"><i class="fa fa-times-circle"></i>&nbsp;{{trans("leng.Cancelar")}}</button>
+      </div>
+   </div>
+</div>
+

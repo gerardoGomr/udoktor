@@ -1,0 +1,72 @@
+<?php $__env->startSection('titulo', 'Abonar a cuenta'); ?>
+
+<?php $__env->startSection('contenido'); ?>
+    <input type="hidden" name="_token" value="<?php echo e(csrf_token()); ?>" id="token">
+    
+    <h2 class="heading content-header-title"><?php echo e(trans('leng.Abonar a cuenta del transportista')); ?></h2>
+    <div class="col-md-12">
+        <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                      <label><?php echo e(trans('leng.Seleccione a los transportistas')); ?>&nbsp;<font style="size: 0.7em;color: red">*</font></label>
+                      <select id="listaTransportistas" multiple="multiple">
+                           <?php echo $cadenaTransportista; ?>
+                      </select>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                      <label><?php echo e(trans('leng.Cantidad a abonar')); ?>&nbsp;<font style="size: 0.7em;color: red">*</font></label>
+                      <input class="form-control" type="text" id="monto">
+
+                    </div>
+                </div>
+
+
+                <div class="col-md-6"></div>
+        </div>
+        
+        <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label><?php echo e(trans('leng.Descripción')); ?>&nbsp;<font style="size: 0.7em;color: red">*</font></label>
+                      <textarea name="textarea-input" id="descripcion" cols="10" rows="3" class="form-control"></textarea>
+                    </div>
+                </div>
+            
+                <div class="col-md-6"></div>
+        </div>
+        <br><br>
+        <div class="row">
+           <div class="col-md-6">
+              <a href="javascript:;" onclick="guardarAbonoTransportista();" class="btn btn-success btn-sm" style="width: 120px;"><i class="fa fa-check"></i> <?php echo e(trans("leng.Guardar")); ?></a>
+              <a href="<?php echo url("/admin/abonarCuenta")?>" class="btn btn-danger btn-sm" style="width: 120px;"><i class="fa fa-times"></i> <?php echo e(trans("leng.Cancelar")); ?></a>
+           </div>
+            
+           <div class="col-md-6"></div>
+        </div>
+        
+        
+          
+          
+          
+          
+      
+    </div>
+    
+    
+
+    
+
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('piePagina'); ?>
+<?php $__env->stopSection(); ?>
+
+
+<?php $__env->startSection('otrosScripts'); ?>
+    <?php echo Html::script('js/listadoAbonoCuenta.js'); ?>  
+<?php $__env->stopSection(); ?>
+    
+<?php echo $__env->make('layouts.admin', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

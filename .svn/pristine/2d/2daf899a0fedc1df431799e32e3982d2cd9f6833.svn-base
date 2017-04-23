@@ -1,0 +1,224 @@
+<?php $__env->startSection('titulo', 'Configuración de correo'); ?>
+
+<?php $__env->startSection('contenido'); ?>
+<?php
+    
+?>
+    
+    <input type="hidden" name="_token" value="<?php echo e(csrf_token()); ?>" id="token">
+    <h2 class="heading content-header-title"><?php echo e(trans('leng.Configuración de correo')); ?></h2>
+    
+            <div class="row">
+                <div class="col-sm-12">
+                    <b>Encabezado</b>
+                            <?php
+                            $vDiv="fileupload fileupload-new";
+                             if($datosCorreo["encabezado"]!=""){
+                                 $vDiv="fileupload fileupload-exists";
+                             }
+                           ?>
+
+                        <div class="<?php echo $vDiv; ?>" data-provides="fileupload"><input type="hidden">
+                              <div class="fileupload-new thumbnail" style="width: 350px; height: 150px;">
+                              </div>
+
+                              <div id="divImagen1" class="fileupload-preview fileupload-exists thumbnail" style="width: 350px; height: 150px;">
+                                  <?php if($datosCorreo["encabezado"]!=="") { ?>
+                                        <img id="i1" src="<?php echo url("/imagenCorreo/".$datosCorreo["encabezado"]) ?>">
+                                  <?php } ?>
+                              </div>
+                              <span class="btn btn-default btn-file">
+                                <span class="fileupload-new"><?php echo e(trans('leng.Buscar imagen')); ?></span>
+                                <span class="fileupload-exists"><?php echo e(trans('leng.Cambiar')); ?></span>
+                                <input type="file" accept="image/*">
+                              </span>
+
+                            <a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload" onclick="quitarImagen(1)"><?php echo e(trans('leng.Quitar')); ?></a>
+                        </div>
+                      
+                    </div>
+            </div>
+        <br>
+        <div class="row">
+            <div class="col-md-12">
+                <b><?php echo e(trans("leng.Título")); ?></b><br><br>
+                <table>
+                    <tr>
+                        <td>
+                            <div class="form-group">
+
+                                <label class="checkbox-inline">
+                                  <input type="checkbox" id="tituloNegrita" <?php if($datosCorreo["tituloNegrita"]==true) echo "checked"; ?> > <?php echo e(trans("leng.Negrita")); ?>
+
+                                </label>
+                                <label class="checkbox-inline">
+                                  <input type="checkbox" id="tituloCursiva" <?php if($datosCorreo["tituloCursiva"]==true) echo "checked"; ?>> <?php echo e(trans("leng.Cursiva")); ?>
+
+                                </label>
+                              </div>
+                        </td>
+                        <td>
+                             <input type="color" id="tituloColor" class="form-control"   value="<?php echo $datosCorreo["tituloColor"]; ?>" style="width:50px;">
+                        </td>
+                        <td>
+                            &nbsp;&nbsp;
+                        </td>
+                        <td>
+                            <select class="form-control" id="tituloTamanio">
+                                <option value="0" selected><?php echo e(trans("leng.Tamaño")); ?></option>
+                                <?php for($k=11;$k<21;$k++){
+                                    if($k==$datosCorreo["tituloTamanio"]){
+                                        echo "<option value='$k' selected>$k</option>";
+                                    }else{
+                                        echo "<option value='$k'>$k</option>";
+                                    }
+                                    
+                                        
+                                } ?>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-12">
+                <b><?php echo e(trans("leng.Etiquetas")); ?></b><br><br>
+                <table>
+                    <tr>
+                        <td>
+                            <div class="form-group">
+
+                                <label class="checkbox-inline">
+                                  <input type="checkbox" id="etiquetaNegrita" <?php if($datosCorreo["etiquetaNegrita"]==true) echo "checked"; ?> > <?php echo e(trans("leng.Negrita")); ?>
+
+                                </label>
+                                <label class="checkbox-inline">
+                                  <input type="checkbox" id="etiquetaCursiva" <?php if($datosCorreo["etiquetaCursiva"]==true) echo "checked"; ?>> <?php echo e(trans("leng.Cursiva")); ?>
+
+                                </label>
+                              </div>
+                        </td>
+                        <td>
+                             <input type="color" id="etiquetaColor" class="form-control"   value="<?php echo $datosCorreo["etiquetaColor"]; ?>" style="width:50px;">
+                        </td>
+                        <td>
+                            &nbsp;&nbsp;
+                        </td>
+                        <td>
+                            <select class="form-control" id="etiquetaTamanio">
+                                <option value="0"><?php echo e(trans("leng.Tamaño")); ?></option>
+                                <?php for($k=11;$k<21;$k++){
+                                    if($k==$datosCorreo["etiquetaTamanio"]){
+                                        echo "<option value='$k' selected>$k</option>";
+                                    }else{
+                                        echo "<option value='$k'>$k</option>";
+                                    }
+                                    
+                                        
+                                } ?>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-12">
+                <b><?php echo e(trans("leng.Detalle")); ?></b><br><br>
+                <table>
+                    <tr>
+                        <td>
+                            <div class="form-group">
+
+                                <label class="checkbox-inline">
+                                  <input type="checkbox" id="detalleNegrita" <?php if($datosCorreo["detalleNegrita"]==true) echo "checked"; ?> > <?php echo e(trans("leng.Negrita")); ?>
+
+                                </label>
+                                <label class="checkbox-inline">
+                                  <input type="checkbox" id="detalleCursiva" <?php if($datosCorreo["detalleCursiva"]==true) echo "checked"; ?>> <?php echo e(trans("leng.Cursiva")); ?>
+
+                                </label>
+                              </div>
+                        </td>
+                        <td>
+                             <input type="color" id="detalleColor" class="form-control"   <?php echo $datosCorreo["detalleColor"]; ?> style="width:50px;">
+                        </td>
+                        <td>
+                            &nbsp;&nbsp;
+                        </td>
+                        <td>
+                            <select class="form-control" id="detalleTamanio">
+                                <option value="0"><?php echo e(trans("leng.Tamaño")); ?></option>
+                                <?php for($k=11;$k<21;$k++){
+                                    if($k==$datosCorreo["detalleTamanio"]){
+                                        echo "<option value='$k' selected>$k</option>";
+                                    }else{
+                                        echo "<option value='$k'>$k</option>";
+                                    }
+                                    
+                                        
+                                } ?>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        
+        <br>
+        <div class="row">
+            <div class="col-sm-12">
+                <b><?php echo e(trans("leng.Pie del correo")); ?></b>
+                  <?php
+                            $vDiv="fileupload fileupload-new";
+                             if($datosCorreo["pie"]!=""){
+                                 $vDiv="fileupload fileupload-exists";
+                             }
+                           ?>
+
+                        <div class="<?php echo $vDiv; ?>" data-provides="fileupload"><input type="hidden">
+                              <div class="fileupload-new thumbnail" style="width: 350px; height: 150px;">
+                              </div>
+
+                              <div id="divImagen2" class="fileupload-preview fileupload-exists thumbnail" style="width: 350px; height: 150px;">
+                                  <?php if($datosCorreo["pie"]!=="") { ?>
+                                        <img id="i2" src="<?php echo url("/imagenCorreo/".$datosCorreo["pie"]) ?>">
+                                  <?php } ?>
+                              </div>
+                              <span class="btn btn-default btn-file">
+                                <span class="fileupload-new"><?php echo e(trans('leng.Buscar imagen')); ?></span>
+                                <span class="fileupload-exists"><?php echo e(trans('leng.Cambiar')); ?></span>
+                                <input type="file" accept="image/*">
+                              </span>
+
+                            <a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload" onclick="quitarImagen(2)"><?php echo e(trans('leng.Quitar')); ?></a>
+                        </div>
+            </div>
+        </div>
+        
+        <br>
+    <div class="row">
+        <div class="col-sm-7">
+            <button type="button" class="btn btn-secondary" onclick="vistaPreviaCorreo();"><i class="fa fa-eye"></i>&nbsp;<?php echo e(trans('leng.Vista previa')); ?></button>
+            <button type="button" class="btn btn-success" onclick="guardarCambiosCorreo();"><i class="fa fa-check"></i>&nbsp;<?php echo e(trans('leng.Aplicar cambios')); ?></button>
+            <a type="button" class="btn btn-primary" href="/admin"><i class="fa fa-times"></i>&nbsp;<?php echo e(trans('leng.Cancelar')); ?></a>
+        </div>
+    </div>
+    
+    <div id="divElmentosCorreo"></div>
+    
+
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('piePagina'); ?>
+<?php $__env->stopSection(); ?>
+
+
+<?php $__env->startSection('otrosScripts'); ?>
+    <?php echo Html::script('js/configuraCorreo.js'); ?>  
+<?php $__env->stopSection(); ?>
+    
+<?php echo $__env->make('layouts.admin', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

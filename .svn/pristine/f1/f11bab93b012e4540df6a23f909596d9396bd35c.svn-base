@@ -1,0 +1,19 @@
+<?php if(count($shippingRequests) > 0): ?>
+    <?php foreach($shippingRequests as $shippingRequest): ?>
+        <tr>
+            <td>
+                <a href="<?php echo e(url('transportista/ofertas/'.$shippingRequest->id.'/detalle')); ?>"><?php echo e($shippingRequest->title); ?></a>
+                <br>
+                <span style="font-size:12px"><i class="fa fa-dashboard"></i> <?php echo e($shippingRequest->km); ?><?php echo e(trans("leng.km")); ?>.</span>
+                <br>
+                <span style="font-size:12px"><i class="fa fa-clock-o"></i> <?php echo e($shippingRequest->tiempo); ?> <?php echo e(trans("leng.hrs")); ?>.</span>
+            </td>
+            <td style="font-size:12px"><?php echo e($shippingRequest->cost == "" ? trans("leng.Sin precio"): 'S/ ' . number_format($shippingRequest->cost, 2)); ?></td>
+            <td style="font-size:12px"><?php echo ucwords($shippingRequest->cityorigen).', '.$shippingRequest->stateorigen.', '.$shippingRequest->countryorigen.'<br>'.
+                T1\Funciones::fechaF3($shippingRequest->collectiondateorigen).($shippingRequest->collectionuntildateorigen==''?'':' '.trans('leng.al').' '.T1\Funciones::fechaF3($shippingRequest->collectionuntildateorigen)).'<br>'.
+                ($shippingRequest->collecttimefromorigen!=""?trans('leng.Desde').': ':'').T1\Funciones::hora12($shippingRequest->collecttimefromorigen).($shippingRequest->collecttimeuntilorigen==''?'':'<br>'.trans('leng.Hasta').': '.T1\Funciones::hora12($shippingRequest->collecttimeuntilorigen)); ?></td>
+            <td style="font-size:12px"><?php echo ucwords($shippingRequest->citydestino).', '.$shippingRequest->statedestino.', '.$shippingRequest->countrydestino.'<br>'.T1\Funciones::fechaF3($shippingRequest->deliverydatedestino).($shippingRequest->deliveryuntildatedestino==''?'':' al '.T1\Funciones::fechaF3($shippingRequest->deliveryuntildatedestino)).'<br>'.($shippingRequest->deliverytimedestino!=""?trans('leng.Desde').': ':'').T1\Funciones::hora12($shippingRequest->deliverytimedestino).($shippingRequest->deliverytimeuntildestino==''?'':'<br>'.trans('leng.Hasta').': '.T1\Funciones::hora12($shippingRequest->deliverytimeuntildestino)); ?></td>
+            <td style="font-size:12px"><div id="clock<?php echo $shippingRequest->id; ?>"></div></td>
+        </tr>
+    <?php endforeach; ?>
+<?php endif; ?>
