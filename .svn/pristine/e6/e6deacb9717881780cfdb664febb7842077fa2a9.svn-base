@@ -1,8 +1,0 @@
-<?php
-
-namespace T1\Events;
-
-abstract class Event
-{
-    //
-}
