@@ -8,6 +8,7 @@
     left: 0;
     z-index: 12;
     width: 100%;
+    background-color: #ee6e73;
 
     .navbar-brand {
         @include three-dots-overflow();

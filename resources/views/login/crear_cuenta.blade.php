@@ -37,7 +37,7 @@
 
                 <div class="row clearfix">
                     <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
-                        <label class="control-label">*Tipo de cuenta:</label>
+                        <label for="tipoCuenta" class="control-label">*Tipo de cuenta:</label>
                     </div>
                     <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
                         <div class="form-group">
@@ -108,14 +108,10 @@
                         <label for="pais" class="control-label">*País:</label>
                     </div>
                     <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
-                        <div class="form-group">
-                            <div class="form-line">
-                                <select class="form-control required" name="pais" id="pais">
-                                    <option value="" selected>{{trans("leng.Seleccione el pais")}}</option>
-                                    <option value="1">demo</option>
-                                </select>
-                            </div>
-                        </div>
+                        <select class="selectpicker show-tick required" name="pais" id="pais" data-live-search="true">
+                            <option value="" selected>{{trans("leng.Seleccione el pais")}}</option>
+                            <option value="1">demo</option>
+                        </select>
                     </div>
                 </div>
 
@@ -126,7 +122,7 @@
                     <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
                         <div class="form-group">
                             <div class="form-line">
-                                <select class="form-control required" name="estado" id="estado">
+                                <select class="selectpicker required" name="estado" id="estado" data-live-search="true">
                                     <option value="" selected>{{trans("leng.Seleccione el estado")}}</option>
                                     <option value="1">demo</option>
                                 </select>
@@ -142,7 +138,7 @@
                     <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
                         <div class="form-group">
                             <div class="form-line">
-                                <select class="form-control required" name="municipio" id="municipio">
+                                <select class="selectpicker required" name="municipio" id="municipio" data-live-search="true">
                                     <option value="" selected>{{trans("leng.Seleccione el municipio")}}</option>
                                     <option value="1">demo</option>
                                 </select>
@@ -176,36 +172,92 @@
                 </div>
                 <div class="row clearfix">
                     <div class="col-lg-offset-2 col-md-offset-2 col-sm-offset-4 col-xs-offset-5">
-                        <button id='paso2' type="button" class="btn btn-success btn-lg">Siguiente&nbsp;<i class="fa fa-arrow-circle-right"></i></button>
+                        <button id='paso2' type="button" class="btn btn-success btn-lg waves-effect">Siguiente&nbsp;<i class="fa fa-arrow-circle-right"></i></button>
                     </div>
                 </div>
             </div>
 
-            <div id="informacionPrestador" style="display: none">
-                <h4>Prestador de servicios</h4>
-                <div class="form-group">
-                    <label class="control-label">Clasificación:</label>
-                    <select class="form-control">
-                        <option value="0" selected="">{{trans("leng.Seleccione clasificación")}}</option>
-                    </select>
+            <div id="informacionPrestador" style="display: none;">
+                <p class="strong"><b>Prestador de servicios</b></p>
+                <br>
+                <div class="row clearfix">
+                    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
+                        <label for="clasificacion" class="control-label">Clasificación:</label>
+                    </div>
+                    <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
+                        <div class="form-group">
+                            <div class="form-line">
+                                <select name="clasificacion" id="clasificacion" class="form-control selectpicker" data-live-search="true" required>
+                                    <option value="" selected="">{{trans("leng.Seleccione clasificación")}}</option>
+                                    <option value="-1">Otro</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label class="control-label">Servicios:</label>
-                    <select class="form-control">
-                        <option value="0" selected="">{{trans("leng.Seleccione clasificación")}}</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label class="control-label">Ubicación:</label>
 
+                <div class="row clearfix">
+                    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
+                        <label for="servicios" class="control-label">Servicios:</label>
+                    </div>
+                    <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
+                        <div class="form-group">
+                            <select name="servicios" id="servicios" class="form-control selectpicker" data-live-search="true" required>
+                                <option value="" selected="">{{trans("leng.Seleccione clasificación")}}</option>
+                                <option value="-1">Otro</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row clearfix">
+                    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
+                        <label class="control-label">Ubicación:</label>
+                    </div>
+                    <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
+                        <div class="input-group">
+                            <div class="form-line">
+                                <input class="form-control" id="ubicacion" type="text" readonly placeholder="{{trans("leng.Ubicaciónl")}}" required>
+                            </div>
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-info waves-effect" title="Abrir ventana para selección de ubicación" id="abrirMapa" data-toggle="tooltip"><i class="material-icons">pin_drop</i></button>
+                            </div>
+                        </div>
+                        <input type="hidden" name="latitud" id="latitud">
+                        <input type="hidden" name="longitud" id="longitud">
+                    </div>
                 </div>
             </div>
 
-            <div class="row" id="divCaptcha" style="display: none">
-                <br>
-                <div class="g-recaptcha" data-sitekey="6Lc9piUTAAAAAFBNrYcFr0-Tukw2GWBcr88sHxSy"></div>
+            <div id="captcha" style="display: none">
+                <div class="row clearfix">
+                    <div class="col-lg-offset-2 col-md-offset-2 col-sm-offset-4 col-xs-offset-5">
+                        <div class="g-recaptcha" data-sitekey="6Lc9piUTAAAAAFBNrYcFr0-Tukw2GWBcr88sHxSy"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row clearfix">
+                <div class="col-lg-offset-2 col-md-offset-2 col-sm-offset-4 col-xs-offset-5">
+                    <button id='pasoAnterior' type="button" class="btn btn-danger btn-lg waves-effect" style="display: none">Anterior&nbsp;<i class="fa fa-arrow-circle-left"></i></button>
+                    <button id='crearCuenta' type="button" class="btn btn-primary btn-lg waves-effect" style="display: none">Crear cuenta&nbsp;<i class="fa fa-save"></i></button>
+                </div>
             </div>
         </form>
+    </div>
+
+    <div class="modal fade" id="modalMapa" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body" id="mapa" style="width: 100%; height: 480px;">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-link waves-effect">Aceptar</button>
+                    <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
     </div>
 @stop
 

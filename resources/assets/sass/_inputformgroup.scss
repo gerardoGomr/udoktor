@@ -1,6 +1,5 @@
 ﻿.input-group {
     width: 100%;
-    margin-bottom: 20px;
 
     .form-line {
         display: inline-block;
@@ -138,12 +137,11 @@
 
 .form-group {
     width: 100%;
-    margin-bottom: 25px;
 
     .form-control {
         width: 100%;
         box-shadow: none;
-        // border-bottom: 1px solid #ddd;
+        /*border-bottom: 1px solid #ddd;*/
         @include border-radius(0);
         padding-left: 0;
     }

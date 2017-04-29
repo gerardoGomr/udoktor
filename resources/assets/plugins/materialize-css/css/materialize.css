@@ -5594,10 +5594,10 @@ button:focus {
   background-color: #2ab7a9;
 }
 
-label {
+/*label {
   font-size: 0.8rem;
   color: #9e9e9e;
-}
+}*/
 
 /* Text Inputs + Textarea
    ========================================================================== */
@@ -5636,17 +5636,17 @@ input[type=search],
 textarea.materialize-textarea {
   background-color: transparent;
   border: none;
-  border-bottom: 1px solid #9e9e9e;
   border-radius: 0;
   outline: none;
   height: 3rem;
   width: 100%;
   font-size: 1rem;
-  margin: 0 0 20px 0;
+
   padding: 0;
   box-shadow: none;
   box-sizing: content-box;
   transition: all 0.3s;
+  border-bottom: 2px solid #cecece;
 }
 
 input:not([type]):disabled, input:not([type])[readonly="readonly"],
@@ -5675,7 +5675,7 @@ input[type=search][readonly="readonly"],
 textarea.materialize-textarea:disabled,
 textarea.materialize-textarea[readonly="readonly"] {
   color: rgba(0, 0, 0, 0.26);
-  border-bottom: 1px dotted rgba(0, 0, 0, 0.26);
+  border-bottom: 2px dotted rgba(0, 0, 0, 0.26);
 }
 
 input:not([type]):disabled + label,
@@ -5720,7 +5720,7 @@ input[type=tel]:focus:not([readonly]),
 input[type=number]:focus:not([readonly]),
 input[type=search]:focus:not([readonly]),
 textarea.materialize-textarea:focus:not([readonly]) {
-  border-bottom: 1px solid #EA9494;
+  border-bottom: 2px solid #EA9494;
   box-shadow: 0 1px 0 0 #EA9494;
 }
 
@@ -5765,7 +5765,7 @@ input[type=search].valid,
 input[type=search]:focus.valid,
 textarea.materialize-textarea.valid,
 textarea.materialize-textarea:focus.valid {
-  border-bottom: 1px solid #EA9494;
+  border-bottom: 2px solid #EA9494;
   box-shadow: 0 1px 0 0 #EA9494;
 }
 
@@ -6467,14 +6467,14 @@ select.browser-default {
   display: block;
 }
 
-select {
+/*select {
   background-color: rgba(255, 255, 255, 0.9);
   width: 100%;
   padding: 5px;
-  border: 1px solid #f2f2f2;
+  border: 1px solid #EA9494;
   border-radius: 2px;
   height: 3rem;
-}
+}*/
 
 .select-label {
   position: absolute;

@@ -36,7 +36,6 @@ mix.sass('resources/assets/sass/style.scss', 'public/css/app.css')
         resourcesDirectory + 'bootstrap/css/bootstrap.css',
         resourcesDirectory + 'node-waves/waves.css',
         resourcesDirectory + 'animate-css/animate.css',
-        resourcesDirectory + 'bootstrap-select/css/bootstrap-select.css',
         resourcesDirectory + 'multi-select/css/multi-select.css',
         resourcesDirectory + 'sweetalert/sweetalert.css',
         resourcesDirectory + 'jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css',
@@ -44,7 +43,7 @@ mix.sass('resources/assets/sass/style.scss', 'public/css/app.css')
         resourcesDirectory + 'ckeditor/content.css',
         resourcesDirectory + 'font-awesome/css/font-awesome.css',
         resourcesDirectory + 'material-design-iconic-font/css/material-design-iconic-font.css',
-        resourcesDirectory + '/materialize-css/css/materialize.css',
+        resourcesDirectory + 'materialize-css/css/materialize.css',
     ], 'public/css/all.css')
     .scripts([
         resourcesDirectory + 'jquery/jquery.min.js',
@@ -71,5 +70,3 @@ mix.sass('resources/assets/sass/style.scss', 'public/css/app.css')
     for (var directory in directories) {
         mix.copy(directory, directories[directory]);
     }
-
-mix.browserSync('http://udoktor.dev');
