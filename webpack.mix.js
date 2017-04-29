@@ -36,6 +36,7 @@ mix.sass('resources/assets/sass/style.scss', 'public/css/app.css')
         resourcesDirectory + 'bootstrap/css/bootstrap.css',
         resourcesDirectory + 'node-waves/waves.css',
         resourcesDirectory + 'animate-css/animate.css',
+        resourcesDirectory + 'bootstrap-select/css/bootstrap-select.css',
         resourcesDirectory + 'multi-select/css/multi-select.css',
         resourcesDirectory + 'sweetalert/sweetalert.css',
         resourcesDirectory + 'jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css',
@@ -43,14 +44,14 @@ mix.sass('resources/assets/sass/style.scss', 'public/css/app.css')
         resourcesDirectory + 'ckeditor/content.css',
         resourcesDirectory + 'font-awesome/css/font-awesome.css',
         resourcesDirectory + 'material-design-iconic-font/css/material-design-iconic-font.css',
-        resourcesDirectory + 'materialize-css/css/materialize.css',
+        'resources/assets/css/materialize.css',
     ], 'public/css/all.css')
+    .styles('resources/assets/css/style.css', 'public/css/style.css')
     .scripts([
         resourcesDirectory + 'jquery/jquery.min.js',
         resourcesDirectory + 'bootstrap/js/bootstrap.min.js',
-        resourcesDirectory + 'bootstrap-select/js/bootstrap-select.js',
         resourcesDirectory + 'ckeditor/ckeditor.js',
-        resourcesDirectory + 'jquery-slimscroll/jquery.slimscroll.js',
+        resourcesDirectory + 'bootstrap-select/js/bootstrap-select.js',
         resourcesDirectory + 'jquery-datatable/jquery.dataTables.js',
         resourcesDirectory + 'jquery-datatable/datatables.js',
         resourcesDirectory + 'jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js',

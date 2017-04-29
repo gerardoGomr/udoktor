@@ -7,7 +7,8 @@
     <title>Udoktor</title>
     <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="{{ mix('css/all.css') }}">
-    <link rel="stylesheet" href="{{ mix('css/app.css') }}">
+
+    <link rel="stylesheet" href="/css/style.css">
 
     @yield('css')
 </head>
@@ -43,6 +44,7 @@
     </div>
 
     <script src="{{ mix('js/all.js') }}"></script>
+    <script src="{{ mix('js/app.js') }}"></script>
 
     @yield('js')
 </body>

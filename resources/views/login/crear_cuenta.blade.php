@@ -108,7 +108,7 @@
                         <label for="pais" class="control-label">*País:</label>
                     </div>
                     <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
-                        <select class="selectpicker show-tick required" name="pais" id="pais" data-live-search="true">
+                        <select class="form-control show-tick required" name="pais" id="pais" data-live-search="true">
                             <option value="" selected>{{trans("leng.Seleccione el pais")}}</option>
                             <option value="1">demo</option>
                         </select>
@@ -120,14 +120,10 @@
                         <label for="estado" class="control-label">*Estado:</label>
                     </div>
                     <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
-                        <div class="form-group">
-                            <div class="form-line">
-                                <select class="selectpicker required" name="estado" id="estado" data-live-search="true">
-                                    <option value="" selected>{{trans("leng.Seleccione el estado")}}</option>
-                                    <option value="1">demo</option>
-                                </select>
-                            </div>
-                        </div>
+                        <select class="form-control show-tick required" name="estado" id="estado" data-live-search="true">
+                            <option value="" selected>{{trans("leng.Seleccione el estado")}}</option>
+                            <option value="1">demo</option>
+                        </select>
                     </div>
                 </div>
 
@@ -136,14 +132,10 @@
                         <label for="municipio" class="control-label">*Municipio:</label>
                     </div>
                     <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
-                        <div class="form-group">
-                            <div class="form-line">
-                                <select class="selectpicker required" name="municipio" id="municipio" data-live-search="true">
-                                    <option value="" selected>{{trans("leng.Seleccione el municipio")}}</option>
-                                    <option value="1">demo</option>
-                                </select>
-                            </div>
-                        </div>
+                        <select class="form-control show-tick required" name="municipio" id="municipio" data-live-search="true">
+                            <option value="" selected>{{trans("leng.Seleccione el municipio")}}</option>
+                            <option value="1">demo</option>
+                        </select>
                     </div>
                 </div>
 

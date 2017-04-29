@@ -16,10 +16,6 @@ jQuery(document).ready(function($) {
         marker                = null,
         geocoder              = new google.maps.Geocoder();
 
-    $('.selectpicker').selectpicker({
-        size: 4
-    });
-
 
 	$paso2.on('click', function () {
 		inicializarValidacionForm();
