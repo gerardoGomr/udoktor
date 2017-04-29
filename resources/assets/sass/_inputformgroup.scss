@@ -1,5 +1,6 @@
-﻿.input-group {
+﻿﻿.input-group {
     width: 100%;
+    margin-bottom: 20px;
 
     .form-line {
         display: inline-block;
@@ -15,7 +16,7 @@
             bottom: -2px;
             @include transform(scaleX(0));
             @include transition(0.25s ease-in);
-            border-bottom: 2px solid #1f91f3;
+            border-bottom: 2px solid #1f91f3#EA9494;
         }
 
         + .input-group-addon {
@@ -83,6 +84,7 @@
 
     input[type="text"],
     .form-control {
+        border: none;
         box-shadow: none;
         padding-left: 0;
     }
@@ -124,8 +126,6 @@
 
     label {
         margin-top: 8px;
-        color: #555;
-        font-size: 14px;
     }
 }
 
@@ -137,11 +137,13 @@
 
 .form-group {
     width: 100%;
+    margin-bottom: 25px;
 
     .form-control {
         width: 100%;
+        border: none;
         box-shadow: none;
-        /*border-bottom: 1px solid #ddd;*/
+        // border-bottom: 1px solid #ddd;
         @include border-radius(0);
         padding-left: 0;
     }
@@ -164,7 +166,7 @@
     .form-line {
         width: 100%;
         position: relative;
-        /*border-bottom: 1px solid #ddd;*/
+        border-bottom: 1px solid #ddd;
 
         &:after {
             content: '';
@@ -175,7 +177,7 @@
             bottom: -1px;
             @include transform(scaleX(0));
             @include transition(0.25s ease-in);
-            border-bottom: 2px solid #1f91f3;
+            border-bottom: 2px solid #EA9494;
         }
 
         .form-label {

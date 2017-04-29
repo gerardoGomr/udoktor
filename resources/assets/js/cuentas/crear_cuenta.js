@@ -8,19 +8,49 @@ jQuery(document).ready(function($) {
         $formCrearCuenta      = $('#formCrearCuenta'),
         $latitud              = $('#latitud'),
         $longitud             = $('#longitud'),
-        $ubicacion            = $("#ubicacion"),
+        $ubicacion            = $('#ubicacion'),
+        $servicios            = $('#servicios'),
         $informacionBasica    = $('#informacionBasica'),
         $informacionPrestador = $('#informacionPrestador'),
         $captcha              = $('#captcha'),
         mapaEnvio             = null,
         marker                = null,
-        geocoder              = new google.maps.Geocoder();
+        geocoder              = new google.maps.Geocoder(),
+        listaServicios        = [{
+            value: '1',
+            text: 'Aplicacion de inyecciones'
+        }, {
+            value: '2',
+            text: 'Consulta'
+        }],
+        servicios                = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            local:          listaServicios
+        });
 
+    servicios.initialize();
+    $servicios.tagsinput({
+        itemValue: 'value',
+        itemText:  'text',
+        typeaheadjs: {
+            name:       'servicios',
+            displayKey: 'text',
+            source:     servicios.ttAdapter()
+        }
+    });
 
+    // click para el paso 2
 	$paso2.on('click', function () {
 		inicializarValidacionForm();
 
         if ($formCrearCuenta.valid()) {
+
+            if (!$('#aceptaTerminos').prop('checked')) {
+                swal('Por favor, acepte los términos y condiciones.');
+                return false;
+            }
+
             var tipoCuenta;
 
             if ($('#cuentaCliente').prop('checked')) {

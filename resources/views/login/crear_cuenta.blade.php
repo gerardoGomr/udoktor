@@ -4,11 +4,11 @@
 @section('body-body', 'signup-box')
 
 @section('content')
-    <div class="msg">Crear una cuenta de usuario</div>
     <div id="divPrincipal">
         <h5 class="text-left text-danger small">Los campos marcados con * son obligatorios</h5>
         <form action="/crear-cuenta" id="formCrearCuenta" class="form-horizontal">
             <div id="informacionBasica">
+                <div class="msg">Información general de la cuenta</div>
                 <div class="row clearfix">
                     <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
                         <label for="email" class="control-label">*Correo electrónico:</label>
@@ -29,7 +29,7 @@
                     <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
                         <div class="form-group">
                             <div class="form-line">
-                                <input type="password" name="pass" id="pass" class="form-control required">
+                                <input type="password" name="pass" id="pass" class="form-control required" data-rule-minlength="8">
                             </div>
                         </div>
                     </div>
@@ -109,7 +109,7 @@
                     </div>
                     <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
                         <select class="form-control show-tick required" name="pais" id="pais" data-live-search="true">
-                            <option value="" selected>{{trans("leng.Seleccione el pais")}}</option>
+                            <option value="" selected>Seleccione</option>
                             <option value="1">demo</option>
                         </select>
                     </div>
@@ -121,7 +121,7 @@
                     </div>
                     <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
                         <select class="form-control show-tick required" name="estado" id="estado" data-live-search="true">
-                            <option value="" selected>{{trans("leng.Seleccione el estado")}}</option>
+                            <option value="" selected>Seleccione</option>
                             <option value="1">demo</option>
                         </select>
                     </div>
@@ -133,7 +133,7 @@
                     </div>
                     <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
                         <select class="form-control show-tick required" name="municipio" id="municipio" data-live-search="true">
-                            <option value="" selected>{{trans("leng.Seleccione el municipio")}}</option>
+                            <option value="" selected>Seleccione</option>
                             <option value="1">demo</option>
                         </select>
                     </div>
@@ -170,21 +170,16 @@
             </div>
 
             <div id="informacionPrestador" style="display: none;">
-                <p class="strong"><b>Prestador de servicios</b></p>
-                <br>
+                <div class="msg">Información de cuenta del prestador de servicios</div>
                 <div class="row clearfix">
                     <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
                         <label for="clasificacion" class="control-label">Clasificación:</label>
                     </div>
                     <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
-                        <div class="form-group">
-                            <div class="form-line">
-                                <select name="clasificacion" id="clasificacion" class="form-control selectpicker" data-live-search="true" required>
-                                    <option value="" selected="">{{trans("leng.Seleccione clasificación")}}</option>
-                                    <option value="-1">Otro</option>
-                                </select>
-                            </div>
-                        </div>
+                        <select name="clasificacion" id="clasificacion" class="form-control show-tick" data-live-search="true" required>
+                            <option value="" selected="">Seleccione</option>
+                            <option value="1">Otro</option>
+                        </select>
                     </div>
                 </div>
 
@@ -194,10 +189,9 @@
                     </div>
                     <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
                         <div class="form-group">
-                            <select name="servicios" id="servicios" class="form-control selectpicker" data-live-search="true" required>
-                                <option value="" selected="">{{trans("leng.Seleccione clasificación")}}</option>
-                                <option value="-1">Otro</option>
-                            </select>
+                            <div class="form-line">
+                                <input type="text" name="servicios" id="servicios" class="form-control">
+                            </div>
                         </div>
                     </div>
                 </div>

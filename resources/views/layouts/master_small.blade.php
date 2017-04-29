@@ -7,8 +7,8 @@
     <title>Udoktor</title>
     <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="{{ mix('css/all.css') }}">
-
-    <link rel="stylesheet" href="/css/style.css">
+    {{-- <link rel="stylesheet" href="/css/style.css"> --}}
+    <link rel="stylesheet" href="{{ mix('css/app.css') }}">
 
     @yield('css')
 </head>
