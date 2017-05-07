@@ -253,3 +253,9 @@
 fieldset[disabled] .form-control {
     background-color: transparent;
 }
+
+@media (max-width: 767px) {
+    .form-control-label {
+        text-align: left;
+    }
+}

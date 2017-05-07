@@ -66,8 +66,8 @@ return [
 
     'providers' => [
         'users' => [
-            'driver' => 'eloquent',
-            'model' => Udoktor\User::class,
+            'driver' => 'doctrine',
+            'model' => Udoktor\Domain\Users\User::class,
         ],
 
         // 'users' => [

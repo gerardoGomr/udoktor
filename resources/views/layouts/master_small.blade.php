@@ -4,16 +4,33 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <meta content="{{ csrf_token() }}" name="csrf-token">
     <title>Udoktor</title>
     <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+
     <link rel="stylesheet" href="{{ mix('css/all.css') }}">
-    {{-- <link rel="stylesheet" href="/css/style.css"> --}}
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
 
     @yield('css')
 </head>
 
 <body class="@yield('body-class')">
+    <div class="page-loader-wrapper">
+        <div class="loader">
+            <div class="preloader pl-size-xl">
+                <div class="spinner-layer pl-red">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <h1>Cargando aplicación; por favor, espere...</h1>
+        </div>
+    </div>
+
     <nav class="navbar">
         <div class="container-fluid">
             <div class="navbar-header">

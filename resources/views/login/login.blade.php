@@ -6,7 +6,11 @@
 @section('content')
     <form action="/login" method="POST">
         {{ csrf_field() }}
-        <div class="msg">Escriba sus datos para ingresar al sistema</div>
+        <div class="msg text-success">Escriba sus datos para ingresar al sistema</div>
+
+        @if(session('error'))
+            <p class="alert alert-danger">{{ session('error') }}</p>
+        @endif
 
         <div class="input-group">
             <span class="input-group-addon">
@@ -22,6 +26,16 @@
             </span>
             <div class="form-line">
                 <input type="password" class="form-control" name="pass" placeholder="Contraseña" required>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <span class="input-group-addon">
+                <i class="material-icons">&nbsp;</i>
+            </span>
+            <div class="form-group">
+                <input type="checkbox" name="rememberMe" id="rememberMe" class="filled-in chk-col-red">
+                <label for="rememberMe">Mantener mi sesión activa</label>
             </div>
         </div>
 

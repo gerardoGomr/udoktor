@@ -21,7 +21,7 @@ class AuthController extends Controller
     |
     */
 
-    use AuthenticatesAndRegistersUsers, ThrottlesLogins;
+    use ThrottlesLogins;
 
     /**
      * Where to redirect users after login / registration.

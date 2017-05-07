@@ -1,9 +1,17 @@
 ﻿.signup-page {
     background: url(../images/medical.jpg) no-repeat !important;
     padding-left: 0;
-    max-width: 50%;
+    max-width: 60%;
     margin: 5% auto;
     overflow-x: hidden;
+
+    @media (max-width: 768px) {
+        .navbar {
+            display: none;
+        }
+
+        max-width: 760px;
+    }
 
     .signup-box {
         .msg {

@@ -16,14 +16,8 @@ jQuery(document).ready(function($) {
         mapaEnvio             = null,
         marker                = null,
         geocoder              = new google.maps.Geocoder(),
-        listaServicios        = [{
-            value: '1',
-            text: 'Aplicacion de inyecciones'
-        }, {
-            value: '2',
-            text: 'Consulta'
-        }],
-        servicios                = new Bloodhound({
+        listaServicios        = JSON.parse(atob($('#serviceTypes').val())),
+        servicios             = new Bloodhound({
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
             local:          listaServicios
@@ -38,6 +32,45 @@ jQuery(document).ready(function($) {
             displayKey: 'text',
             source:     servicios.ttAdapter()
         }
+    });
+
+    // cargar estados - municipios
+    $formCrearCuenta.on('change', 'select.aUnit', function(event) {
+        var aUnitId = $(this).val(),
+            target  = '#' + $(this).data('target');
+
+        // avoid change on empty
+        if (aUnitId === '') {
+            return false;
+        }
+
+        $.ajax({
+            url:        '/crear-cuenta/a-units/search',
+            type:       'POST',
+            dataType:   'json',
+            data:       {aUnitId: aUnitId},
+            beforeSend: function () {
+                $('#loader').modal('show');
+            }
+        })
+        .done(function(result) {
+            console.log(result.status);
+            $('#loader').modal('hide');
+
+            if (result.status === 'OK') {
+                $(target).html(result.html);
+
+                $(target).selectpicker('refresh');
+            }
+
+            if (result.status === 'fail') {
+                swal(result.message);
+            }
+        })
+        .fail(function(jqXHR, textStatus, errorThrown) {
+            console.log('error: ' + textStatus + ' -- ' + errorThrown);
+            $('#loader').modal('hide');
+        });
     });
 
     // click para el paso 2
@@ -88,6 +121,7 @@ jQuery(document).ready(function($) {
         $informacionBasica.show(300);
     });
 
+    // crear cuenta
     $crearCuenta.on('click', function () {
         inicializarValidacionForm();
         if ($formCrearCuenta.valid()) {

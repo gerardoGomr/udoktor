@@ -1,9 +1,7 @@
 <?php
-
 namespace Udoktor\Http\Controllers;
+
 use Illuminate\Http\Request;
-use Udoktor\User;
-use Udoktor\V_person;
 use Auth;
 use Udoktor\Http\Controllers\Controller;
 
@@ -29,53 +27,21 @@ class LoginController extends Controller
      * process login
      *
      * @param  Request $request
-     * @return [type]
+     * @return Illuminate\Support\Redirect
      */
-    public function store(Request $request)
+    public function login(Request $request)
     {
-        $usuario = $request->get('usuario');
-        $pass    = $request->get('password');
-        $origen  = $request->get('origen');
+        $correo     = $request->get('correo');
+        $pass       = $request->get('pass');
+        $rememberMe = $request->has('rememberMe') ? true : false;
 
-        if(Auth::attempt(['email'=>$usuario,'password'=>$pass,'confirmationtoken'=>'1'])){
+        if (Auth::attempt(['email' => $correo, 'password' => $pass, 'active' => 1], $rememberMe)) {
+            return redirect()->intended('/');
 
-            $activo=  User::where('email',$usuario)->where('active',true)->count();
-            if($activo==0){
-                return view('login.login')->with('cuentainactiva','si');
-            }
-
-
-            $idPerson = Auth::user()->personid;
-            $dataPerson=V_person::find($idPerson);
-
-            if(count($dataPerson)>0){
-                if($origen==0){
-                    if($dataPerson->isserviceprovider==true){
-                        return redirect('prestadorServicios');
-                    }else if($dataPerson->isclient==true){
-                        return redirect('cliente');
-                    }else if($dataPerson->isadmin==true){
-                        return redirect('admin');
-                    }else{
-                        return redirect('cliente');
-                    }
-                }else{
-                    return response()->json(['usuarioexiste' => true, 'id' => $idPerson, 'nombre'=>$dataPerson->firstname . " " . $dataPerson->lastname]);
-                }
-            }else{
-                if($origen==0){
-                    return view('login.login')->with('usuarioInvalido','si');
-                }else{
-                    return response()->json(['usuarioexiste' => false, 'id' => 0,'nombre'=>'']);
-                }
-            }
-        }else{
-
-            if($origen==0){
-                return view('login.login')->with('usuarioInvalido','si');
-            }else{
-                return response()->json(['usuarioexiste' => false, 'id' => 0,'nombre'=>'']);
-            }
+        } else {
+            return redirect()
+                ->back()
+                ->with('error', 'Error de correo electrónico y/o contraseña');
         }
     }
 }
