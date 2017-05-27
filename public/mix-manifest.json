@@ -5,5 +5,7 @@
   "/css/all.css": "/css/all.css",
   "/css/style.css": "/css/style.css",
   "/js/all.js": "/js/all.js",
-  "/js/cuentas/crear_cuenta.js": "/js/cuentas/crear_cuenta.js"
+  "/js/accounts/sign_up.js": "/js/accounts/sign_up.js",
+  "/js/accounts/password_recovery.js": "/js/accounts/password_recovery.js",
+  "/js/accounts/reset_password.js": "/js/accounts/reset_password.js"
 }

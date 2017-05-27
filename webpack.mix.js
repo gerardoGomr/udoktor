@@ -65,12 +65,16 @@ mix.sass('resources/assets/sass/style.scss', 'public/css/app.css')
         resourcesDirectory + 'materialize-css/js/materialize.min.js',
         resourcesDirectory + 'multi-select/js/jquery.multi-select.js',
         resourcesDirectory + 'sweetalert/sweetalert.min.js',
+        resourcesDirectory + 'jquery-slimscroll/jquery.slimscroll.js',
         resourcesDirectory + 'node-waves/waves.js',
         resourcesDirectory + 'raphael/raphael.min.js',
         resourcesDirectory + 'morrisjs/morris.min.js',
-        'resources/assets/pages/ui/tooltips-popovers.js'
+        'resources/assets/js/pages/ui/tooltips-popovers.js',
+        'resources/assets/js/demo.js'
     ], 'public/js/all.js')
-    .scripts('resources/assets/js/cuentas/crear_cuenta.js', 'public/js/cuentas/crear_cuenta.js');
+    .scripts('resources/assets/js/accounts/sign_up.js', 'public/js/accounts/sign_up.js')
+    .scripts('resources/assets/js/accounts/password_recovery.js', 'public/js/accounts/password_recovery.js')
+    .scripts('resources/assets/js/accounts/reset_password.js', 'public/js/accounts/reset_password.js');
 
     for (var directory in directories) {
         mix.copy(directory, directories[directory]);

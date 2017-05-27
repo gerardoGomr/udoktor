@@ -1,19 +1,18 @@
 <?php
 namespace Udoktor\Infrastructure\Mappings\Persons;
 
+use LaravelDoctrine\Fluent\EmbeddableMapping;
 use LaravelDoctrine\Fluent\Fluent;
-use LaravelDoctrine\Fluent\MappedSuperClassMapping;
 use Udoktor\Domain\Persons\FullName;
-use Udoktor\Domain\Persons\Person;
 
 /**
- * Class PersonMapping
+ * Class FullNameMapping
  *
  * @package Udoktor\Infrastructure\Mappings\Persons
  * @category Mapping
  * @author Gerardo Adrián Gómez Ruiz <gerardo.gomr@gmail.com>
  */
-class PersonMapping extends MappedSuperClassMapping
+class FullNameMapping extends EmbeddableMapping
 {
     /**
      * Returns the fully qualified name of the class that this mapper maps.
@@ -22,7 +21,7 @@ class PersonMapping extends MappedSuperClassMapping
      */
     public function mapFor()
     {
-        return Person::class;
+        return FullName::class;
     }
 
     /**
@@ -33,11 +32,10 @@ class PersonMapping extends MappedSuperClassMapping
     public function map(Fluent $builder)
     {
         // Both strings will be varchars
-        $builder->string('phoneNumber')->length(20);
-        $builder->string('cellphoneNumber')
-            ->length(20)
+        $builder->string('name')->length(80);
+        $builder->string('lastName1')->length(80);
+        $builder->string('lastName2')
+            ->length(80)
             ->nullable();
-
-        $builder->embed(FullName::class);
     }
 }

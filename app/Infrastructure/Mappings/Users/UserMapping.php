@@ -3,6 +3,8 @@ namespace Udoktor\Infrastructure\Mappings\Users;
 
 use LaravelDoctrine\Fluent\EntityMapping;
 use LaravelDoctrine\Fluent\Fluent;
+use Udoktor\Domain\Users\Classification;
+use Udoktor\Domain\Users\ServiceType;
 use Udoktor\Domain\Users\User;
 
 /**
@@ -31,18 +33,37 @@ class UserMapping extends EntityMapping
      */
     public function map(Fluent $builder)
     {
-        // Both strings will be varchars
         $builder->increments('id');
         $builder->string('email')
             ->length(80)
             ->unique();
         $builder->string('password')->length(80);
+        $builder->string('tempPassword')
+            ->length(80)
+            ->nullable();
         $builder->string('rememberToken')
             ->nullable();
+        $builder->string('verificationToken')
+            ->length(80)
+            ->nullable();
+        $builder->string('requestToken')
+            ->length(80)
+            ->nullable();
         $builder->boolean('active');
+        $builder->boolean('verified');
+        $builder->datetime('verificationDate')->nullable();
+        $builder->datetime('requestDate')->nullable();
+        $builder->smallInteger('role');
         $builder->datetime('createdAt');
         $builder->datetime('updatedAt')->nullable();
         $builder->datetime('deletedAt')->nullable();
         $builder->index('email');
+
+        // many to one relationship
+        $builder->manyToOne(Classification::class)
+            ->nullable();
+
+        // many to many
+        $builder->manyToMany(ServiceType::class);
     }
 }

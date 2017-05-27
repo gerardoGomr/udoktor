@@ -4,7 +4,10 @@ namespace Udoktor\Providers;
 
 use Doctrine\Common\Persistence\ObjectRepository;
 use Illuminate\Support\ServiceProvider;
-use Udoktor\Domain\Regions\AdministrativeUnit;
+use LaravelDoctrine\ORM\Facades\EntityManager;
+use Udoktor\Domain\Users\Repositories\UsersRepository;
+use Udoktor\Domain\Users\User;
+use Udoktor\Infrastructure\Repositories\Users\DoctrineUsersRepository;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -25,11 +28,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        /*$this->app
-            ->when(SignUpController::class)
-            ->needs(ObjectRepository::class)
-            ->give(function(){
-                return EntityManager::getRepository(AdministrativeUnit::class);
-            });*/
+        $this->app->bind(UsersRepository::class, function(){
+            return new DoctrineUsersRepository(EntityManager::getRepository(User::class));
+        });
     }
 }

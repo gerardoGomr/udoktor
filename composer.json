@@ -12,7 +12,8 @@
         "yajra/laravel-datatables-oracle": "~6.0",
         "captcha-com/laravel-captcha": "4.*",
         "laravel-doctrine/orm": "1.3.*",
-        "laravel-doctrine/fluent": "^1.1"
+        "laravel-doctrine/fluent": "^1.1",
+        "guzzlehttp/guzzle": "^6.2"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

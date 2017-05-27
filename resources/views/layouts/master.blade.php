@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <meta content="{{ csrf_token() }}" name="csrf-token">
+    <meta content="normal" name="layout">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <title>Udoktor</title>
 
@@ -15,7 +16,7 @@
     @yield('css')
 </head>
 
-<body class="theme-teal">
+<body class="theme-red">
     <!-- Page Loader -->
     <div class="page-loader-wrapper">
         <div class="loader">
@@ -48,15 +49,15 @@
     </div>
     <!-- #END# Search Bar -->
     <!-- Top Bar -->
-    @include('navbar')
+    @include('layouts.navbar')
     <!-- #Top Bar -->
     <section>
         <!-- Left Sidebar -->
-        @include('menu')
+        @include('layouts.menu')
         <!-- #END# Left Sidebar -->
 
         <!-- Right Sidebar -->
-        @include('right_sidebar')
+        @include('layouts.right_sidebar')
         <!-- #END# Right Sidebar -->
     </section>
 
@@ -66,8 +67,8 @@
         </div>
     </section>
 
+    <script src="{{ mix('js/all.js') }}"></script>
     <script src="{{ mix('js/app.js') }}"></script>
-    <script src="{{ mix('js/additional.js') }}"></script>
     @yield('js')
 
 </body>

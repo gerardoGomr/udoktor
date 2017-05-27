@@ -1,9 +1,9 @@
 $(function () {
     //Tooltip
     $('[data-toggle="tooltip"]').tooltip({
-        container: 'body'
+        containter: 'body'
     });
 
     //Popover
     $('[data-toggle="popover"]').popover();
-})
+});

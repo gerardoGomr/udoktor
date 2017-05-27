@@ -55,7 +55,7 @@ return [
     |
     */
 
-    'from' => ['address' => 'noreply@efletex.com', 'name' => 'Efletex'],
+    'from' => ['address' => 'noreply@udoktor.com', 'name' => 'Udoktor'],
 
     /*
     |--------------------------------------------------------------------------

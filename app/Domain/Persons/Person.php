@@ -11,18 +11,10 @@ namespace Udoktor\Domain\Persons;
 abstract class Person
 {
     /**
-     * @var string
+     *
+     * @var FullName
      */
-    protected $name;
-
-    /**
-     * @var string
-     */
-    protected $lastName1;
-    /**
-     * @var string
-     */
-    protected $lastName2;
+    protected $fullName;
 
     /**
      * @var string
@@ -37,64 +29,11 @@ abstract class Person
     /**
      * Person constructor
      *
-     * @param string $name
-     * @param string $lastName1
-     * @param string $lastName2
+     * @param FullName $fullName
      */
-    public function __construct($name, $lastName1, $lastName2)
+    public function __construct(FullName $fullName)
     {
-        $this->name      = $name;
-        $this->lastName1 = $lastName1;
-        $this->lastName2 = $lastName2;
-    }
-
-    /**
-     * name of the person
-     *
-     * @return string
-     */
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    /**
-     * first last name of person
-     *
-     * @return string
-     */
-    public function getLastName1(): string
-    {
-        return $this->lastName1;
-    }
-
-    /**
-     * second last name
-     *
-     * @return string
-     */
-    public function getLastName2(): string
-    {
-        return $this->lastName2;
-    }
-
-    /**
-     * get the full name
-     *
-     * @return string
-     */
-    public function fullName(): string
-    {
-        $name = $this->name;
-
-        if(strlen($this->lastName1)) {
-            $name .= ' '.$this->lastName1;
-        }
-
-        if(strlen($this->lastName2)) {
-            $name .= ' '.$this->lastName2;
-        }
-        return $name;
+        $this->fullName = $fullName;
     }
 
     /**
@@ -115,5 +54,15 @@ abstract class Person
     public function getCellphoneNumber(): string
     {
         return $this->cellphoneNumber;
+    }
+
+    /**
+     * Gets the value of fullName.
+     *
+     * @return FullName
+     */
+    public function getFullName()
+    {
+        return $this->fullName;
     }
 }

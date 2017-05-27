@@ -2,11 +2,22 @@
     <!-- User Info -->
     <div class="user-info">
         <div class="image">
-            <img src="images/user.png" width="48" height="48" alt="User" />
+            <img src="images/user.png" width="48" height="48" alt="User">
         </div>
         <div class="info-container">
-            <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ request()->session()->get('usuario')->nombreCompleto() }}</div>
-            <div class="email">gerardo.gomr@gmail.com</div>
+            @php
+                $cuenta = '';
+                if (Auth::user()->isServiceProvider()) {
+                    $cuenta = 'Prestador de Servicios';
+                }
+
+                if (Auth::user()->isClient()) {
+                    $cuenta = 'Cliente';
+                }
+            @endphp
+            <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ Auth::user()->getFullName()->fullName() }}</div>
+            <div class="email"><b>{{ Auth::user()->getEmail() }}</b></div>
+            <div class="email"><b>{{ $cuenta }}</b></div>
             <div class="btn-group user-helper-dropdown">
                 <i class="material-icons" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">keyboard_arrow_down</i>
                 <ul class="dropdown-menu pull-right">
@@ -40,7 +51,7 @@
     <!-- Footer -->
     <div class="legal">
         <div class="copyright">
-            &copy; {{ date('Y') }} La Casa del <b>Perfume</b>
+            &copy; {{ date('Y') }} <b>Udoktor</b>
         </div>
         <div class="version">
             <b>Version: </b> 1.0

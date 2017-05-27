@@ -32,6 +32,7 @@ return [
                 base_path('app/Domain')
             ],
             'mappings'      => [
+                Udoktor\Infrastructure\Mappings\Persons\FullNameMapping::class,
                 Udoktor\Infrastructure\Mappings\Persons\PersonMapping::class,
                 Udoktor\Infrastructure\Mappings\Users\UserMapping::class,
                 Udoktor\Infrastructure\Mappings\Regions\AdministrativeUnitMapping::class,

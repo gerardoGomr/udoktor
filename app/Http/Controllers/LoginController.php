@@ -20,7 +20,7 @@ class LoginController extends Controller
      * @return Illuminate\Support\Facades\View
      */
     public function index(){
-        return view('login.login');
+        return view('login');
     }
 
     /**
