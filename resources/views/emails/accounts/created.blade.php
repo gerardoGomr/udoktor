@@ -20,7 +20,7 @@ Contraseña: {{ $user->getTempPassword() }} <br>
 Cuenta:     {{ $cuenta }}
 
 Para poder ingresar a Udoktor, es necesario que active su cuenta. Para activarla, dé click en el siguiente botón, el cual lo redireccionará a la aplicación.
-@component('mail::button', ['url' => url('cuentas/activar/' . base64_encode($user->getId()) . '/' . $user->getVerificationToken()]))
+@component('mail::button', ['url' => url('cuentas/activar/' . base64_encode($user->getId()) . '/' . $user->getVerificationToken())])
 Activar mi cuenta de usuario
 @endcomponent
 

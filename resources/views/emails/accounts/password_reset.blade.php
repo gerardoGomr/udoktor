@@ -15,7 +15,7 @@
 Se ha solicitado un reseteo de contraseña para la cuenta {{ $user->getEmail() }}. Si usted no solicitó este reseteo, por favor, ignore este correo electrónico.
 
 Para resetear su contraseña, dé click en el siguiente botón, el cual lo redireccionará a la aplicación.
-@component('mail::button', ['url' => url('cuentas/nueva-contrasenia/' . base64_encode($user->getId()) . '/' . $user->getRequestToken()]))
+@component('mail::button', ['url' => url('cuentas/nueva-contrasenia/' . base64_encode($user->getId()) . '/' . $user->getRequestToken())])
 Resetear mi contraseñan
 @endcomponent
 
