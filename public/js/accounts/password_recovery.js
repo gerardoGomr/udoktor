@@ -33,7 +33,7 @@ jQuery(document).ready(function($) {
             })
             .done(function(result) {
                 if (result.status === 'error') {
-                    swal('Ocurrió un error al enviar las instrucciones a ' + $email.val() + '. Por favor, intente de nuevo.');
+                    swal('warning', 'Ocurrió un error al enviar las instrucciones a ' + $email.val() + '. Por favor, intente de nuevo.');
                 }
 
                 if (result.status === 'success') {
@@ -53,7 +53,7 @@ jQuery(document).ready(function($) {
             .fail(function(jqXHR, textStatus, errorThrown) {
                 console.log(textStatus + ': ' + errorThrown);
 
-                swal('Ocurrió un error al enviar las instrucciones a ' + $email.val() + '. Por favor, intente de nuevo.');
+                swal('warning', 'Ocurrió un error al enviar las instrucciones a ' + $email.val() + '. Por favor, intente de nuevo.');
             })
             .always(function () {
                 $loader.modal('hide');
