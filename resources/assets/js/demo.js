@@ -1,17 +1,14 @@
 $(function () {
-    var layout = $('meta[name="layout"').attr('content');
+    skinChanger();
+    activateNotificationAndTasksScroll();
 
-    if (layout === 'normal') {
-        skinChanger();
-        activateNotificationAndTasksScroll();
-
+    setSkinListHeightAndScroll();
+    setSettingListHeightAndScroll();
+    $(window).resize(function () {
         setSkinListHeightAndScroll();
         setSettingListHeightAndScroll();
-        $(window).resize(function () {
-            setSkinListHeightAndScroll();
-            setSettingListHeightAndScroll();
-        });
-    }
+    });
+
 });
 
 //Skin changer

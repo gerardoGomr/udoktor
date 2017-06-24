@@ -16,7 +16,7 @@
             <span class="input-group-addon">
                 <i class="material-icons">person</i>
             </span>
-            <div class="form-line">
+            <div class="form-line focused">
                 <input type="text" class="form-control" name="correo" placeholder="Correo electrónico" required autofocus>
             </div>
         </div>

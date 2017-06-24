@@ -1,0 +1,17 @@
+#map {
+  width: 600px;
+  height: 480px;
+}
+
+.profile-image {
+  text-align: center;
+
+  .btn {
+    margin: 5px auto;
+    display: block;
+  }
+
+  img {
+    height: 90px;
+  }
+}

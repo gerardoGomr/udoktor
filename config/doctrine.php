@@ -38,6 +38,7 @@ return [
                 Udoktor\Infrastructure\Mappings\Regions\AdministrativeUnitMapping::class,
                 Udoktor\Infrastructure\Mappings\Users\ServiceTypeMapping::class,
                 Udoktor\Infrastructure\Mappings\Users\ClassificationMapping::class,
+                Udoktor\Infrastructure\Mappings\Regions\LocationMapping::class,
             ],
             'repository'    => Doctrine\ORM\EntityRepository::class,
             'proxies'       => [

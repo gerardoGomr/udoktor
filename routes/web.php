@@ -10,9 +10,27 @@
 |
 */
 
-Route::get('/', function () {
-    return view('dashboard');
-})->middleware('auth');
+Route::group(['middleware' => ['auth', 'picture']], function () {
+    // main view
+    Route::get('/', 'HomeController@index');
+
+    // perfil prestador servicios
+    Route::group(['prefix' => 'prestador-servicios/perfil'], function () {
+        Route::get('/', 'AccountsController@index');
+        Route::put('/', 'AccountsController@updateProfile');
+        Route::put('picture', 'AccountsController@changeProfileImage');
+        Route::put('notificaciones', 'AccountsController@setNotifications');
+        Route::put('servicios', 'AccountsController@updateServices');
+        Route::put('ubicacion', 'AccountsController@updateLocation');
+    });
+
+    // group for service providers
+    Route::group(['prefix' => 'prestador-servicios', 'namespace' => 'ServiceProviders'], function () {
+
+        // calendar
+        Route::get('/', 'DatesController@index');
+    });
+});
 
 // login
 Route::get('login', 'LoginController@index');

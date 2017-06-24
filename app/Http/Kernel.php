@@ -45,12 +45,13 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
-        'auth' => \Udoktor\Http\Middleware\Authenticate::class,
+        'auth'       => \Udoktor\Http\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
-        'can' => \Illuminate\Foundation\Http\Middleware\Authorize::class,
-        'guest' => \Udoktor\Http\Middleware\RedirectIfAuthenticated::class,
-        'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
-        'web' => \Udoktor\Http\Middleware\LangMiddleware::class,
-        'roles'=> \Udoktor\Http\Middleware\CheckRole::class,
+        'can'        => \Illuminate\Foundation\Http\Middleware\Authorize::class,
+        'guest'      => \Udoktor\Http\Middleware\RedirectIfAuthenticated::class,
+        'throttle'   => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+        'web'        => \Udoktor\Http\Middleware\LangMiddleware::class,
+        'roles'      => \Udoktor\Http\Middleware\CheckRole::class,
+        'picture'    => \Udoktor\Http\Middleware\CheckProfilePicture::class,
     ];
 }

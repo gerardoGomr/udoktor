@@ -7,6 +7,8 @@ use LaravelDoctrine\ORM\Auth\Authenticatable as AuthenticatableTrait;
 use Udoktor\Domain\ICollection;
 use Udoktor\Domain\Persons\FullName;
 use Udoktor\Domain\Persons\Person;
+use Udoktor\Domain\Regions\AdministrativeUnit;
+use Udoktor\Domain\Regions\Location;
 use Udoktor\Exceptions\AddingComponentsForNonServiceProviderRoleException;
 use Udoktor\Exceptions\InvalidRoleAssignmenException;
 use Udoktor\Exceptions\InvalidVerificationTokenException;
@@ -46,6 +48,11 @@ class User extends Person implements Authenticatable
      * @var bool
      */
     private $verified;
+
+    /**
+     * @var bool
+     */
+    private $hasCompletedProfile;
 
     /**
      * @var DateTime
@@ -97,6 +104,26 @@ class User extends Person implements Authenticatable
      */
     private $requestDate;
 
+    /**
+     * @var AdministrativeUnit
+     */
+    private $administrativeUnit;
+
+    /**
+     * @var Location
+     */
+    private $location;
+
+    /**
+     * @var string
+     */
+    private $profilePicture;
+
+    /**
+     * @var string
+     */
+    private $notifications;
+
     const ADMIN            = 3;
     const CLIENT           = 1;
     const SERVICE_PROVIDER = 2;
@@ -109,13 +136,15 @@ class User extends Person implements Authenticatable
      * @param string $password
      * @param string $contactNumber
      * @param int $role
+     * @param AdministrativeUnit $aUnit
      */
-    public function __construct(FullName $fullName, $email, $password, $contactNumber, $role)
+    public function __construct(FullName $fullName, $email, $password, $contactNumber, $role, AdministrativeUnit $aUnit)
     {
-        $this->email        = $email;
-        $this->password     = $password;
-        $this->tempPassword = $password;
-        $this->phoneNumber  = $contactNumber;
+        $this->email              = $email;
+        $this->password           = $password;
+        $this->tempPassword       = $password;
+        $this->phoneNumber        = $contactNumber;
+        $this->administrativeUnit = $aUnit;
 
         if ($role !== self::ADMIN && $role !== self::SERVICE_PROVIDER && $role !== self::CLIENT) {
             throw new InvalidRoleAssignmenException('El rol que se solicita no existe.');
@@ -150,11 +179,12 @@ class User extends Person implements Authenticatable
      */
     public function register()
     {
-        $this->password          = password_hash($this->password, PASSWORD_DEFAULT);
-        $this->createdAt         = new DateTime();
-        $this->active            = true;
-        $this->verified          = false;
-        $this->verificationToken = md5(uniqid(rand(), 1) . 'udoktor');
+        $this->password            = password_hash($this->password, PASSWORD_DEFAULT);
+        $this->createdAt           = new DateTime();
+        $this->active              = true;
+        $this->verified            = false;
+        $this->verificationToken   = md5(uniqid(rand(), 1) . 'udoktor');
+        $this->hasCompletedProfile = false;
     }
 
     /**
@@ -212,7 +242,7 @@ class User extends Person implements Authenticatable
      *
      * @return bool
      */
-    public function isVerified(): boolean
+    public function isVerified(): bool
     {
         return $this->verified;
     }
@@ -261,6 +291,76 @@ class User extends Person implements Authenticatable
     public function getTempPassword()
     {
         return $this->tempPassword;
+    }
+
+    /**
+     * @return AdministrativeUnit
+     */
+    public function getAdministrativeUnit()
+    {
+        return $this->administrativeUnit;
+    }
+
+    /**
+     * @return Classification
+     */
+    public function getClassification()
+    {
+        return $this->classification;
+    }
+
+    /**
+     * @return ICollection
+     */
+    public function getServiceTypes()
+    {
+        return $this->serviceTypes;
+    }
+
+    /**
+     * @return Location
+     */
+    public function getLocation()
+    {
+        return $this->location;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProfilePicture()
+    {
+        return $this->profilePicture;
+    }
+
+    /**
+     * returns the notifications the user has
+     *
+     * @return string
+     */
+    public function getNotifications()
+    {
+        return $this->notifications;
+    }
+
+    /**
+     * checks if the user has a profile picture
+     *
+     * @return bool
+     */
+    public function hasProfilePicture()
+    {
+        return !is_null($this->profilePicture);
+    }
+
+    /**
+     * updates user's profile picture
+     *
+     * @param string $picture
+     */
+    public function updateProfilePicture($picture)
+    {
+        $this->profilePicture = $picture;
     }
 
     /**
@@ -331,5 +431,80 @@ class User extends Person implements Authenticatable
         $this->requestToken = null;
         $this->requestDate  = null;
         $this->updatedAt    = new DateTime();
+    }
+
+    /**
+     * checks whether the user has completed his/her profile
+     *
+     * @return bool
+     */
+    public function hasCompletedProfile()
+    {
+        return $this->hasCompletedProfile;
+    }
+
+    /**
+     * user has completed profile
+     *
+     * @param FullName $fullName
+     * @param string $email
+     * @param string $contactNumber
+     * @param AdministrativeUnit $aUnit
+     * @return void
+     */
+    public function completeProfile(FullName $fullName, $email, $contactNumber, AdministrativeUnit $aUnit)
+    {
+        $this->fullName            = $fullName;
+        $this->email               = $email;
+        $this->phoneNumber         = $contactNumber;
+        $this->administrativeUnit  = $aUnit;
+        $this->hasCompletedProfile = true;
+    }
+
+    /**
+     * clears the notifications the user has
+     *
+     * @return void
+     */
+    public function clearNotifications()
+    {
+        if ($this->hasNotifications()) {
+            $this->notifications = null;
+        }
+    }
+
+    /**
+     * checks if the current user has notifications
+     *
+     * @return bool
+     */
+    public function hasNotifications()
+    {
+        return !is_null($this->notifications);
+    }
+
+    /**
+     * add a new notification to the user
+     *
+     * @param string $newNotification
+     */
+    public function addNotification($newNotification)
+    {
+        if (!$this->hasNotifications()) {
+            $this->notifications = $newNotification;
+        } else {
+            $this->notifications .= ',' . $newNotification;
+        }
+    }
+
+    /**
+     * updates user's current location
+     *
+     * @param Location $location
+     * @return void
+     */
+    public function updateLocation(Location $location)
+    {
+        $this->location = $location;
     }
 }

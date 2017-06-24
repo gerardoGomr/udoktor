@@ -282,11 +282,11 @@ $.AdminBSB.input = {
         });
 
         //Not blank form
-        $('.form-control').each(function () {
+        /*$('.form-control').each(function () {
             if ($(this).val() !== '') {
                 $(this).parents('.form-line').addClass('focused');
             }
-        });
+        });*/
     }
 }
 //==========================================================================================================================
@@ -448,15 +448,16 @@ $(function () {
     var layout = $('meta[name="layout"').attr('content');
 
     if (layout === 'normal') {
-        $.AdminBSB.browser.activate();
         $.AdminBSB.leftSideBar.activate();
         $.AdminBSB.rightSideBar.activate();
         $.AdminBSB.navbar.activate();
-        $.AdminBSB.dropdownMenu.activate();
-        $.AdminBSB.input.activate();
-        $.AdminBSB.select.activate();
-        $.AdminBSB.search.activate();
     }
+
+    $.AdminBSB.browser.activate();
+    $.AdminBSB.dropdownMenu.activate();
+    $.AdminBSB.input.activate();
+    $.AdminBSB.select.activate();
+    $.AdminBSB.search.activate();
 
     setTimeout(function () { $('.page-loader-wrapper').fadeOut(); }, 50);
 

@@ -1,8 +1,10 @@
 <?php
 namespace Udoktor\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Auth;
+use Illuminate\Http\Request;
+use LaravelDoctrine\ORM\Facades\EntityManager;
+use Udoktor\Domain\Users\User;
 use Udoktor\Http\Controllers\Controller;
 
 /**
@@ -35,13 +37,20 @@ class LoginController extends Controller
         $pass       = $request->get('pass');
         $rememberMe = $request->has('rememberMe') ? true : false;
 
-        if (Auth::attempt(['email' => $correo, 'password' => $pass, 'active' => 1], $rememberMe)) {
+        if (Auth::attempt(['email' => $correo, 'password' => $pass, 'active' => 1, 'verified' => 1], $rememberMe)) {
             return redirect()->intended('/');
 
         } else {
+            $user = EntityManager::getRepository(User::class)->findOneBy(['email' => $correo]);
+
+            $errorMessage = 'Error de correo electrónico y/o contraseña';
+            if (!$user->isVerified()) {
+                $errorMessage = 'No ha verificado su cuenta';
+            }
+
             return redirect()
                 ->back()
-                ->with('error', 'Error de correo electrónico y/o contraseña');
+                ->with('error', $errorMessage);
         }
     }
 }

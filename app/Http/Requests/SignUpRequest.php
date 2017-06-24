@@ -4,6 +4,13 @@ namespace Udoktor\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Class SignUpRequest
+ *
+ * @package Udoktor\Http\Requests
+ * @category Request
+ * @author  Gerardo Adrián Gómez Ruiz <gerardo.gomr@gmail.com>
+ */
 class SignUpRequest extends FormRequest
 {
     /**

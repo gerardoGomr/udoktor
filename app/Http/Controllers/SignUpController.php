@@ -99,11 +99,14 @@ class SignUpController extends Controller
         $response = ['estatus' => 'OK'];
 
         try {
-            $user = new User(new FullName($request->get('nombre'), $request->get('paterno'), $request->get('materno')),
+            $aUnit  = EntityManager::getRepository(AdministrativeUnit::class)->find((int) $request->get('municipio'));
+            $user   = new User(new FullName($request->get('nombre'), $request->get('paterno'), $request->get('materno')),
                 $request->get('email'),
                 $request->get('pass'),
                 $request->get('telefono'),
-                (int) $request->get('tipoCuenta'));
+                (int) $request->get('tipoCuenta'),
+                $aUnit
+            );
 
             if ($user->isServiceProvider()) {
                 $services       = new CustomCollection;

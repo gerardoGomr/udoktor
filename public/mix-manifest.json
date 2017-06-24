@@ -3,9 +3,11 @@
   "/css/app.css": "/css/app.css",
   "/js/app.js": "/js/app.js",
   "/css/all.css": "/css/all.css",
-  "/css/style.css": "/css/style.css",
   "/js/all.js": "/js/all.js",
   "/js/accounts/sign_up.js": "/js/accounts/sign_up.js",
   "/js/accounts/password_recovery.js": "/js/accounts/password_recovery.js",
-  "/js/accounts/reset_password.js": "/js/accounts/reset_password.js"
+  "/js/accounts/reset_password.js": "/js/accounts/reset_password.js",
+  "/js/service_provider/index.js": "/js/service_provider/index.js",
+  "/js/service_provider/profile.js": "/js/service_provider/profile.js",
+  "/js/service_provider/map.js": "/js/service_provider/map.js"
 }

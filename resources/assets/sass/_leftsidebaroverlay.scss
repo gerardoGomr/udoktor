@@ -20,7 +20,12 @@
 .sidebar {
     @include transition(all .5s);
     font-family: $sidebar-font-family;
-    background: #fdfdfd;
+    color: #FFFFFF;
+    background: #4C4C4C;
+    background: -webkit-linear-gradient(left, #4C4C4C , #5D5D5D);
+    background: -o-linear-gradient(left, #4C4C4C , #5D5D5D);
+    background: -moz-linear-gradient(left, #4C4C4C , #5D5D5D);
+    background: linear-gradient(to right, #4C4C4C , #5D5D5D);
     width: 300px;
     overflow: hidden;
     display: inline-block;
@@ -35,7 +40,7 @@
         position: absolute;
         bottom: 0;
         width: 100%;
-        border-top: 1px solid #eee;
+        border-top: 1px solid #2F2F2F;
         padding: 15px;
         overflow: hidden;
 
@@ -82,14 +87,15 @@
 
             .name {
                 @include three-dots-overflow();
-                font-size: 14px;
+                font-size: 16px;
                 max-width: 200px;
                 color: #fff;
+                font-weight: bold;
             }
 
             .email {
                 @include three-dots-overflow();
-                font-size: 12px;
+                font-size: 14px;
                 max-width: 200px;
                 color: #fff;
             }
@@ -116,6 +122,7 @@
             padding-left: 0;
 
             li {
+                border-top: solid 1px #484848;
                 &.active {
                     > :first-child {
                         span {
@@ -126,7 +133,6 @@
             }
 
             .header {
-                background: #eee;
                 font-size: 12px;
                 font-weight: 600;
                 padding: 8px 16px;
@@ -168,7 +174,7 @@
             }
 
             a {
-                color: #747474;
+                color: #FFFFFF;
                 position: relative;
                 display: inline-flex;
                 vertical-align: middle;
@@ -189,10 +195,14 @@
 
                 span {
                     margin: 7px 0 7px 12px;
-                    color: #333;
+                    color: #FFFFFF;
                     font-weight: bold;
                     font-size: 14px;
                     overflow: hidden;
+
+                    &:hover {
+                        color: #F44336 !important;
+                    }
                 }
             }
 
@@ -212,6 +222,10 @@
                         padding-left: 55px;
                         padding-top: 7px;
                         padding-bottom: 7px;
+
+                        &:hover {
+                            color: #F44336 !important;
+                        }
                     }
 
                     &.active {
