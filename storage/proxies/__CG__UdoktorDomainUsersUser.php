@@ -64,10 +64,10 @@ class User extends \Udoktor\Domain\Users\User implements \Doctrine\ORM\Proxy\Pro
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', '' . "\0" . 'Udoktor\\Domain\\Users\\User' . "\0" . 'id', '' . "\0" . 'Udoktor\\Domain\\Users\\User' . "\0" . 'email', '' . "\0" . 'Udoktor\\Domain\\Users\\User' . "\0" . 'active', '' . "\0" . 'Udoktor\\Domain\\Users\\User' . "\0" . 'createdAt', '' . "\0" . 'Udoktor\\Domain\\Users\\User' . "\0" . 'updatedAt', '' . "\0" . 'Udoktor\\Domain\\Users\\User' . "\0" . 'deletedAt', 'name', 'lastName1', 'lastName2', 'phoneNumber', 'cellphoneNumber', 'password', 'rememberToken'];
+            return ['__isInitialized__', '' . "\0" . 'Udoktor\\Domain\\Users\\User' . "\0" . 'id', '' . "\0" . 'Udoktor\\Domain\\Users\\User' . "\0" . 'email', '' . "\0" . 'Udoktor\\Domain\\Users\\User' . "\0" . 'tempPassword', '' . "\0" . 'Udoktor\\Domain\\Users\\User' . "\0" . 'active', '' . "\0" . 'Udoktor\\Domain\\Users\\User' . "\0" . 'verified', '' . "\0" . 'Udoktor\\Domain\\Users\\User' . "\0" . 'hasCompletedProfile', '' . "\0" . 'Udoktor\\Domain\\Users\\User' . "\0" . 'createdAt', '' . "\0" . 'Udoktor\\Domain\\Users\\User' . "\0" . 'updatedAt', '' . "\0" . 'Udoktor\\Domain\\Users\\User' . "\0" . 'deletedAt', '' . "\0" . 'Udoktor\\Domain\\Users\\User' . "\0" . 'role', '' . "\0" . 'Udoktor\\Domain\\Users\\User' . "\0" . 'classification', '' . "\0" . 'Udoktor\\Domain\\Users\\User' . "\0" . 'services', '' . "\0" . 'Udoktor\\Domain\\Users\\User' . "\0" . 'verificationToken', '' . "\0" . 'Udoktor\\Domain\\Users\\User' . "\0" . 'verificationDate', '' . "\0" . 'Udoktor\\Domain\\Users\\User' . "\0" . 'requestToken', '' . "\0" . 'Udoktor\\Domain\\Users\\User' . "\0" . 'requestDate', '' . "\0" . 'Udoktor\\Domain\\Users\\User' . "\0" . 'administrativeUnit', '' . "\0" . 'Udoktor\\Domain\\Users\\User' . "\0" . 'location', '' . "\0" . 'Udoktor\\Domain\\Users\\User' . "\0" . 'profilePicture', '' . "\0" . 'Udoktor\\Domain\\Users\\User' . "\0" . 'notifications', '' . "\0" . 'Udoktor\\Domain\\Users\\User' . "\0" . 'priceType', 'fullName', 'phoneNumber', 'cellphoneNumber', 'password', 'rememberToken'];
         }
 
-        return ['__isInitialized__', '' . "\0" . 'Udoktor\\Domain\\Users\\User' . "\0" . 'id', '' . "\0" . 'Udoktor\\Domain\\Users\\User' . "\0" . 'email', '' . "\0" . 'Udoktor\\Domain\\Users\\User' . "\0" . 'active', '' . "\0" . 'Udoktor\\Domain\\Users\\User' . "\0" . 'createdAt', '' . "\0" . 'Udoktor\\Domain\\Users\\User' . "\0" . 'updatedAt', '' . "\0" . 'Udoktor\\Domain\\Users\\User' . "\0" . 'deletedAt', 'name', 'lastName1', 'lastName2', 'phoneNumber', 'cellphoneNumber', 'password', 'rememberToken'];
+        return ['__isInitialized__', '' . "\0" . 'Udoktor\\Domain\\Users\\User' . "\0" . 'id', '' . "\0" . 'Udoktor\\Domain\\Users\\User' . "\0" . 'email', '' . "\0" . 'Udoktor\\Domain\\Users\\User' . "\0" . 'tempPassword', '' . "\0" . 'Udoktor\\Domain\\Users\\User' . "\0" . 'active', '' . "\0" . 'Udoktor\\Domain\\Users\\User' . "\0" . 'verified', '' . "\0" . 'Udoktor\\Domain\\Users\\User' . "\0" . 'hasCompletedProfile', '' . "\0" . 'Udoktor\\Domain\\Users\\User' . "\0" . 'createdAt', '' . "\0" . 'Udoktor\\Domain\\Users\\User' . "\0" . 'updatedAt', '' . "\0" . 'Udoktor\\Domain\\Users\\User' . "\0" . 'deletedAt', '' . "\0" . 'Udoktor\\Domain\\Users\\User' . "\0" . 'role', '' . "\0" . 'Udoktor\\Domain\\Users\\User' . "\0" . 'classification', '' . "\0" . 'Udoktor\\Domain\\Users\\User' . "\0" . 'services', '' . "\0" . 'Udoktor\\Domain\\Users\\User' . "\0" . 'verificationToken', '' . "\0" . 'Udoktor\\Domain\\Users\\User' . "\0" . 'verificationDate', '' . "\0" . 'Udoktor\\Domain\\Users\\User' . "\0" . 'requestToken', '' . "\0" . 'Udoktor\\Domain\\Users\\User' . "\0" . 'requestDate', '' . "\0" . 'Udoktor\\Domain\\Users\\User' . "\0" . 'administrativeUnit', '' . "\0" . 'Udoktor\\Domain\\Users\\User' . "\0" . 'location', '' . "\0" . 'Udoktor\\Domain\\Users\\User' . "\0" . 'profilePicture', '' . "\0" . 'Udoktor\\Domain\\Users\\User' . "\0" . 'notifications', '' . "\0" . 'Udoktor\\Domain\\Users\\User' . "\0" . 'priceType', 'fullName', 'phoneNumber', 'cellphoneNumber', 'password', 'rememberToken'];
     }
 
     /**
@@ -176,45 +176,401 @@ class User extends \Udoktor\Domain\Users\User implements \Doctrine\ORM\Proxy\Pro
     /**
      * {@inheritDoc}
      */
-    public function getName(): string
+    public function addComponentsForServiceProvider(\Udoktor\Domain\Users\Classification $classification, \Udoktor\Domain\ICollection $services)
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getName', []);
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addComponentsForServiceProvider', [$classification, $services]);
 
-        return parent::getName();
+        return parent::addComponentsForServiceProvider($classification, $services);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getLastName1(): string
+    public function register()
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getLastName1', []);
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'register', []);
 
-        return parent::getLastName1();
+        return parent::register();
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getLastName2(): string
+    public function isServiceProvider()
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getLastName2', []);
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'isServiceProvider', []);
 
-        return parent::getLastName2();
+        return parent::isServiceProvider();
     }
 
     /**
      * {@inheritDoc}
      */
-    public function fullName(): string
+    public function isClient()
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'fullName', []);
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'isClient', []);
 
-        return parent::fullName();
+        return parent::isClient();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getId()
+    {
+        if ($this->__isInitialized__ === false) {
+            return (int)  parent::getId();
+        }
+
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getId', []);
+
+        return parent::getId();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getEmail(): string
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getEmail', []);
+
+        return parent::getEmail();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function isActive(): bool
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'isActive', []);
+
+        return parent::isActive();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function isVerified(): bool
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'isVerified', []);
+
+        return parent::isVerified();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getVerificationDate(): \DateTime
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getVerificationDate', []);
+
+        return parent::getVerificationDate();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getVerificationToken(): string
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getVerificationToken', []);
+
+        return parent::getVerificationToken();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getRequestToken(): string
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getRequestToken', []);
+
+        return parent::getRequestToken();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getRequestDate(): \DateTime
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getRequestDate', []);
+
+        return parent::getRequestDate();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getTempPassword()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getTempPassword', []);
+
+        return parent::getTempPassword();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getAdministrativeUnit()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getAdministrativeUnit', []);
+
+        return parent::getAdministrativeUnit();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getClassification()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getClassification', []);
+
+        return parent::getClassification();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getservices()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getservices', []);
+
+        return parent::getservices();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getLocation()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getLocation', []);
+
+        return parent::getLocation();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getProfilePicture()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getProfilePicture', []);
+
+        return parent::getProfilePicture();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getNotifications()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getNotifications', []);
+
+        return parent::getNotifications();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getPriceType()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getPriceType', []);
+
+        return parent::getPriceType();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function hasServices()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'hasServices', []);
+
+        return parent::hasServices();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function hasProfilePicture()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'hasProfilePicture', []);
+
+        return parent::hasProfilePicture();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function updateProfilePicture($picture)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'updateProfilePicture', [$picture]);
+
+        return parent::updateProfilePicture($picture);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function verify($token)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'verify', [$token]);
+
+        return parent::verify($token);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function requestPasswordReset()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'requestPasswordReset', []);
+
+        return parent::requestPasswordReset();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function canResetPassword($token)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'canResetPassword', [$token]);
+
+        return parent::canResetPassword($token);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function resetPassword($newPassword)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'resetPassword', [$newPassword]);
+
+        return parent::resetPassword($newPassword);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function hasCompletedProfile()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'hasCompletedProfile', []);
+
+        return parent::hasCompletedProfile();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function completeProfile(\Udoktor\Domain\Persons\FullName $fullName, $email, $contactNumber, \Udoktor\Domain\Regions\AdministrativeUnit $aUnit)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'completeProfile', [$fullName, $email, $contactNumber, $aUnit]);
+
+        return parent::completeProfile($fullName, $email, $contactNumber, $aUnit);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function clearNotifications()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'clearNotifications', []);
+
+        return parent::clearNotifications();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function hasNotifications()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'hasNotifications', []);
+
+        return parent::hasNotifications();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function addNotification($newNotification)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addNotification', [$newNotification]);
+
+        return parent::addNotification($newNotification);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function updateLocation(\Udoktor\Domain\Regions\Location $location)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'updateLocation', [$location]);
+
+        return parent::updateLocation($location);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function removeAllServices()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'removeAllServices', []);
+
+        return parent::removeAllServices();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function addService(\Udoktor\Domain\Users\OfferedService $service)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addService', [$service]);
+
+        return parent::addService($service);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function removeService(\Udoktor\Domain\Users\OfferedService $service)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'removeService', [$service]);
+
+        return parent::removeService($service);
     }
 
     /**
@@ -237,6 +593,17 @@ class User extends \Udoktor\Domain\Users\User implements \Doctrine\ORM\Proxy\Pro
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getCellphoneNumber', []);
 
         return parent::getCellphoneNumber();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getFullName()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getFullName', []);
+
+        return parent::getFullName();
     }
 
     /**

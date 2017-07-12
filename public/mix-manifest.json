@@ -9,5 +9,6 @@
   "/js/accounts/reset_password.js": "/js/accounts/reset_password.js",
   "/js/service_provider/index.js": "/js/service_provider/index.js",
   "/js/service_provider/profile.js": "/js/service_provider/profile.js",
-  "/js/service_provider/map.js": "/js/service_provider/map.js"
+  "/js/service_provider/map.js": "/js/service_provider/map.js",
+  "/js/service_provider/services.js": "/js/service_provider/services.js"
 }

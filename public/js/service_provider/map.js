@@ -1,3 +1,5 @@
+'use strict';
+
 jQuery(document).ready(function($) {
     let $map                    = $('#map'),
         $latitude               = $('#latitude'),

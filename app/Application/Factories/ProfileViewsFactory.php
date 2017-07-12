@@ -6,13 +6,12 @@ use Illuminate\Support\Facades\Storage;
 use LaravelDoctrine\ORM\Facades\EntityManager;
 use Udoktor\Domain\Regions\AdministrativeUnit;
 use Udoktor\Domain\Users\Classification;
-use Udoktor\Domain\Users\ServiceType;
 
 /**
  * Class ProfileViewsFactory
  *
  * @package Udoktor\Application\Factories
- * @category Simple Factory
+ * @category Application Service (Simple Factory)
  * @author  Gerardo Adrián Gómez Ruiz <gerardo.gomr@gmail.com>
  */
 class ProfileViewsFactory
@@ -28,33 +27,11 @@ class ProfileViewsFactory
             $countries        = EntityManager::getRepository(AdministrativeUnit::class)->findBy(['parentUnit' => null]);
             $state            = EntityManager::getRepository(AdministrativeUnit::class)->find(Auth::user()->getAdministrativeUnit()->getParentUnit()->getId());
             $cities           = EntityManager::getRepository(AdministrativeUnit::class)->findBy(['parentUnit' => $state->getId()]);
-            $serviceTypes     = EntityManager::getRepository(ServiceType::class)->findBy(['active' => true]);
             $classifications  = EntityManager::getRepository(Classification::class)->findBy(['active' => true]);
-            $serviceTypesJson = [];
-
-            // creating list services on json format
-            foreach ($serviceTypes as $serviceType) {
-                $serviceTypesJson[] = [
-                    'value' => $serviceType->getId(),
-                    'text'  => $serviceType->getName()
-                ];
-            }
-
-            // creating list of services from user on json format
-            foreach (Auth::user()->getServiceTypes() as $service) {
-                $serviceTypesJsonUser[] = [
-                    'value' => $service->getId(),
-                    'text'  => $service->getName()
-                ];
-            }
-
-            $serviceTypesJson     = json_encode($serviceTypesJson);
-            $serviceTypesJsonUser = json_encode($serviceTypesJsonUser);
-
             $profilePictureUrl = static::checkUsersProfilePicture();
             $notifications     = explode(',', Auth::user()->getNotifications());
 
-            return view('service_provider.profile', compact('countries', 'state', 'cities', 'serviceTypesJson', 'classifications', 'serviceTypesJsonUser', 'profilePictureUrl', 'notifications'));
+            return view('service_provider.profile', compact('countries', 'state', 'cities', 'classifications', 'profilePictureUrl', 'notifications'));
         }
     }
 

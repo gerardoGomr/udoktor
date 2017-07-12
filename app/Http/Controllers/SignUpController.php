@@ -10,8 +10,9 @@ use Udoktor\Application\CustomCollection;
 use Udoktor\Domain\Persons\FullName;
 use Udoktor\Domain\Regions\AdministrativeUnit;
 use Udoktor\Domain\Users\Classification;
+use Udoktor\Domain\Users\OfferedService;
 use Udoktor\Domain\Users\Repositories\UsersRepository;
-use Udoktor\Domain\Users\ServiceType;
+use Udoktor\Domain\Users\Service;
 use Udoktor\Domain\Users\User;
 use Udoktor\Http\Controllers\Controller;
 use Udoktor\Http\Requests\SignUpRequest;
@@ -48,22 +49,22 @@ class SignUpController extends Controller
      */
     public function index()
     {
-        $countries        = EntityManager::getRepository(AdministrativeUnit::class)->findBy(['parentUnit' => null]);
-        $serviceTypes     = EntityManager::getRepository(ServiceType::class)->findBy(['active' => true]);
-        $classifications  = EntityManager::getRepository(Classification::class)->findBy(['active' => true]);
-        $serviceTypesJson = [];
+        $countries       = EntityManager::getRepository(AdministrativeUnit::class)->findBy(['parentUnit' => null]);
+        $services        = EntityManager::getRepository(Service::class)->findBy(['active' => true]);
+        $classifications = EntityManager::getRepository(Classification::class)->findBy(['active' => true]);
+        $servicesJson    = [];
 
         // creating list services on json format
-        foreach ($serviceTypes as $serviceType) {
-            $serviceTypesJson[] = [
-                'value' => $serviceType->getId(),
-                'text'  => $serviceType->getName()
+        foreach ($services as $service) {
+            $servicesJson[] = [
+                'value' => $service->getId(),
+                'text'  => $service->getName()
             ];
         }
 
-        $serviceTypesJson = json_encode($serviceTypesJson);
+        $servicesJson = json_encode($servicesJson);
 
-        return view('accounts.sign_up', compact('countries', 'serviceTypesJson', 'classifications'));
+        return view('accounts.sign_up', compact('countries', 'servicesJson', 'classifications'));
     }
 
     /**
@@ -75,7 +76,7 @@ class SignUpController extends Controller
     public function searchAUnit(Request $request)
     {
         $response = ['status' => 'OK'];
-        $aUnitId  = (int) $request->get('aUnitId');
+        $aUnitId  = (int) $request->input('aUnitId');
         $aUnits   = EntityManager::getRepository(AdministrativeUnit::class)->findBy(['parentUnit' => $aUnitId]);
 
         if (count($aUnits) === 0) {
@@ -99,26 +100,27 @@ class SignUpController extends Controller
         $response = ['estatus' => 'OK'];
 
         try {
-            $aUnit  = EntityManager::getRepository(AdministrativeUnit::class)->find((int) $request->get('municipio'));
-            $user   = new User(new FullName($request->get('nombre'), $request->get('paterno'), $request->get('materno')),
-                $request->get('email'),
-                $request->get('pass'),
-                $request->get('telefono'),
-                (int) $request->get('tipoCuenta'),
+            $aUnit  = EntityManager::getRepository(AdministrativeUnit::class)->find((int) $request->input('municipio'));
+            $user   = new User(new FullName($request->input('nombre'), $request->input('paterno'), $request->input('materno')),
+                $request->input('email'),
+                $request->input('pass'),
+                $request->input('telefono'),
+                (int) $request->input('tipoCuenta'),
                 $aUnit
             );
 
             if ($user->isServiceProvider()) {
-                $services       = new CustomCollection;
-                $classification = EntityManager::getRepository(Classification::class)->find((int) $request->get('clasificacion'));
-                $serviceTypeIds = explode(',', $request->get('servicios'));
+                $offeredServices = new CustomCollection;
+                $classification  = EntityManager::getRepository(Classification::class)->find((int) $request->input('clasificacion'));
+                $servicesIds     = explode(',', $request->input('servicios'));
 
-                foreach ($serviceTypeIds as $serviceId) {
-                    $serviceType = EntityManager::getRepository(ServiceType::class)->find((int) $serviceId);
-                    $services->add($serviceType);
+                foreach ($servicesIds as $serviceId) {
+                    $service        = EntityManager::getRepository(Service::class)->find((int) $serviceId);
+                    $offeredService = new OfferedService($user, $service);
+                    $offeredServices->add($offeredService);
                 }
 
-                $user->addComponentsForServiceProvider($classification, $services);
+                $user->addComponentsForServiceProvider($classification, $offeredServices);
             }
 
             $user->register();
@@ -135,6 +137,7 @@ class SignUpController extends Controller
             $response['message'] = '¡Hubo un error! ' . $e->getMessage();
 
             Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
 
         } finally {
             return response()->json($response);

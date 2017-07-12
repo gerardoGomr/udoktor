@@ -43,9 +43,12 @@ class LoginController extends Controller
         } else {
             $user = EntityManager::getRepository(User::class)->findOneBy(['email' => $correo]);
 
-            $errorMessage = 'Error de correo electrónico y/o contraseña';
-            if (!$user->isVerified()) {
+            if (is_null($user)) {
+                $errorMessage = 'Error de correo electrónico y/o contraseña';
+            } elseif (!$user->isVerified()) {
                 $errorMessage = 'No ha verificado su cuenta';
+            } else {
+                $errorMessage = 'Error de correo electrónico y/o contraseña';
             }
 
             return redirect()

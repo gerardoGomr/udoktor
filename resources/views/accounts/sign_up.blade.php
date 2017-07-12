@@ -12,10 +12,10 @@
                     <div class="col-sm-4 col-xs-12 col-md-3 form-control-label">
                         <label for="email" class="control-label">Correo electrónico:</label>
                     </div>
-                    <div class="col-sm-8 col-xs-12 col-md-4">
+                    <div class="col-sm-8 col-xs-12 col-md-6 col-lg-4">
                         <div class="form-group">
                             <div class="form-line">
-                                <input type="text" name="email" id="email" class="form-control required" data-rule-email="true" placeholder="ejemplo@ejemplo.com" autofocus>
+                                <input type="text" name="email" id="email" class="form-control required" data-rule-email="true" placeholder="ejemplo@ejemplo.com" maxlength="80" autofocus>
                             </div>
                         </div>
                     </div>
@@ -25,10 +25,10 @@
                     <div class="col-sm-4 col-xs-12 col-md-3 form-control-label">
                         <label for="pass" class="control-label">Contraseña:</label>
                     </div>
-                    <div class="col-sm-8 col-xs-12 col-md-4">
+                    <div class="col-sm-8 col-xs-12 col-md-6 col-lg-4">
                         <div class="form-group">
                             <div class="form-line">
-                                <input type="password" name="pass" id="pass" class="form-control required" data-rule-minlength="8" placeholder="Longitud mínima de 8 caracteres">
+                                <input type="password" name="pass" id="pass" class="form-control required" data-rule-minlength="8" placeholder="Longitud mínima de 8 caracteres" maxlength="80">
                             </div>
                         </div>
                     </div>
@@ -53,10 +53,10 @@
                     <div class="col-sm-4 col-xs-12 col-md-3 form-control-label">
                         <label for="nombre" class="control-label">Nombre:</label>
                     </div>
-                    <div class="col-sm-8 col-xs-12 col-md-4">
+                    <div class="col-sm-8 col-xs-12 col-md-6 col-lg-4">
                         <div class="form-group">
                             <div class="form-line">
-                                <input type="text" name="nombre" id="nombre" class="form-control required" placeholder="">
+                                <input type="text" name="nombre" id="nombre" class="form-control required" placeholder="" maxlength="80">
                             </div>
                         </div>
                     </div>
@@ -66,10 +66,10 @@
                     <div class="col-sm-4 col-xs-12 col-md-3 form-control-label">
                         <label for="paterno" class="control-label">A. Paterno:</label>
                     </div>
-                    <div class="col-sm-8 col-xs-12 col-md-4">
+                    <div class="col-sm-8 col-xs-12 col-md-6 col-lg-4">
                         <div class="form-group">
                             <div class="form-line">
-                                <input type="text" name="paterno" id="paterno" class="form-control required" placeholder="">
+                                <input type="text" name="paterno" id="paterno" class="form-control required" placeholder="" maxlength="80">
                             </div>
                         </div>
                     </div>
@@ -79,10 +79,10 @@
                     <div class="col-sm-4 col-xs-12 col-md-3 form-control-label">
                         <label for="materno" class="control-label">A. Materno:</label>
                     </div>
-                    <div class="col-sm-8 col-xs-12 col-md-4">
+                    <div class="col-sm-8 col-xs-12 col-md-6 col-lg-4">
                         <div class="form-group">
                             <div class="form-line">
-                                <input type="text" name="materno" id="materno" class="form-control">
+                                <input type="text" name="materno" id="materno" class="form-control" maxlength="80">
                             </div>
                         </div>
                     </div>
@@ -92,7 +92,7 @@
                     <div class="col-sm-4 col-xs-12 col-md-3 form-control-label">
                         <label for="pais" class="control-label">País de residencia:</label>
                     </div>
-                    <div class="col-sm-8 col-xs-12 col-md-4">
+                    <div class="col-sm-8 col-xs-12 col-md-6 col-lg-4">
                         <div class="form-group">
                             <select class="form-control show-tick required aUnit" name="pais" id="pais" data-live-search="true" data-target="estado">
                                 <option value="" selected>Seleccione</option>
@@ -109,7 +109,7 @@
                     <div class="col-sm-4 col-xs-12 col-md-3 form-control-label">
                         <label for="estado" class="control-label">Estado de residencia:</label>
                     </div>
-                    <div class="col-sm-8 col-xs-12 col-md-4">
+                    <div class="col-sm-8 col-xs-12 col-md-6 col-lg-4">
                         <div class="form-group">
                             <select class="form-control show-tick required aUnit" name="estado" id="estado" data-live-search="true" data-target="municipio">
                                 <option value="" selected>Seleccione</option>
@@ -123,7 +123,7 @@
                     <div class="col-sm-4 col-xs-12 col-md-3 form-control-label">
                         <label for="municipio" class="control-label">Municipio de residencia:</label>
                     </div>
-                    <div class="col-sm-8 col-xs-12 col-md-4">
+                    <div class="col-sm-8 col-xs-12 col-md-6 col-lg-4">
                         <div class="form-group">
                             <select class="form-control show-tick required" name="municipio" id="municipio" data-live-search="true">
                                 <option value="" selected>Seleccione</option>
@@ -137,10 +137,10 @@
                     <div class="col-sm-4 col-xs-12 col-md-3 form-control-label">
                         <label for="telefono" class="control-label">¿Algún número de contacto?:</label>
                     </div>
-                    <div class="col-sm-8 col-xs-12 col-md-4">
+                    <div class="col-sm-8 col-xs-12 col-md-6 col-lg-4">
                         <div class="form-group">
                             <div class="form-line">
-                                <input type="text" name="telefono" id="telefono" class="form-control required">
+                                <input type="text" name="telefono" id="telefono" class="form-control required" maxlength="20">
                             </div>
                         </div>
                     </div>
@@ -152,6 +152,11 @@
                             <input type="checkbox" name="aceptaTerminos" id="aceptaTerminos" class="filled-in chk-col-red">
                             <label for="aceptaTerminos">&nbsp; Estoy de acuerdo con los términos y condiciones de Udoktor</label>
                         </div>
+                    </div>
+                </div>
+                <div class="row clearfix">
+                    <div class="col-md-offset-3 col-sm-offset-4">
+                        <div class="g-recaptcha" data-sitekey="6Lc9piUTAAAAAFBNrYcFr0-Tukw2GWBcr88sHxSy"></div>
                     </div>
                 </div>
                 <br>
@@ -168,7 +173,7 @@
                     <div class="col-sm-4 col-xs-12 col-md-3 form-control-label">
                         <label for="clasificacion" class="control-label">Clasificación:</label>
                     </div>
-                    <div class="col-sm-8 col-xs-12 col-md-4">
+                    <div class="col-sm-8 col-xs-12 col-md-6 col-lg-4">
                         <div class="form-group">
                             <select name="clasificacion" id="clasificacion" class="form-control show-tick" data-live-search="true" required>
                                 <option value="" selected="">Seleccione</option>
@@ -192,7 +197,7 @@
                             </div>
 
                             <p class="form-control-static text-muted">Escriba algún servicio que usted brinde. Ejemplo: aplicación de inyecciones</p>
-                            <input type="hidden" id="serviceTypes" value="{{ base64_encode($serviceTypesJson) }}">
+                            <input type="hidden" id="services" value="{{ base64_encode($servicesJson) }}">
                         </div>
                     </div>
                 </div>
@@ -207,24 +212,10 @@
         </form>
     </div>
 
-    <div class="modal fade" id="modalMapa" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-body" id="mapa" style="width: 100%; height: 480px;">
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">Cerrar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     @include('layouts.loader')
 @stop
 
 @section('js')
-    {{-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC5UyM5feL_oL7pwodFUKGagZQieNXy3Ps"></script>
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script> --}}
+    <script src="https://www.google.com/recaptcha/api.js" defer></script>
     <script src="{{ mix('js/accounts/sign_up.js') }}"></script>
 @stop

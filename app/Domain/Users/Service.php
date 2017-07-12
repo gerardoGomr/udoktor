@@ -63,7 +63,7 @@ class Service
     private $deletedAt;
 
     /**
-     * Service Constructor
+     * ServiceType Constructor
      *
      * @param string $name
      * @param string $description
@@ -102,6 +102,36 @@ class Service
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * gets the price
+     *
+     * @return float
+     */
+    public function getPrice()
+    {
+        return $this->price;
+    }
+
+    /**
+     * gets the maximum price
+     *
+     * @return float
+     */
+    public function getMaxPrice()
+    {
+        return $this->maxPrice;
+    }
+
+    /**
+     * gets the minimum price
+     *
+     * @return float
+     */
+    public function getMinPrice()
+    {
+        return $this->minPrice;
     }
 
     /**

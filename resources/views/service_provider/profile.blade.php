@@ -47,59 +47,11 @@
                 <div class="body">
                     <ul class="nav nav-tabs tab-nav-right" role="tablist">
                         <li role="presentation" class="active"><a href="#generalData" data-toggle="tab">Datos Generales</a></li>
-                        <li role="presentation"><a href="#offeredServices" data-toggle="tab">Servicios</a></li>
                         <li role="presentation"><a id="mapLocationLink" href="#mapLocation" data-toggle="tab">Ubicación</a></li>
                     </ul>
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane fade in active" id="generalData">
                             @include('common._profile_form')
-                        </div>
-
-                        <div role="tabpanel" class="tab-pane fade" id="offeredServices">
-                            <form id="offeredServicesForm">
-                                <div class="row clearfix">
-                                    <div class="col-sm-4 col-xs-12 col-md-3 form-control-label">
-                                        <label for="classification" class="control-label">Clasificación:</label>
-                                    </div>
-                                    <div class="col-sm-8 col-xs-12 col-md-4">
-                                        <div class="form-group">
-                                            <select name="classification" id="classification" class="form-control show-tick" data-live-search="true" required>
-                                                <option value="" selected="">Seleccione</option>
-                                                <option value="-1">Otro</option>
-                                                @foreach($classifications as $classification)
-                                                    <option value="{{ $classification->getId() }}" {{ $classification->getId() === $user->getClassification()->getId() ? 'selected' : '' }}>{{ $classification->getName() }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row clearfix">
-                                    <div class="col-sm-4 col-xs-12 col-md-3 form-control-label">
-                                        <label for="services" class="control-label">Servicios que brinda:</label>
-                                    </div>
-                                    <div class="col-sm-8 col-xs-12 col-md-9">
-                                        <div class="form-group">
-                                            <div class="form-line">
-                                                <input type="text" name="services" id="services" class="form-control required">
-                                            </div>
-
-                                            <p class="form-control-static text-muted">Escriba algún servicio que usted brinde. Ejemplo: aplicación de inyecciones</p>
-                                            <input type="hidden" id="serviceTypes" value="{{ base64_encode($serviceTypesJson) }}">
-                                            <input type="hidden" id="serviceTypesUser" value="{{ base64_encode($serviceTypesJsonUser) }}">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row clearfix">
-                                    <div class="col-sm-8 col-xs-12 col-md-4 col-sm-offset-4 col-md-offset-3">
-                                        <div class="form-group">
-                                            <button type="button" class="btn bg-red waves-effect" id="updateServices"><i class="fa fa-save"></i> Actualizar servicios</button>
-
-                                            <input type="hidden" name="_method" value="PUT">
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
                         </div>
 
                         <div role="tabpanel" class="tab-pane fade" id="mapLocation">

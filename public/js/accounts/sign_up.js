@@ -1,3 +1,5 @@
+'use strict';
+
 jQuery(document).ready(function($) {
     var $paso2                = $('#paso2'),
         $pasoAnterior         = $('#pasoAnterior'),
@@ -6,18 +8,12 @@ jQuery(document).ready(function($) {
         $abrirMapa            = $('#abrirMapa'),
         $modalMapa            = $('#modalMapa'),
         $formCrearCuenta      = $('#formCrearCuenta'),
-        //$latitud              = $('#latitud'),
-        //$longitud             = $('#longitud'),
-        //$ubicacion            = $('#ubicacion'),
         $servicios            = $('#servicios'),
         $informacionBasica    = $('#informacionBasica'),
         $informacionPrestador = $('#informacionPrestador'),
-        //$captcha              = $('#captcha'),
+        $captcha              = $("#g-recaptcha-response"),
         $loader               = $('#loader'),
-        mapaEnvio             = null,
-        marker                = null,
-        //geocoder              = new google.maps.Geocoder(),
-        listaServicios        = JSON.parse(atob($('#serviceTypes').val())),
+        listaServicios        = JSON.parse(atob($('#services').val())),
         servicios             = new Bloodhound({
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
@@ -76,7 +72,7 @@ jQuery(document).ready(function($) {
 
     // click para el paso 2
 	$paso2.on('click', function () {
-		inicializarValidacionForm();
+		validateForm();
 
         if ($formCrearCuenta.valid()) {
 
@@ -85,7 +81,7 @@ jQuery(document).ready(function($) {
                 return false;
             }
 
-            var tipoCuenta;
+            let tipoCuenta = null;
 
             if ($('#cuentaCliente').prop('checked')) {
                 tipoCuenta = 1;
@@ -126,7 +122,7 @@ jQuery(document).ready(function($) {
 
     // crear cuenta
     $crearCuenta.on('click', function () {
-        inicializarValidacionForm();
+        validateForm();
         if ($formCrearCuenta.valid()) {
             crearCuenta($formCrearCuenta.serialize());
         }
@@ -152,7 +148,7 @@ jQuery(document).ready(function($) {
             $loader.modal('hide');
 
             if (respuesta.estatus === 'fail') {
-                swal('Tuvimos un inconveniente al crear su cuenta. Por favor, intente de nuevo', 'warning');
+                swal('¡Error!', 'Tuvimos un inconveniente al crear su cuenta. Por favor, intente de nuevo', 'warning');
             }
 
             if (respuesta.estatus === 'OK') {
@@ -171,14 +167,20 @@ jQuery(document).ready(function($) {
         })
         .fail(function(jqXHR, textStatus, errorThrown) {
             $loader.modal('hide');
-            console.log(textStatus + ': ' + errorThrown);
+            let errors = '';
+            if(jqXHR.status === 422) {
+                $.each(jqXHR.responseJSON, function(key, value) {
+                    errors += value + '<br>';
+                });
+            }
+            swal('¡Error!', 'Tuvimos un inconveniente al crear su cuenta:' + errors, 'warning');
         });
     }
 
     /**
      * inicializar validacion de form
      */
-    function inicializarValidacionForm() {
+    function validateForm() {
         $formCrearCuenta.validate({
             highlight: function (input) {
                 console.log(input);
@@ -193,90 +195,5 @@ jQuery(document).ready(function($) {
             }
         })
             .settings.ignore = ':disabled,:hidden';
-    }
-
-    // abrir modal del mapa
-    /*$abrirMapa.on('click', function(event) {
-        // gmaps on load
-        mapaEnvio = new google.maps.Map(document.querySelector('#mapa'), {
-            center: {
-                lat: 19.432608,
-                lng: -99.133208
-            },
-            zoom: 7
-        });
-
-        marker = new google.maps.Marker({
-            position: event.latLng,
-            map: mapaEnvio,
-            draggable: true
-        });
-
-        // listener mapa
-        google.maps.event.addListener(mapaEnvio, 'click', function(event) {
-            marker.setMap(null);
-
-            marker = new google.maps.Marker({
-                position: event.latLng,
-                map: mapaEnvio,
-                draggable: true
-            });
-
-            $latitud.val(event.latLng.lat());
-            $longitud.val(event.latLng.lng());
-            obtenerDireccionPunto(event.latLng);
-
-            google.maps.event.addListener(marker, 'click', function(event) {
-                marker.setMap(null);
-                $latitud.val('');
-                $longitud.val('');
-                $ubicacion.val('');
-            });
-        });
-
-        $modalMapa.modal('show');
-    });
-
-    // función para repintar mapa
-    $modalMapa.on("shown.bs.modal", function () {
-        google.maps.event.trigger(mapaEnvio, "resize");
-    });*/
-
-    /**
-     * obtener la direccion real del punt
-     *
-     * @param  string punto
-     * @return void
-     */
-    function obtenerDireccionPunto(punto) {
-        geocoder.geocode({ 'latLng': punto }, function (results, status) {
-            if (status == google.maps.GeocoderStatus.OK) {
-                if (results[1]) {
-                    var cadenaOrigen1    = '',
-                        addressComponent = results[0].address_components,
-                        aCompareAdress   = {
-                            'locality' : 'municipio',
-                            'administrative_area_level_1':'estado',
-                            'administrative_area_level_2' : 'estado2',
-                            'country' : 'pais'
-                        };
-
-                    for (var iAddress in addressComponent) {
-                        var type = aCompareAdress[addressComponent[iAddress].types[0]];
-                        if(type != null){
-                            if(type === 'municipio')
-                                cadenaOrigen1 = cadenaOrigen1 + addressComponent[iAddress].short_name + ',';
-                            if(type === 'estado')
-                                cadenaOrigen1 = cadenaOrigen1 + addressComponent[iAddress].short_name + ',';
-                            if(type === 'estado2')
-                                cadenaOrigen1 = cadenaOrigen1 + addressComponent[iAddress].short_name + ',';
-                            if(type === 'pais')
-                                cadenaOrigen1 = cadenaOrigen1 + addressComponent[iAddress].long_name + ',';
-                        }
-                    }
-                    $ubicacion.val(cadenaOrigen1);
-               }
-            }
-        });
     }
 });

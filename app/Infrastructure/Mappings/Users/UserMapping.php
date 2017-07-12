@@ -6,6 +6,7 @@ use LaravelDoctrine\Fluent\Fluent;
 use Udoktor\Domain\Regions\AdministrativeUnit;
 use Udoktor\Domain\Regions\Location;
 use Udoktor\Domain\Users\Classification;
+use Udoktor\Domain\Users\OfferedService;
 use Udoktor\Domain\Users\ServiceType;
 use Udoktor\Domain\Users\User;
 
@@ -48,6 +49,7 @@ class UserMapping extends EntityMapping
         $builder->datetime('verificationDate')->nullable();
         $builder->datetime('requestDate')->nullable();
         $builder->smallInteger('role');
+        $builder->smallInteger('priceType');
         $builder->string('profilePicture')->length(15)->nullable();
         $builder->string('notifications')->length(255)->nullable();
         $builder->datetime('createdAt');
@@ -65,6 +67,11 @@ class UserMapping extends EntityMapping
         $builder->manyToOne(Classification::class)->nullable();
 
         // user offers many services - a service is offered by many users
-        $builder->manyToMany(ServiceType::class);
+        $relation = $builder->oneToMany(OfferedService::class, 'services')
+            ->mappedBy('user')
+            ->orphanRemoval();
+
+        $relation->cascadePersist();
+        $relation->cascadeRemove();
     }
 }

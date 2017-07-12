@@ -1,6 +1,7 @@
+'use strict';
+
 jQuery(document).ready(function($) {
     var $generalDataForm        = $('#generalDataForm'),
-        $offeredServicesForm    = $('#offeredServicesForm'),
         $locationForm           = $('#locationForm'),
         $formPicture            = $('#formPicture'),
         $services               = $('#services'),
@@ -11,13 +12,6 @@ jQuery(document).ready(function($) {
         $updateProfile          = $('#updateProfile'),
         $updateServices         = $('#updateServices'),
         $updateLocation         = $('#updateLocation'),
-        servicesList            = JSON.parse(atob($('#serviceTypes').val())),
-        userServicesList        = JSON.parse(atob($('#serviceTypesUser').val())),
-        services                = new Bloodhound({
-            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
-            queryTokenizer: Bloodhound.tokenizers.whitespace,
-            local:          servicesList
-        }),
         optionsPicture          = {
             dataType: 'json',
             beforeSubmit: function () {
@@ -41,28 +35,6 @@ jQuery(document).ready(function($) {
 
     // setting ajax form for sending image
     $formPicture.ajaxForm(optionsPicture);
-
-    // tagsinput
-    services.initialize();
-    $services.tagsinput({
-        itemValue: 'value',
-        itemText:  'text',
-        typeaheadjs: {
-            name:       'servicios',
-            displayKey: 'text',
-            source:     services.ttAdapter()
-        }
-    });
-
-    // render tagsinput
-    let length = userServicesList.length;
-
-    for (let i = 0; i < length; i++) {
-        $services.tagsinput('add', {
-            'value': userServicesList[i]['value'] ,
-            'text':  userServicesList[i]['text']
-        });
-    }
 
     // load states - municipality
     $generalDataForm.on('change', 'select.aUnit', function(event) {
@@ -105,7 +77,6 @@ jQuery(document).ready(function($) {
 
     // validate form
     validateForm($generalDataForm);
-    validateForm($offeredServicesForm);
     validateForm($locationForm);
     validateForm($formPicture);
 
@@ -184,36 +155,6 @@ jQuery(document).ready(function($) {
             .fail(function(jqXHR) {
                 $loader.modal('hide');
                 swal('Error', 'Ocurrió un error al actualizar el perfil del prestador de servicios', 'error');
-            });
-        }
-    });
-
-    // services
-    $updateServices.on('click', function () {
-        if ($offeredServicesForm.valid()) {
-            $.ajax({
-                url:        '/prestador-servicios/perfil/servicios',
-                type:       'POST',
-                dataType:   'json',
-                data:       $offeredServicesForm.serialize(),
-                beforeSend: function () {
-                    $loader.modal('show');
-                }
-            })
-            .done(function(response) {
-                $loader.modal('hide');
-
-                if (response.status === 'success') {
-                    swal('¡Éxito!', 'Servicios actualizados con éxito', 'success');
-                }
-
-                if (response.status === 'error') {
-                    swal('Error', 'Ocurrió un error al actualizar los servicios del prestador de servicios: ' + response.error, 'error');
-                }
-            })
-            .fail(function(jqXHR) {
-                $loader.modal('hide');
-                swal('Error', 'Ocurrió un error al actualizar los servicios del prestador de servicios', 'error');
             });
         }
     });

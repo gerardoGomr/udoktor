@@ -14,21 +14,28 @@ Route::group(['middleware' => ['auth', 'picture']], function () {
     // main view
     Route::get('/', 'HomeController@index');
 
-    // perfil prestador servicios
+    // service provider profile
     Route::group(['prefix' => 'prestador-servicios/perfil'], function () {
-        Route::get('/', 'AccountsController@index');
-        Route::put('/', 'AccountsController@updateProfile');
-        Route::put('picture', 'AccountsController@changeProfileImage');
-        Route::put('notificaciones', 'AccountsController@setNotifications');
-        Route::put('servicios', 'AccountsController@updateServices');
-        Route::put('ubicacion', 'AccountsController@updateLocation');
+        Route::get('/', 'UsersController@index');
+        Route::put('/', 'UsersController@updateProfile');
+        Route::put('picture', 'UsersController@changeProfileImage');
+        Route::put('notificaciones', 'UsersController@setNotifications');
+        Route::put('ubicacion', 'UsersController@updateLocation');
     });
+
+    // update price type for service provider
+    Route::put('prestador-servicios/precios', 'UsersController@updatePriceType');
+    Route::patch('prestador-servicios/precios', 'UsersController@updatePrices');
 
     // group for service providers
     Route::group(['prefix' => 'prestador-servicios', 'namespace' => 'ServiceProviders'], function () {
-
         // calendar
         Route::get('/', 'DatesController@index');
+
+        // services
+        Route::get('servicios', 'ServicesController@index');
+        Route::put('servicios', 'ServicesController@addServices');
+        Route::delete('servicios', 'ServicesController@removeService');
     });
 });
 

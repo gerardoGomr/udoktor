@@ -11,9 +11,7 @@ const { mix } = require('laravel-mix');
  |
  */
 
-// mix.js('resources/assets/js/app.js', 'public/js')
-//   .sass('resources/assets/sass/app.scss', 'public/css');
-var publicFontDirectory  = 'public/fonts',
+let publicFontDirectory  = 'public/fonts',
     resourcesDirectory   = 'resources/assets/plugins/',
     publicImageDirectory = 'public/images',
     directories          = {
@@ -81,8 +79,10 @@ mix.sass('resources/assets/sass/style.scss', 'public/css/app.css')
     .scripts('resources/assets/js/accounts/reset_password.js', 'public/js/accounts/reset_password.js')
     .scripts('resources/assets/js/service_provider/index.js', 'public/js/service_provider/index.js')
     .scripts('resources/assets/js/service_provider/profile.js', 'public/js/service_provider/profile.js')
-    .scripts('resources/assets/js/service_provider/map.js', 'public/js/service_provider/map.js');
+    .scripts('resources/assets/js/service_provider/map.js', 'public/js/service_provider/map.js')
+    .scripts('resources/assets/js/service_provider/services.js', 'public/js/service_provider/services.js');
 
-    for (var directory in directories) {
-        mix.copy(directory, directories[directory]);
-    }
+// copying assets from resources to public
+for (let directory in directories) {
+    mix.copy(directory, directories[directory]);
+}

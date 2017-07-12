@@ -3,16 +3,17 @@ namespace Udoktor\Infrastructure\Mappings\Users;
 
 use LaravelDoctrine\Fluent\EntityMapping;
 use LaravelDoctrine\Fluent\Fluent;
-use Udoktor\Domain\Users\ServiceType;
+use Udoktor\Domain\Users\OfferedService;
+use Udoktor\Domain\Users\Service;
 
 /**
- * Class ServiceTypeMapping
+ * Class ServiceMapping
  *
  * @package Udoktor\Infrastructure\Mappings\Users
  * @category Mapping
  * @author Gerardo Adrián Gómez Ruiz <gerardo.gomr@gmail.com>
  */
-class ServiceTypeMapping extends EntityMapping
+class ServiceMapping extends EntityMapping
 {
     /**
      * Returns the fully qualified name of the class that this mapper maps.
@@ -21,7 +22,7 @@ class ServiceTypeMapping extends EntityMapping
      */
     public function mapFor()
     {
-        return ServiceType::class;
+        return Service::class;
     }
 
     /**

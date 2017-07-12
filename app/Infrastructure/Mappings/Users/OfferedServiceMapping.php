@@ -3,16 +3,18 @@ namespace Udoktor\Infrastructure\Mappings\Users;
 
 use LaravelDoctrine\Fluent\EntityMapping;
 use LaravelDoctrine\Fluent\Fluent;
-use Udoktor\Domain\Users\ServiceType;
+use Udoktor\Domain\Users\OfferedService;
+use Udoktor\Domain\Users\Service;
+use Udoktor\Domain\Users\User;
 
 /**
- * Class ServiceTypeMapping
+ * Class OfferedServiceMapping
  *
  * @package Udoktor\Infrastructure\Mappings\Users
  * @category Mapping
  * @author Gerardo Adrián Gómez Ruiz <gerardo.gomr@gmail.com>
  */
-class ServiceTypeMapping extends EntityMapping
+class OfferedServiceMapping extends EntityMapping
 {
     /**
      * Returns the fully qualified name of the class that this mapper maps.
@@ -21,7 +23,7 @@ class ServiceTypeMapping extends EntityMapping
      */
     public function mapFor()
     {
-        return ServiceType::class;
+        return OfferedService::class;
     }
 
     /**
@@ -31,16 +33,11 @@ class ServiceTypeMapping extends EntityMapping
      */
     public function map(Fluent $builder)
     {
-        // Both strings will be varchars
         $builder->increments('id');
-        $builder->string('name')->length(80);
-        $builder->string('description')->length(200);
-        $builder->boolean('active');
         $builder->float('price');
-        $builder->float('minPrice');
-        $builder->float('maxPrice');
-        $builder->datetime('createdAt');
-        $builder->datetime('updatedAt')->nullable();
-        $builder->datetime('deletedAt')->nullable();
+
+        // a user lives in one a unit - aUnit is the place wher many users live
+        $builder->manyToOne(User::class)->inversedBy('services')->nullable();
+        $builder->manyToOne(Service::class)->nullable();
     }
 }

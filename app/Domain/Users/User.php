@@ -10,6 +10,7 @@ use Udoktor\Domain\Persons\Person;
 use Udoktor\Domain\Regions\AdministrativeUnit;
 use Udoktor\Domain\Regions\Location;
 use Udoktor\Exceptions\AddingComponentsForNonServiceProviderRoleException;
+use Udoktor\Exceptions\InvalidPriceTypeException;
 use Udoktor\Exceptions\InvalidRoleAssignmenException;
 use Udoktor\Exceptions\InvalidVerificationTokenException;
 
@@ -80,9 +81,11 @@ class User extends Person implements Authenticatable
     private $classification;
 
     /**
+     * The offered services by the user (OfferedService collection)
+     *
      * @var ICollection
      */
-    private $serviceTypes;
+    private $services;
 
     /**
      * @var string
@@ -124,9 +127,30 @@ class User extends Person implements Authenticatable
      */
     private $notifications;
 
-    const ADMIN            = 3;
+    /**
+     * the price type (fixed, recommended)
+     *
+     * @var integer
+     */
+    private $priceType;
+
     const CLIENT           = 1;
     const SERVICE_PROVIDER = 2;
+    const ADMIN            = 3;
+
+    /**
+     * the price the user offers
+     *
+     * @var integer
+     */
+    const FIXED_PRICE = 1;
+
+    /**
+     * the price the system offers
+     *
+     * @var integer
+     */
+    const RECOMMENDED_PRICE = 2;
 
     /**
      * User Constructor
@@ -138,7 +162,7 @@ class User extends Person implements Authenticatable
      * @param int $role
      * @param AdministrativeUnit $aUnit
      */
-    public function __construct(FullName $fullName, $email, $password, $contactNumber, $role, AdministrativeUnit $aUnit)
+    public function __construct(FullName $fullName, $email, $password, $contactNumber, $role, AdministrativeUnit $aUnit, $priceType = self::RECOMMENDED_PRICE)
     {
         $this->email              = $email;
         $this->password           = $password;
@@ -150,7 +174,8 @@ class User extends Person implements Authenticatable
             throw new InvalidRoleAssignmenException('El rol que se solicita no existe.');
         }
 
-        $this->role = $role;
+        $this->role      = $role;
+        $this->priceType = $priceType;
 
         parent::__construct($fullName);
     }
@@ -158,18 +183,21 @@ class User extends Person implements Authenticatable
     /**
      * add components for the user with service provider role
      *
-     * @param Classification $classification [description]
+     * @method addComponentsForServiceProvider
+     * @param Classification $classification
      * @param ICollection $services
+     *
+     * @return void
      */
     public function addComponentsForServiceProvider(Classification $classification, ICollection $services)
     {
         if ($this->role !== self::SERVICE_PROVIDER) {
-            throw new AddingComponentsForNonServiceProviderRoleException('Solamente se pueden agregar estos componentes a usuarios con rol de prestador servicio.');
+            throw new AddingComponentsForNonServiceProviderRoleException('Solamente se pueden agregar estos componentes a usuarios con rol de prestador de servicio.');
 
         }
 
         $this->classification = $classification;
-        $this->serviceTypes   = $services;
+        $this->services       = $services;
     }
 
     /**
@@ -232,7 +260,7 @@ class User extends Person implements Authenticatable
      *
      * @return bool
      */
-    public function isActive(): boolean
+    public function isActive(): bool
     {
         return $this->active;
     }
@@ -312,9 +340,9 @@ class User extends Person implements Authenticatable
     /**
      * @return ICollection
      */
-    public function getServiceTypes()
+    public function getservices()
     {
-        return $this->serviceTypes;
+        return $this->services;
     }
 
     /**
@@ -341,6 +369,26 @@ class User extends Person implements Authenticatable
     public function getNotifications()
     {
         return $this->notifications;
+    }
+
+    /**
+     * returns the configuerd price type
+     *
+     * @return integer
+     */
+    public function getPriceType()
+    {
+        return $this->priceType;
+    }
+
+    /**
+     * checks if the service provider has services
+     *
+     * @return bool
+     */
+    public function hasServices()
+    {
+        return !is_null($this->services);
     }
 
     /**
@@ -506,5 +554,126 @@ class User extends Person implements Authenticatable
     public function updateLocation(Location $location)
     {
         $this->location = $location;
+    }
+
+    /**
+     * removing all services
+     *
+     * @return void
+     */
+    public function removeAllServices()
+    {
+        $this->services->clear();
+    }
+
+    /**
+     * add a new service if it ins't contained in the collection
+     *
+     * @param OfferedService $service
+     *
+     * @return void
+     *
+     * @throws AddingComponentsForNonServiceProvierRoleException When the current user isn't a service provider
+     */
+    public function addService(OfferedService $service)
+    {
+        if ($this->role !== self::SERVICE_PROVIDER) {
+            throw new AddingComponentsForNonServiceProviderRoleException('Solamente se pueden agregar estos componentes a usuarios con rol de prestador servicio.');
+
+        }
+
+        if (!$this->existsService($service)) {
+            $this->services->add($service);
+        }
+    }
+
+    /**
+     * remove the service from the user
+     *
+     * @param OfferedService $service
+     *
+     * @return void
+     */
+    public function removeService(OfferedService $service)
+    {
+        if ($this->existsService($service)) {
+            $this->services->removeElement($service);
+        }
+    }
+
+    /**
+     * checks the existence of the given service
+     *
+     * @param OfferedService $service
+     *
+     * @return boolean
+     */
+    private function existsService(OfferedService $service)
+    {
+        return $this->services->contains($service);
+    }
+
+    /**
+     * changes the type of price
+     *
+     * @param integer $priceType
+     *
+     * @return void
+     *
+     * @throws InvalidPriceException when $priceType is out of the valid types
+     */
+    public function changePriceType($priceType)
+    {
+        if ($priceType !== self::FIXED_PRICE && $priceType !== self::RECOMMENDED_PRICE) {
+            throw new InvalidPriceTypeException('El tipo de precio ' . (string) $priceType . ' no puede ser asignado al prestador de servicio.');
+        }
+
+        $this->priceType = $priceType;
+    }
+
+    /**
+     * checks if the user offers fixed prices
+     *
+     * @return bool
+     */
+    public function offersFixedPrices()
+    {
+        if (!$this->isServiceProvider()) {
+            return false;
+        }
+
+        return $this->priceType === self::FIXED_PRICE;
+    }
+
+    /**
+     * checks if the user offers recommended prices
+     *
+     * @return bool
+     */
+    public function offersRecommendedPrices()
+    {
+        if (!$this->isServiceProvider()) {
+            return false;
+        }
+
+        return $this->priceType === self::RECOMMENDED_PRICE;
+    }
+
+    /**
+     * gets the service
+     *
+     * @param integer $serviceId
+     *
+     * @return OfferedService
+     */
+    public function getOfferedService($serviceId)
+    {
+        foreach ($this->services as $service) {
+            if ($service->getId() === $serviceId) {
+                return $service;
+            }
+        }
+
+        return null;
     }
 }

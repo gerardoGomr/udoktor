@@ -34,10 +34,10 @@ class SignUpRequest extends FormRequest
             'email'          => 'required|email|unique:users',
             'pass'           => 'required|min:8',
             'tipoCuenta'     => 'required|numeric|min:1|max:2',
-            'nombre'         => 'required',
-            'paterno'        => 'required',
+            'nombre'         => 'required|max:80',
+            'paterno'        => 'required|max:80',
             'municipio'      => 'required|numeric',
-            'telefono'       => 'required',
+            'telefono'       => 'required|max:20',
             'aceptaTerminos' => 'required',
             'clasificacion'  => 'required_if:tipoCuenta,2|numeric',
             'servicios'      => 'required_if:tipoCuenta,2'
