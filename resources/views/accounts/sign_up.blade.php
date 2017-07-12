@@ -156,7 +156,7 @@
                 </div>
                 <div class="row clearfix">
                     <div class="col-md-offset-3 col-sm-offset-4">
-                        <div class="g-recaptcha" data-sitekey="6Lc9piUTAAAAAFBNrYcFr0-Tukw2GWBcr88sHxSy"></div>
+                        <div class="g-recaptcha" data-sitekey="6LebuygUAAAAAALfGes-6BvCroAdMm6k9TqjmuO8"></div>
                     </div>
                 </div>
                 <br>
