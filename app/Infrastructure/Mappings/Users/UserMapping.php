@@ -7,6 +7,7 @@ use Udoktor\Domain\Regions\AdministrativeUnit;
 use Udoktor\Domain\Regions\Location;
 use Udoktor\Domain\Users\Classification;
 use Udoktor\Domain\Users\OfferedService;
+use Udoktor\Domain\Users\Schedule;
 use Udoktor\Domain\Users\ServiceType;
 use Udoktor\Domain\Users\User;
 
@@ -50,6 +51,8 @@ class UserMapping extends EntityMapping
         $builder->datetime('requestDate')->nullable();
         $builder->smallInteger('role');
         $builder->smallInteger('priceType');
+        $builder->smallInteger('diaryScheduleType')->nullable();
+        $builder->smallInteger('minServiceDuration')->nullable();
         $builder->string('profilePicture')->length(15)->nullable();
         $builder->string('notifications')->length(255)->nullable();
         $builder->datetime('createdAt');
@@ -73,5 +76,11 @@ class UserMapping extends EntityMapping
 
         $relation->cascadePersist();
         $relation->cascadeRemove();
+
+        $relation = $builder->oneToMany(Schedule::class)
+            ->mappedBy('user')
+            ->orphanRemoval();
+
+        $relation->cascadePersist();
     }
 }

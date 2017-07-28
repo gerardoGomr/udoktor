@@ -53,6 +53,7 @@ class SignUpController extends Controller
         $services        = EntityManager::getRepository(Service::class)->findBy(['active' => true]);
         $classifications = EntityManager::getRepository(Classification::class)->findBy(['active' => true]);
         $servicesJson    = [];
+        $servicesString  = [];
 
         // creating list services on json format
         foreach ($services as $service) {
@@ -60,11 +61,14 @@ class SignUpController extends Controller
                 'value' => $service->getId(),
                 'text'  => $service->getName()
             ];
+
+            $servicesString[] = '-' . $service->getName();
         }
 
-        $servicesJson = json_encode($servicesJson);
+        $servicesJson   = json_encode($servicesJson);
+        $servicesString = implode("<br>", $servicesString);
 
-        return view('accounts.sign_up', compact('countries', 'servicesJson', 'classifications'));
+        return view('accounts.sign_up', compact('countries', 'servicesJson', 'classifications', 'servicesString'));
     }
 
     /**
@@ -111,6 +115,7 @@ class SignUpController extends Controller
 
             if ($user->isServiceProvider()) {
                 $offeredServices = new CustomCollection;
+                $schedules       = new CustomCollection;
                 $classification  = EntityManager::getRepository(Classification::class)->find((int) $request->input('clasificacion'));
                 $servicesIds     = explode(',', $request->input('servicios'));
 
@@ -120,7 +125,7 @@ class SignUpController extends Controller
                     $offeredServices->add($offeredService);
                 }
 
-                $user->addComponentsForServiceProvider($classification, $offeredServices);
+                $user->addComponentsForServiceProvider($classification, $offeredServices, $schedules);
             }
 
             $user->register();

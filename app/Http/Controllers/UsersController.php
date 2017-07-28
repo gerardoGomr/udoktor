@@ -255,6 +255,13 @@ class UsersController extends Controller
         ]);
     }
 
+    /**
+     * updates prices
+     *
+     * @param UpdatePricesRequest $request
+     *
+     * @return Illuminate\Http\JsonResponse
+     */
     public function updatePrices(UpdatePricesRequest $request)
     {
         $user     = Auth::user();

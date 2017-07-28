@@ -41,6 +41,8 @@ mix.sass('resources/assets/sass/style.scss', 'public/css/app.css')
         resourcesDirectory + 'bootstrap-tagsinput/bootstrap-tagsinput-typeahead.css',
         resourcesDirectory + 'jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css',
         resourcesDirectory + 'fullcalendar-3.4.0/fullcalendar.css',
+        resourcesDirectory + 'bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css',
+        resourcesDirectory + 'bootstrap-timepicker/css/bootstrap-timepicker.css',
         resourcesDirectory + 'morrisjs/morris.css',
         resourcesDirectory + 'ckeditor/content.css',
         resourcesDirectory + 'font-awesome/css/font-awesome.css',
@@ -68,6 +70,8 @@ mix.sass('resources/assets/sass/style.scss', 'public/css/app.css')
         resourcesDirectory + 'fullcalendar-3.4.0/lib/moment.min.js',
         resourcesDirectory + 'fullcalendar-3.4.0/fullcalendar.js',
         resourcesDirectory + 'fullcalendar-3.4.0/locale/es.js',
+        resourcesDirectory + 'bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js',
+        resourcesDirectory + 'bootstrap-timepicker/js/bootstrap-timepicker.js',
         resourcesDirectory + 'node-waves/waves.js',
         resourcesDirectory + 'raphael/raphael.min.js',
         resourcesDirectory + 'morrisjs/morris.min.js',
@@ -80,7 +84,8 @@ mix.sass('resources/assets/sass/style.scss', 'public/css/app.css')
     .scripts('resources/assets/js/service_provider/index.js', 'public/js/service_provider/index.js')
     .scripts('resources/assets/js/service_provider/profile.js', 'public/js/service_provider/profile.js')
     .scripts('resources/assets/js/service_provider/map.js', 'public/js/service_provider/map.js')
-    .scripts('resources/assets/js/service_provider/services.js', 'public/js/service_provider/services.js');
+    .scripts('resources/assets/js/service_provider/services.js', 'public/js/service_provider/services.js')
+    .scripts('resources/assets/js/service_provider/diary_schedules.js', 'public/js/service_provider/diary_schedules.js');
 
 // copying assets from resources to public
 for (let directory in directories) {

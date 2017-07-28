@@ -39,6 +39,7 @@ return [
                 Udoktor\Infrastructure\Mappings\Users\ServiceMapping::class,
                 Udoktor\Infrastructure\Mappings\Users\ClassificationMapping::class,
                 Udoktor\Infrastructure\Mappings\Users\OfferedServiceMapping::class,
+                Udoktor\Infrastructure\Mappings\Users\ScheduleMapping::class,
                 Udoktor\Infrastructure\Mappings\Regions\LocationMapping::class,
             ],
             'repository'    => Doctrine\ORM\EntityRepository::class,

@@ -36,6 +36,15 @@ Route::group(['middleware' => ['auth', 'picture']], function () {
         Route::get('servicios', 'ServicesController@index');
         Route::put('servicios', 'ServicesController@addServices');
         Route::delete('servicios', 'ServicesController@removeService');
+
+        // agenda
+        Route::get('agenda/configuracion', 'DiariesController@index');
+        Route::put('agenda/tipo', 'DiariesController@changeDiaryType');
+        Route::put('agenda/duracion-servicios', 'DiariesController@modifyServicesLasting');
+        Route::put('agenda/agregar-horario', 'DiariesController@addSchedule');
+
+        // citas
+        Route::get('agenda/citas', 'AppointmentsController@index');
     });
 });
 

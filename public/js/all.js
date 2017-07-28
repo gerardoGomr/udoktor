@@ -41894,6 +41894,2362 @@ fcViews.listYear = {
 return FC; // export for Node/CommonJS
 });
 !function(e){"function"==typeof define&&define.amd?define(["jquery","moment"],e):"object"==typeof exports?module.exports=e(require("jquery"),require("moment")):e(jQuery,moment)}(function(e,a){!function(){var e="ene._feb._mar._abr._may._jun._jul._ago._sep._oct._nov._dic.".split("_"),o="ene_feb_mar_abr_may_jun_jul_ago_sep_oct_nov_dic".split("_");a.defineLocale("es",{months:"enero_febrero_marzo_abril_mayo_junio_julio_agosto_septiembre_octubre_noviembre_diciembre".split("_"),monthsShort:function(a,s){return a?/-MMM-/.test(s)?o[a.month()]:e[a.month()]:e},monthsParseExact:!0,weekdays:"domingo_lunes_martes_miércoles_jueves_viernes_sábado".split("_"),weekdaysShort:"dom._lun._mar._mié._jue._vie._sáb.".split("_"),weekdaysMin:"do_lu_ma_mi_ju_vi_sá".split("_"),weekdaysParseExact:!0,longDateFormat:{LT:"H:mm",LTS:"H:mm:ss",L:"DD/MM/YYYY",LL:"D [de] MMMM [de] YYYY",LLL:"D [de] MMMM [de] YYYY H:mm",LLLL:"dddd, D [de] MMMM [de] YYYY H:mm"},calendar:{sameDay:function(){return"[hoy a la"+(1!==this.hours()?"s":"")+"] LT"},nextDay:function(){return"[mañana a la"+(1!==this.hours()?"s":"")+"] LT"},nextWeek:function(){return"dddd [a la"+(1!==this.hours()?"s":"")+"] LT"},lastDay:function(){return"[ayer a la"+(1!==this.hours()?"s":"")+"] LT"},lastWeek:function(){return"[el] dddd [pasado a la"+(1!==this.hours()?"s":"")+"] LT"},sameElse:"L"},relativeTime:{future:"en %s",past:"hace %s",s:"unos segundos",m:"un minuto",mm:"%d minutos",h:"una hora",hh:"%d horas",d:"un día",dd:"%d días",M:"un mes",MM:"%d meses",y:"un año",yy:"%d años"},dayOfMonthOrdinalParse:/\d{1,2}º/,ordinal:"%dº",week:{dow:1,doy:4}})}(),e.fullCalendar.datepickerLocale("es","es",{closeText:"Cerrar",prevText:"&#x3C;Ant",nextText:"Sig&#x3E;",currentText:"Hoy",monthNames:["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"],monthNamesShort:["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"],dayNames:["domingo","lunes","martes","miércoles","jueves","viernes","sábado"],dayNamesShort:["dom","lun","mar","mié","jue","vie","sáb"],dayNamesMin:["D","L","M","X","J","V","S"],weekHeader:"Sm",dateFormat:"dd/mm/yy",firstDay:1,isRTL:!1,showMonthAfterYear:!1,yearSuffix:""}),e.fullCalendar.locale("es",{buttonText:{month:"Mes",week:"Semana",day:"Día",list:"Agenda"},allDayHtml:"Todo<br/>el día",eventLimitText:"más",noEventsMessage:"No hay eventos para mostrar"})});
+(function ($, moment)
+{
+   var pluginName = "bootstrapMaterialDatePicker";
+   var pluginDataName = "plugin_" + pluginName;
+
+   moment.locale('en');
+
+   function Plugin(element, options)
+   {
+      this.currentView = 0;
+
+      this.minDate;
+      this.maxDate;
+
+      this._attachedEvents = [];
+
+      this.element = element;
+      this.$element = $(element);
+
+      this.params = {date: true, time: true, format: 'YYYY-MM-DD', minDate: null, maxDate: null, currentDate: null, lang: 'en', weekStart: 0, shortTime: false, clearButton: false, nowButton: false, cancelText: 'Cancel', okText: 'OK', clearText: 'Clear', nowText: 'Now', switchOnClick: false};
+      this.params = $.fn.extend(this.params, options);
+
+      this.name = "dtp_" + this.setName();
+      this.$element.attr("data-dtp", this.name);
+
+      moment.locale(this.params.lang);
+
+      this.init();
+   }
+
+   $.fn[pluginName] = function (options, p)
+   {
+      this.each(function ()
+      {
+         if (!$.data(this, pluginDataName))
+         {
+            $.data(this, pluginDataName, new Plugin(this, options));
+         } else
+         {
+            if (typeof ($.data(this, pluginDataName)[options]) === 'function')
+            {
+               $.data(this, pluginDataName)[options](p);
+            }
+            if (options === 'destroy')
+            {
+               delete $.data(this, pluginDataName);
+            }
+         }
+      });
+      return this;
+   };
+
+   Plugin.prototype =
+           {
+              init: function ()
+              {
+                 this.initDays();
+                 this.initDates();
+
+                 this.initTemplate();
+
+                 this.initButtons();
+
+                 this._attachEvent($(window), 'resize', this._centerBox.bind(this));
+                 this._attachEvent(this.$dtpElement.find('.dtp-content'), 'click', this._onElementClick.bind(this));
+                 this._attachEvent(this.$dtpElement, 'click', this._onBackgroundClick.bind(this));
+                 this._attachEvent(this.$dtpElement.find('.dtp-close > a'), 'click', this._onCloseClick.bind(this));
+                 this._attachEvent(this.$element, 'focus', this._onFocus.bind(this));
+              },
+              initDays: function ()
+              {
+                 this.days = [];
+                 for (var i = this.params.weekStart; this.days.length < 7; i++)
+                 {
+                    if (i > 6)
+                    {
+                       i = 0;
+                    }
+                    this.days.push(i.toString());
+                 }
+              },
+              initDates: function ()
+              {
+                 if (this.$element.val().length > 0)
+                 {
+                    if (typeof (this.params.format) !== 'undefined' && this.params.format !== null)
+                    {
+                       this.currentDate = moment(this.$element.val(), this.params.format).locale(this.params.lang);
+                    } else
+                    {
+                       this.currentDate = moment(this.$element.val()).locale(this.params.lang);
+                    }
+                 } else
+                 {
+                    if (typeof (this.$element.attr('value')) !== 'undefined' && this.$element.attr('value') !== null && this.$element.attr('value') !== "")
+                    {
+                       if (typeof (this.$element.attr('value')) === 'string')
+                       {
+                          if (typeof (this.params.format) !== 'undefined' && this.params.format !== null)
+                          {
+                             this.currentDate = moment(this.$element.attr('value'), this.params.format).locale(this.params.lang);
+                          } else
+                          {
+                             this.currentDate = moment(this.$element.attr('value')).locale(this.params.lang);
+                          }
+                       }
+                    } else
+                    {
+                       if (typeof (this.params.currentDate) !== 'undefined' && this.params.currentDate !== null)
+                       {
+                          if (typeof (this.params.currentDate) === 'string')
+                          {
+                             if (typeof (this.params.format) !== 'undefined' && this.params.format !== null)
+                             {
+                                this.currentDate = moment(this.params.currentDate, this.params.format).locale(this.params.lang);
+                             } else
+                             {
+                                this.currentDate = moment(this.params.currentDate).locale(this.params.lang);
+                             }
+                          } else
+                          {
+                             if (typeof (this.params.currentDate.isValid) === 'undefined' || typeof (this.params.currentDate.isValid) !== 'function')
+                             {
+                                var x = this.params.currentDate.getTime();
+                                this.currentDate = moment(x, "x").locale(this.params.lang);
+                             } else
+                             {
+                                this.currentDate = this.params.currentDate;
+                             }
+                          }
+                          this.$element.val(this.currentDate.format(this.params.format));
+                       } else
+                          this.currentDate = moment();
+                    }
+                 }
+
+                 if (typeof (this.params.minDate) !== 'undefined' && this.params.minDate !== null)
+                 {
+                    if (typeof (this.params.minDate) === 'string')
+                    {
+                       if (typeof (this.params.format) !== 'undefined' && this.params.format !== null)
+                       {
+                          this.minDate = moment(this.params.minDate, this.params.format).locale(this.params.lang);
+                       } else
+                       {
+                          this.minDate = moment(this.params.minDate).locale(this.params.lang);
+                       }
+                    } else
+                    {
+                       if (typeof (this.params.minDate.isValid) === 'undefined' || typeof (this.params.minDate.isValid) !== 'function')
+                       {
+                          var x = this.params.minDate.getTime();
+                          this.minDate = moment(x, "x").locale(this.params.lang);
+                       } else
+                       {
+                          this.minDate = this.params.minDate;
+                       }
+                    }
+                 } else if (this.params.minDate === null)
+                 {
+                    this.minDate = null;
+                 }
+
+                 if (typeof (this.params.maxDate) !== 'undefined' && this.params.maxDate !== null)
+                 {
+                    if (typeof (this.params.maxDate) === 'string')
+                    {
+                       if (typeof (this.params.format) !== 'undefined' && this.params.format !== null)
+                       {
+                          this.maxDate = moment(this.params.maxDate, this.params.format).locale(this.params.lang);
+                       } else
+                       {
+                          this.maxDate = moment(this.params.maxDate).locale(this.params.lang);
+                       }
+                    } else
+                    {
+                       if (typeof (this.params.maxDate.isValid) === 'undefined' || typeof (this.params.maxDate.isValid) !== 'function')
+                       {
+                          var x = this.params.maxDate.getTime();
+                          this.maxDate = moment(x, "x").locale(this.params.lang);
+                       } else
+                       {
+                          this.maxDate = this.params.maxDate;
+                       }
+                    }
+                 } else if (this.params.maxDate === null)
+                 {
+                    this.maxDate = null;
+                 }
+
+                 if (!this.isAfterMinDate(this.currentDate))
+                 {
+                    this.currentDate = moment(this.minDate);
+                 }
+                 if (!this.isBeforeMaxDate(this.currentDate))
+                 {
+                    this.currentDate = moment(this.maxDate);
+                 }
+              },
+              initTemplate: function ()
+              {
+                 this.template = '<div class="dtp hidden" id="' + this.name + '">' +
+                         '<div class="dtp-content">' +
+                         '<div class="dtp-date-view">' +
+                         '<header class="dtp-header">' +
+                         '<div class="dtp-actual-day">Lundi</div>' +
+                         '<div class="dtp-close"><a href="javascript:void(0);"><i class="material-icons">clear</i></</div>' +
+                         '</header>' +
+                         '<div class="dtp-date hidden">' +
+                         '<div>' +
+                         '<div class="left center p10">' +
+                         '<a href="javascript:void(0);" class="dtp-select-month-before"><i class="material-icons">chevron_left</i></a>' +
+                         '</div>' +
+                         '<div class="dtp-actual-month p80">MAR</div>' +
+                         '<div class="right center p10">' +
+                         '<a href="javascript:void(0);" class="dtp-select-month-after"><i class="material-icons">chevron_right</i></a>' +
+                         '</div>' +
+                         '<div class="clearfix"></div>' +
+                         '</div>' +
+                         '<div class="dtp-actual-num">13</div>' +
+                         '<div>' +
+                         '<div class="left center p10">' +
+                         '<a href="javascript:void(0);" class="dtp-select-year-before"><i class="material-icons">chevron_left</i></a>' +
+                         '</div>' +
+                         '<div class="dtp-actual-year p80">2014</div>' +
+                         '<div class="right center p10">' +
+                         '<a href="javascript:void(0);" class="dtp-select-year-after"><i class="material-icons">chevron_right</i></a>' +
+                         '</div>' +
+                         '<div class="clearfix"></div>' +
+                         '</div>' +
+                         '</div>' +
+                         '<div class="dtp-time hidden">' +
+                         '<div class="dtp-actual-maxtime">23:55</div>' +
+                         '</div>' +
+                         '<div class="dtp-picker">' +
+                         '<div class="dtp-picker-calendar"></div>' +
+                         '<div class="dtp-picker-datetime hidden">' +
+                         '<div class="dtp-actual-meridien">' +
+                         '<div class="left p20">' +
+                         '<a class="dtp-meridien-am" href="javascript:void(0);">AM</a>' +
+                         '</div>' +
+                         '<div class="dtp-actual-time p60"></div>' +
+                         '<div class="right p20">' +
+                         '<a class="dtp-meridien-pm" href="javascript:void(0);">PM</a>' +
+                         '</div>' +
+                         '<div class="clearfix"></div>' +
+                         '</div>' +
+                         '<div id="dtp-svg-clock">' +
+                         '</div>' +
+                         '</div>' +
+                         '</div>' +
+                         '</div>' +
+                         '<div class="dtp-buttons">' +
+                         '<button class="dtp-btn-now btn btn-flat hidden">' + this.params.nowText + '</button>' +
+                         '<button class="dtp-btn-clear btn btn-flat hidden">' + this.params.clearText + '</button>' +
+                         '<button class="dtp-btn-cancel btn btn-flat">' + this.params.cancelText + '</button>' +
+                         '<button class="dtp-btn-ok btn btn-flat">' + this.params.okText + '</button>' +
+                         '<div class="clearfix"></div>' +
+                         '</div>' +
+                         '</div>' +
+                         '</div>';
+
+                 if ($('body').find("#" + this.name).length <= 0)
+                 {
+                    $('body').append(this.template);
+
+                    if (this)
+                       this.dtpElement = $('body').find("#" + this.name);
+                    this.$dtpElement = $(this.dtpElement);
+                 }
+              },
+              initButtons: function ()
+              {
+                 this._attachEvent(this.$dtpElement.find('.dtp-btn-cancel'), 'click', this._onCancelClick.bind(this));
+                 this._attachEvent(this.$dtpElement.find('.dtp-btn-ok'), 'click', this._onOKClick.bind(this));
+                 this._attachEvent(this.$dtpElement.find('a.dtp-select-month-before'), 'click', this._onMonthBeforeClick.bind(this));
+                 this._attachEvent(this.$dtpElement.find('a.dtp-select-month-after'), 'click', this._onMonthAfterClick.bind(this));
+                 this._attachEvent(this.$dtpElement.find('a.dtp-select-year-before'), 'click', this._onYearBeforeClick.bind(this));
+                 this._attachEvent(this.$dtpElement.find('a.dtp-select-year-after'), 'click', this._onYearAfterClick.bind(this));
+
+                 if (this.params.clearButton === true)
+                 {
+                    this._attachEvent(this.$dtpElement.find('.dtp-btn-clear'), 'click', this._onClearClick.bind(this));
+                    this.$dtpElement.find('.dtp-btn-clear').removeClass('hidden');
+                 }
+
+                 if (this.params.nowButton === true)
+                 {
+                    this._attachEvent(this.$dtpElement.find('.dtp-btn-now'), 'click', this._onNowClick.bind(this));
+                    this.$dtpElement.find('.dtp-btn-now').removeClass('hidden');
+                 }
+
+                 if ((this.params.nowButton === true) && (this.params.clearButton === true))
+                 {
+                    this.$dtpElement.find('.dtp-btn-clear, .dtp-btn-now, .dtp-btn-cancel, .dtp-btn-ok').addClass('btn-xs');
+                 } else if ((this.params.nowButton === true) || (this.params.clearButton === true))
+                 {
+                    this.$dtpElement.find('.dtp-btn-clear, .dtp-btn-now, .dtp-btn-cancel, .dtp-btn-ok').addClass('btn-sm');
+                 }
+              },
+              initMeridienButtons: function ()
+              {
+                 this.$dtpElement.find('a.dtp-meridien-am').off('click').on('click', this._onSelectAM.bind(this));
+                 this.$dtpElement.find('a.dtp-meridien-pm').off('click').on('click', this._onSelectPM.bind(this));
+              },
+              initDate: function (d)
+              {
+                 this.currentView = 0;
+
+                 this.$dtpElement.find('.dtp-picker-calendar').removeClass('hidden');
+                 this.$dtpElement.find('.dtp-picker-datetime').addClass('hidden');
+
+                 var _date = ((typeof (this.currentDate) !== 'undefined' && this.currentDate !== null) ? this.currentDate : null);
+                 var _calendar = this.generateCalendar(this.currentDate);
+
+                 if (typeof (_calendar.week) !== 'undefined' && typeof (_calendar.days) !== 'undefined')
+                 {
+                    var _template = this.constructHTMLCalendar(_date, _calendar);
+
+                    this.$dtpElement.find('a.dtp-select-day').off('click');
+                    this.$dtpElement.find('.dtp-picker-calendar').html(_template);
+
+                    this.$dtpElement.find('a.dtp-select-day').on('click', this._onSelectDate.bind(this));
+
+                    this.toggleButtons(_date);
+                 }
+
+                 this._centerBox();
+                 this.showDate(_date);
+              },
+              initHours: function ()
+              {
+                 this.currentView = 1;
+
+                 this.showTime(this.currentDate);
+                 this.initMeridienButtons();
+
+                 if (this.currentDate.hour() < 12)
+                 {
+                    this.$dtpElement.find('a.dtp-meridien-am').click();
+                 } else
+                 {
+                    this.$dtpElement.find('a.dtp-meridien-pm').click();
+                 }
+
+                 var hFormat = ((this.params.shortTime) ? 'h' : 'H');
+
+                 this.$dtpElement.find('.dtp-picker-datetime').removeClass('hidden');
+                 this.$dtpElement.find('.dtp-picker-calendar').addClass('hidden');
+
+                 var svgClockElement = this.createSVGClock(true);
+
+                 for (var i = 0; i < 12; i++)
+                 {
+                    var x = -(162 * (Math.sin(-Math.PI * 2 * (i / 12))));
+                    var y = -(162 * (Math.cos(-Math.PI * 2 * (i / 12))));
+
+                    var fill = ((this.currentDate.format(hFormat) == i) ? "#007d72" : 'transparent');
+                    var color = ((this.currentDate.format(hFormat) == i) ? "#fff" : '#000');
+
+                    var svgHourCircle = this.createSVGElement("circle", {'id': 'h-' + i, 'class': 'dtp-select-hour', 'style': 'cursor:pointer', r: '30', cx: x, cy: y, fill: fill, 'data-hour': i});
+
+                    var svgHourText = this.createSVGElement("text", {'id': 'th-' + i, 'class': 'dtp-select-hour-text', 'text-anchor': 'middle', 'style': 'cursor:pointer', 'font-weight': 'bold', 'font-size': '20', x: x, y: y + 7, fill: color, 'data-hour': i});
+                    svgHourText.textContent = ((i === 0) ? ((this.params.shortTime) ? 12 : i) : i);
+
+                    if (!this.toggleTime(i, true))
+                    {
+                       svgHourCircle.className += " disabled";
+                       svgHourText.className += " disabled";
+                       svgHourText.setAttribute('fill', '#bdbdbd');
+                    } else
+                    {
+                       svgHourCircle.addEventListener('click', this._onSelectHour.bind(this));
+                       svgHourText.addEventListener('click', this._onSelectHour.bind(this));
+                    }
+
+                    svgClockElement.appendChild(svgHourCircle)
+                    svgClockElement.appendChild(svgHourText)
+                 }
+
+                 if (!this.params.shortTime)
+                 {
+                    for (var i = 0; i < 12; i++)
+                    {
+                       var x = -(110 * (Math.sin(-Math.PI * 2 * (i / 12))));
+                       var y = -(110 * (Math.cos(-Math.PI * 2 * (i / 12))));
+
+                       var fill = ((this.currentDate.format(hFormat) == (i + 12)) ? "#007d72" : 'transparent');
+                       var color = ((this.currentDate.format(hFormat) == (i + 12)) ? "#fff" : '#000');
+
+                       var svgHourCircle = this.createSVGElement("circle", {'id': 'h-' + (i + 12), 'class': 'dtp-select-hour', 'style': 'cursor:pointer', r: '30', cx: x, cy: y, fill: fill, 'data-hour': (i + 12)});
+
+                       var svgHourText = this.createSVGElement("text", {'id': 'th-' + (i + 12), 'class': 'dtp-select-hour-text', 'text-anchor': 'middle', 'style': 'cursor:pointer', 'font-weight': 'bold', 'font-size': '22', x: x, y: y + 7, fill: color, 'data-hour': (i + 12)});
+                       svgHourText.textContent = i + 12;
+
+                       if (!this.toggleTime(i + 12, true))
+                       {
+                          svgHourCircle.className += " disabled";
+                          svgHourText.className += " disabled";
+                          svgHourText.setAttribute('fill', '#bdbdbd');
+                       } else
+                       {
+                          svgHourCircle.addEventListener('click', this._onSelectHour.bind(this));
+                          svgHourText.addEventListener('click', this._onSelectHour.bind(this));
+                       }
+
+                       svgClockElement.appendChild(svgHourCircle)
+                       svgClockElement.appendChild(svgHourText)
+                    }
+
+                    this.$dtpElement.find('a.dtp-meridien-am').addClass('hidden');
+                    this.$dtpElement.find('a.dtp-meridien-pm').addClass('hidden');
+                 }
+
+                 this._centerBox();
+              },
+              initMinutes: function ()
+              {
+                 this.currentView = 2;
+
+                 this.showTime(this.currentDate);
+
+                 this.initMeridienButtons();
+
+                 if (this.currentDate.hour() < 12)
+                 {
+                    this.$dtpElement.find('a.dtp-meridien-am').click();
+                 } else
+                 {
+                    this.$dtpElement.find('a.dtp-meridien-pm').click();
+                 }
+
+                 this.$dtpElement.find('.dtp-picker-calendar').addClass('hidden');
+                 this.$dtpElement.find('.dtp-picker-datetime').removeClass('hidden');
+
+                 var svgClockElement = this.createSVGClock(false);
+
+                 for (var i = 0; i < 60; i++)
+                 {
+                    var s = ((i % 5 === 0) ? 162 : 158);
+                    var r = ((i % 5 === 0) ? 30 : 20);
+
+                    var x = -(s * (Math.sin(-Math.PI * 2 * (i / 60))));
+                    var y = -(s * (Math.cos(-Math.PI * 2 * (i / 60))));
+
+                    var color = ((this.currentDate.format("m") == i) ? "#007d72" : 'transparent');
+
+                    var svgMinuteCircle = this.createSVGElement("circle", {'id': 'm-' + i, 'class': 'dtp-select-minute', 'style': 'cursor:pointer', r: r, cx: x, cy: y, fill: color, 'data-minute': i});
+
+                    if (!this.toggleTime(i, false))
+                    {
+                       svgMinuteCircle.className += " disabled";
+                    } else
+                    {
+                       svgMinuteCircle.addEventListener('click', this._onSelectMinute.bind(this));
+                    }
+
+                    svgClockElement.appendChild(svgMinuteCircle)
+                 }
+
+                 for (var i = 0; i < 60; i++)
+                 {
+                    if ((i % 5) === 0)
+                    {
+                       var x = -(162 * (Math.sin(-Math.PI * 2 * (i / 60))));
+                       var y = -(162 * (Math.cos(-Math.PI * 2 * (i / 60))));
+
+                       var color = ((this.currentDate.format("m") == i) ? "#fff" : '#000');
+
+                       var svgMinuteText = this.createSVGElement("text", {'id': 'tm-' + i, 'class': 'dtp-select-minute-text', 'text-anchor': 'middle', 'style': 'cursor:pointer', 'font-weight': 'bold', 'font-size': '20', x: x, y: y + 7, fill: color, 'data-minute': i});
+                       svgMinuteText.textContent = i;
+
+                       if (!this.toggleTime(i, false))
+                       {
+                          svgMinuteText.className += " disabled";
+                          svgMinuteText.setAttribute('fill', '#bdbdbd');
+                       } else
+                       {
+                          svgMinuteText.addEventListener('click', this._onSelectMinute.bind(this));
+                       }
+
+                       svgClockElement.appendChild(svgMinuteText)
+                    }
+                 }
+
+                 this._centerBox();
+              },
+              animateHands: function ()
+              {
+                 var H = this.currentDate.hour();
+                 var M = this.currentDate.minute();
+
+                 var hh = this.$dtpElement.find('.hour-hand');
+                 hh[0].setAttribute('transform', "rotate(" + 360 * H / 12 + ")");
+
+                 var mh = this.$dtpElement.find('.minute-hand');
+                 mh[0].setAttribute('transform', "rotate(" + 360 * M / 60 + ")");
+              },
+              createSVGClock: function (isHour)
+              {
+                 var hl = ((this.params.shortTime) ? -120 : -90);
+
+                 var svgElement = this.createSVGElement("svg", {class: 'svg-clock', viewBox: '0,0,400,400'});
+                 var svgGElement = this.createSVGElement("g", {transform: 'translate(200,200) '});
+                 var svgClockFace = this.createSVGElement("circle", {r: '192', fill: '#eee', stroke: '#bdbdbd', 'stroke-width': 2});
+                 var svgClockCenter = this.createSVGElement("circle", {r: '15', fill: '#757575'});
+
+                 svgGElement.appendChild(svgClockFace)
+
+                 if (isHour)
+                 {
+                    var svgMinuteHand = this.createSVGElement("line", {class: 'minute-hand', x1: 0, y1: 0, x2: 0, y2: -150, stroke: '#bdbdbd', 'stroke-width': 2});
+                    var svgHourHand = this.createSVGElement("line", {class: 'hour-hand', x1: 0, y1: 0, x2: 0, y2: hl, stroke: '#007d72', 'stroke-width': 8});
+
+                    svgGElement.appendChild(svgMinuteHand);
+                    svgGElement.appendChild(svgHourHand);
+                 } else
+                 {
+                    var svgMinuteHand = this.createSVGElement("line", {class: 'minute-hand', x1: 0, y1: 0, x2: 0, y2: -150, stroke: '#007d72', 'stroke-width': 2});
+                    var svgHourHand = this.createSVGElement("line", {class: 'hour-hand', x1: 0, y1: 0, x2: 0, y2: hl, stroke: '#bdbdbd', 'stroke-width': 8});
+
+                    svgGElement.appendChild(svgHourHand);
+                    svgGElement.appendChild(svgMinuteHand);
+                 }
+
+                 svgGElement.appendChild(svgClockCenter)
+
+                 svgElement.appendChild(svgGElement)
+
+                 this.$dtpElement.find("#dtp-svg-clock").empty();
+                 this.$dtpElement.find("#dtp-svg-clock")[0].appendChild(svgElement);
+
+                 this.animateHands();
+
+                 return svgGElement;
+              },
+              createSVGElement: function (tag, attrs)
+              {
+                 var el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+                 for (var k in attrs)
+                 {
+                    el.setAttribute(k, attrs[k]);
+                 }
+                 return el;
+              },
+              isAfterMinDate: function (date, checkHour, checkMinute)
+              {
+                 var _return = true;
+
+                 if (typeof (this.minDate) !== 'undefined' && this.minDate !== null)
+                 {
+                    var _minDate = moment(this.minDate);
+                    var _date = moment(date);
+
+                    if (!checkHour && !checkMinute)
+                    {
+                       _minDate.hour(0);
+                       _minDate.minute(0);
+
+                       _date.hour(0);
+                       _date.minute(0);
+                    }
+
+                    _minDate.second(0);
+                    _date.second(0);
+                    _minDate.millisecond(0);
+                    _date.millisecond(0);
+
+                    if (!checkMinute)
+                    {
+                       _date.minute(0);
+                       _minDate.minute(0);
+
+                       _return = (parseInt(_date.format("X")) >= parseInt(_minDate.format("X")));
+                    } else
+                    {
+                       _return = (parseInt(_date.format("X")) >= parseInt(_minDate.format("X")));
+                    }
+                 }
+
+                 return _return;
+              },
+              isBeforeMaxDate: function (date, checkTime, checkMinute)
+              {
+                 var _return = true;
+
+                 if (typeof (this.maxDate) !== 'undefined' && this.maxDate !== null)
+                 {
+                    var _maxDate = moment(this.maxDate);
+                    var _date = moment(date);
+
+                    if (!checkTime && !checkMinute)
+                    {
+                       _maxDate.hour(0);
+                       _maxDate.minute(0);
+
+                       _date.hour(0);
+                       _date.minute(0);
+                    }
+
+                    _maxDate.second(0);
+                    _date.second(0);
+                    _maxDate.millisecond(0);
+                    _date.millisecond(0);
+
+                    if (!checkMinute)
+                    {
+                       _date.minute(0);
+                       _maxDate.minute(0);
+
+                       _return = (parseInt(_date.format("X")) <= parseInt(_maxDate.format("X")));
+                    } else
+                    {
+                       _return = (parseInt(_date.format("X")) <= parseInt(_maxDate.format("X")));
+                    }
+                 }
+
+                 return _return;
+              },
+              rotateElement: function (el, deg)
+              {
+                 $(el).css
+                         ({
+                            WebkitTransform: 'rotate(' + deg + 'deg)',
+                            '-moz-transform': 'rotate(' + deg + 'deg)'
+                         });
+              },
+              showDate: function (date)
+              {
+                 if (date)
+                 {
+                    this.$dtpElement.find('.dtp-actual-day').html(date.locale(this.params.lang).format('dddd'));
+                    this.$dtpElement.find('.dtp-actual-month').html(date.locale(this.params.lang).format('MMM').toUpperCase());
+                    this.$dtpElement.find('.dtp-actual-num').html(date.locale(this.params.lang).format('DD'));
+                    this.$dtpElement.find('.dtp-actual-year').html(date.locale(this.params.lang).format('YYYY'));
+                 }
+              },
+              showTime: function (date)
+              {
+                 if (date)
+                 {
+                    var minutes = date.minute();
+                    var content = ((this.params.shortTime) ? date.format('hh') : date.format('HH')) + ':' + ((minutes.toString().length == 2) ? minutes : '0' + minutes) + ((this.params.shortTime) ? ' ' + date.format('A') : '');
+
+                    if (this.params.date)
+                       this.$dtpElement.find('.dtp-actual-time').html(content);
+                    else
+                    {
+                       if (this.params.shortTime)
+                          this.$dtpElement.find('.dtp-actual-day').html(date.format('A'));
+                       else
+                          this.$dtpElement.find('.dtp-actual-day').html('&nbsp;');
+
+                       this.$dtpElement.find('.dtp-actual-maxtime').html(content);
+                    }
+                 }
+              },
+              selectDate: function (date)
+              {
+                 if (date)
+                 {
+                    this.currentDate.date(date);
+
+                    this.showDate(this.currentDate);
+                    this.$element.trigger('dateSelected', this.currentDate);
+                 }
+              },
+              generateCalendar: function (date)
+              {
+                 var _calendar = {};
+
+                 if (date !== null)
+                 {
+                    var startOfMonth = moment(date).locale(this.params.lang).startOf('month');
+                    var endOfMonth = moment(date).locale(this.params.lang).endOf('month');
+
+                    var iNumDay = startOfMonth.format('d');
+
+                    _calendar.week = this.days;
+                    _calendar.days = [];
+
+                    for (var i = startOfMonth.date(); i <= endOfMonth.date(); i++)
+                    {
+                       if (i === startOfMonth.date())
+                       {
+                          var iWeek = _calendar.week.indexOf(iNumDay.toString());
+                          if (iWeek > 0)
+                          {
+                             for (var x = 0; x < iWeek; x++)
+                             {
+                                _calendar.days.push(0);
+                             }
+                          }
+                       }
+                       _calendar.days.push(moment(startOfMonth).locale(this.params.lang).date(i));
+                    }
+                 }
+
+                 return _calendar;
+              },
+              constructHTMLCalendar: function (date, calendar)
+              {
+                 var _template = "";
+
+                 _template += '<div class="dtp-picker-month">' + date.locale(this.params.lang).format('MMMM YYYY') + '</div>';
+                 _template += '<table class="table dtp-picker-days"><thead>';
+                 for (var i = 0; i < calendar.week.length; i++)
+                 {
+                    _template += '<th>' + moment(parseInt(calendar.week[i]), "d").locale(this.params.lang).format("dd").substring(0, 1) + '</th>';
+                 }
+
+                 _template += '</thead>';
+                 _template += '<tbody><tr>';
+
+                 for (var i = 0; i < calendar.days.length; i++)
+                 {
+                    if (i % 7 == 0)
+                       _template += '</tr><tr>';
+                    _template += '<td data-date="' + moment(calendar.days[i]).locale(this.params.lang).format("D") + '">';
+                    if (calendar.days[i] != 0)
+                    {
+                       if (this.isBeforeMaxDate(moment(calendar.days[i]), false, false) === false || this.isAfterMinDate(moment(calendar.days[i]), false, false) === false)
+                       {
+                          _template += '<span class="dtp-select-day">' + moment(calendar.days[i]).locale(this.params.lang).format("DD") + '</span>';
+                       } else
+                       {
+                          if (moment(calendar.days[i]).locale(this.params.lang).format("DD") === moment(this.currentDate).locale(this.params.lang).format("DD"))
+                          {
+                             _template += '<a href="javascript:void(0);" class="dtp-select-day selected">' + moment(calendar.days[i]).locale(this.params.lang).format("DD") + '</a>';
+                          } else
+                          {
+                             _template += '<a href="javascript:void(0);" class="dtp-select-day">' + moment(calendar.days[i]).locale(this.params.lang).format("DD") + '</a>';
+                          }
+                       }
+
+                       _template += '</td>';
+                    }
+                 }
+                 _template += '</tr></tbody></table>';
+
+                 return _template;
+              },
+              setName: function ()
+              {
+                 var text = "";
+                 var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+                 for (var i = 0; i < 5; i++)
+                 {
+                    text += possible.charAt(Math.floor(Math.random() * possible.length));
+                 }
+
+                 return text;
+              },
+              isPM: function ()
+              {
+                 return this.$dtpElement.find('a.dtp-meridien-pm').hasClass('selected');
+              },
+              setElementValue: function ()
+              {
+                 this.$element.trigger('beforeChange', this.currentDate);
+                 if (typeof ($.material) !== 'undefined')
+                 {
+                    this.$element.removeClass('empty');
+                 }
+                 this.$element.val(moment(this.currentDate).locale(this.params.lang).format(this.params.format));
+                 this.$element.trigger('change', this.currentDate);
+              },
+              toggleButtons: function (date)
+              {
+                 if (date && date.isValid())
+                 {
+                    var startOfMonth = moment(date).locale(this.params.lang).startOf('month');
+                    var endOfMonth = moment(date).locale(this.params.lang).endOf('month');
+
+                    if (!this.isAfterMinDate(startOfMonth, false, false))
+                    {
+                       this.$dtpElement.find('a.dtp-select-month-before').addClass('invisible');
+                    } else
+                    {
+                       this.$dtpElement.find('a.dtp-select-month-before').removeClass('invisible');
+                    }
+
+                    if (!this.isBeforeMaxDate(endOfMonth, false, false))
+                    {
+                       this.$dtpElement.find('a.dtp-select-month-after').addClass('invisible');
+                    } else
+                    {
+                       this.$dtpElement.find('a.dtp-select-month-after').removeClass('invisible');
+                    }
+
+                    var startOfYear = moment(date).locale(this.params.lang).startOf('year');
+                    var endOfYear = moment(date).locale(this.params.lang).endOf('year');
+
+                    if (!this.isAfterMinDate(startOfYear, false, false))
+                    {
+                       this.$dtpElement.find('a.dtp-select-year-before').addClass('invisible');
+                    } else
+                    {
+                       this.$dtpElement.find('a.dtp-select-year-before').removeClass('invisible');
+                    }
+
+                    if (!this.isBeforeMaxDate(endOfYear, false, false))
+                    {
+                       this.$dtpElement.find('a.dtp-select-year-after').addClass('invisible');
+                    } else
+                    {
+                       this.$dtpElement.find('a.dtp-select-year-after').removeClass('invisible');
+                    }
+                 }
+              },
+              toggleTime: function (value, isHours)
+              {
+                 var result = false;
+
+                 if (isHours)
+                 {
+                    var _date = moment(this.currentDate);
+                    _date.hour(this.convertHours(value)).minute(0).second(0);
+
+                    result = !(this.isAfterMinDate(_date, true, false) === false || this.isBeforeMaxDate(_date, true, false) === false);
+                 } else
+                 {
+                    var _date = moment(this.currentDate);
+                    _date.minute(value).second(0);
+
+                    result = !(this.isAfterMinDate(_date, true, true) === false || this.isBeforeMaxDate(_date, true, true) === false);
+                 }
+
+                 return result;
+              },
+              _attachEvent: function (el, ev, fn)
+              {
+                 el.on(ev, null, null, fn);
+                 this._attachedEvents.push([el, ev, fn]);
+              },
+              _detachEvents: function ()
+              {
+                 for (var i = this._attachedEvents.length - 1; i >= 0; i--)
+                 {
+                    this._attachedEvents[i][0].off(this._attachedEvents[i][1], this._attachedEvents[i][2]);
+                    this._attachedEvents.splice(i, 1);
+                 }
+              },
+              _onFocus: function ()
+              {
+                 this.currentView = 0;
+                 this.$element.blur();
+
+                 this.initDates();
+
+                 this.show();
+
+                 if (this.params.date)
+                 {
+                    this.$dtpElement.find('.dtp-date').removeClass('hidden');
+                    this.initDate();
+                 } else
+                 {
+                    if (this.params.time)
+                    {
+                       this.$dtpElement.find('.dtp-time').removeClass('hidden');
+                       this.initHours();
+                    }
+                 }
+              },
+              _onBackgroundClick: function (e)
+              {
+                 e.stopPropagation();
+                 this.hide();
+              },
+              _onElementClick: function (e)
+              {
+                 e.stopPropagation();
+              },
+              _onKeydown: function (e)
+              {
+                 if (e.which === 27)
+                 {
+                    this.hide();
+                 }
+              },
+              _onCloseClick: function ()
+              {
+                 this.hide();
+              },
+              _onClearClick: function ()
+              {
+                 this.currentDate = null;
+                 this.$element.trigger('beforeChange', this.currentDate);
+                 this.hide();
+                 if (typeof ($.material) !== 'undefined')
+                 {
+                    this.$element.addClass('empty');
+                 }
+                 this.$element.val('');
+                 this.$element.trigger('change', this.currentDate);
+              },
+              _onNowClick: function ()
+              {
+                 this.currentDate = moment();
+
+                 if (this.params.date === true)
+                 {
+                    this.showDate(this.currentDate);
+
+                    if (this.currentView === 0)
+                    {
+                       this.initDate();
+                    }
+                 }
+
+                 if (this.params.time === true)
+                 {
+                    this.showTime(this.currentDate);
+
+                    switch (this.currentView)
+                    {
+                       case 1 :
+                          this.initHours();
+                          break;
+                       case 2 :
+                          this.initMinutes();
+                          break;
+                    }
+
+                    this.animateHands();
+                 }
+              },
+              _onOKClick: function ()
+              {
+                 switch (this.currentView)
+                 {
+                    case 0:
+                       if (this.params.time === true)
+                       {
+                          this.initHours();
+                       } else
+                       {
+                          this.setElementValue();
+                          this.hide();
+                       }
+                       break;
+                    case 1:
+                       this.initMinutes();
+                       break;
+                    case 2:
+                       this.setElementValue();
+                       this.hide();
+                       break;
+                 }
+              },
+              _onCancelClick: function ()
+              {
+                 if (this.params.time)
+                 {
+                    switch (this.currentView)
+                    {
+                       case 0:
+                          this.hide();
+                          break;
+                       case 1:
+                          if (this.params.date)
+                          {
+                             this.initDate();
+                          } else
+                          {
+                             this.hide();
+                          }
+                          break;
+                       case 2:
+                          this.initHours();
+                          break;
+                    }
+                 } else
+                 {
+                    this.hide();
+                 }
+              },
+              _onMonthBeforeClick: function ()
+              {
+                 this.currentDate.subtract(1, 'months');
+                 this.initDate(this.currentDate);
+              },
+              _onMonthAfterClick: function ()
+              {
+                 this.currentDate.add(1, 'months');
+                 this.initDate(this.currentDate);
+              },
+              _onYearBeforeClick: function ()
+              {
+                 this.currentDate.subtract(1, 'years');
+                 this.initDate(this.currentDate);
+              },
+              _onYearAfterClick: function ()
+              {
+                 this.currentDate.add(1, 'years');
+                 this.initDate(this.currentDate);
+              },
+              _onSelectDate: function (e)
+              {
+                 this.$dtpElement.find('a.dtp-select-day').removeClass('selected');
+                 $(e.currentTarget).addClass('selected');
+
+                 this.selectDate($(e.currentTarget).parent().data("date"));
+
+                 if (this.params.switchOnClick === true && this.params.time === true)
+                    setTimeout(this.initHours.bind(this), 200);
+                    
+                 if(this.params.switchOnClick === true && this.params.time === false) {
+                    setTimeout(this._onOKClick.bind(this), 200);
+                 }
+                 
+              },
+              _onSelectHour: function (e)
+              {
+                 if (!$(e.target).hasClass('disabled'))
+                 {
+                    var value = $(e.target).data('hour');
+                    var parent = $(e.target).parent();
+
+                    var h = parent.find('.dtp-select-hour');
+                    for (var i = 0; i < h.length; i++)
+                    {
+                       $(h[i]).attr('fill', 'transparent');
+                    }
+                    var th = parent.find('.dtp-select-hour-text');
+                    for (var i = 0; i < th.length; i++)
+                    {
+                       $(th[i]).attr('fill', '#000');
+                    }
+
+                    $(parent.find('#h-' + value)).attr('fill', '#007d72');
+                    $(parent.find('#th-' + value)).attr('fill', '#fff');
+
+                    this.currentDate.hour(parseInt(value));
+
+                    if (this.params.shortTime === true && this.isPM())
+                    {
+                       this.currentDate.add(12, 'hours');
+                    }
+
+                    this.showTime(this.currentDate);
+
+                    this.animateHands();
+
+                    if (this.params.switchOnClick === true)
+                       setTimeout(this.initMinutes.bind(this), 200);
+                 }
+              },
+              _onSelectMinute: function (e)
+              {
+                 if (!$(e.target).hasClass('disabled'))
+                 {
+                    var value = $(e.target).data('minute');
+                    var parent = $(e.target).parent();
+
+                    var m = parent.find('.dtp-select-minute');
+                    for (var i = 0; i < m.length; i++)
+                    {
+                       $(m[i]).attr('fill', 'transparent');
+                    }
+                    var tm = parent.find('.dtp-select-minute-text');
+                    for (var i = 0; i < tm.length; i++)
+                    {
+                       $(tm[i]).attr('fill', '#000');
+                    }
+
+                    $(parent.find('#m-' + value)).attr('fill', '#007d72');
+                    $(parent.find('#tm-' + value)).attr('fill', '#fff');
+
+                    this.currentDate.minute(parseInt(value));
+                    this.showTime(this.currentDate);
+
+                    this.animateHands();
+
+                    if (this.params.switchOnClick === true)
+                       setTimeout(function ()
+                       {
+                          this.setElementValue();
+                          this.hide();
+                       }.bind(this), 200);
+                 }
+              },
+              _onSelectAM: function (e)
+              {
+                 $('.dtp-actual-meridien').find('a').removeClass('selected');
+                 $(e.currentTarget).addClass('selected');
+
+                 if (this.currentDate.hour() >= 12)
+                 {
+                    if (this.currentDate.subtract(12, 'hours'))
+                       this.showTime(this.currentDate);
+                 }
+                 this.toggleTime((this.currentView === 1));
+              },
+              _onSelectPM: function (e)
+              {
+                 $('.dtp-actual-meridien').find('a').removeClass('selected');
+                 $(e.currentTarget).addClass('selected');
+
+                 if (this.currentDate.hour() < 12)
+                 {
+                    if (this.currentDate.add(12, 'hours'))
+                       this.showTime(this.currentDate);
+                 }
+                 this.toggleTime((this.currentView === 1));
+              },
+              convertHours: function (h)
+              {
+                 var _return = h;
+
+                 if (this.params.shortTime === true)
+                 {
+                    if ((h < 12) && this.isPM())
+                    {
+                       _return += 12;
+                    }
+                 }
+
+                 return _return;
+              },
+              setDate: function (date)
+              {
+                 this.params.currentDate = date;
+                 this.initDates();
+              },
+              setMinDate: function (date)
+              {
+                 this.params.minDate = date;
+                 this.initDates();
+              },
+              setMaxDate: function (date)
+              {
+                 this.params.maxDate = date;
+                 this.initDates();
+              },
+              destroy: function ()
+              {
+                 this._detachEvents();
+                 this.$dtpElement.remove();
+              },
+              show: function ()
+              {
+                 this.$dtpElement.removeClass('hidden');
+                 this._attachEvent($(window), 'keydown', this._onKeydown.bind(this));
+                 this._centerBox();
+              },
+              hide: function ()
+              {
+                 $(window).off('keydown', null, null, this._onKeydown.bind(this));
+                 this.$dtpElement.addClass('hidden');
+              },
+              _centerBox: function ()
+              {
+                 var h = (this.$dtpElement.height() - this.$dtpElement.find('.dtp-content').height()) / 2;
+                 this.$dtpElement.find('.dtp-content').css('marginLeft', -(this.$dtpElement.find('.dtp-content').width() / 2) + 'px');
+                 this.$dtpElement.find('.dtp-content').css('top', h + 'px');
+              },
+              enableDays: function ()
+              {
+                 var enableDays = this.params.enableDays;
+                 if (enableDays) {
+                    $(".dtp-picker-days tbody tr td").each(function () {
+                       if (!(($.inArray($(this).index(), enableDays)) >= 0)) {
+                          $(this).find('a').css({
+                             "background": "#e3e3e3",
+                             "cursor": "no-drop",
+                             "opacity": "0.5"
+                          }).off("click");
+                       }
+                    });
+                 }
+              }
+
+           };
+})(jQuery, moment);
+
+/*!
+ * Timepicker Component for Twitter Bootstrap
+ *
+ * Copyright 2013 Joris de Wit and bootstrap-timepicker contributors
+ *
+ * Contributors https://github.com/jdewit/bootstrap-timepicker/graphs/contributors
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+(function($, window, document) {
+  'use strict';
+
+  // TIMEPICKER PUBLIC CLASS DEFINITION
+  var Timepicker = function(element, options) {
+    this.widget = '';
+    this.$element = $(element);
+    this.defaultTime = options.defaultTime;
+    this.disableFocus = options.disableFocus;
+    this.disableMousewheel = options.disableMousewheel;
+    this.isOpen = options.isOpen;
+    this.minuteStep = options.minuteStep;
+    this.modalBackdrop = options.modalBackdrop;
+    this.orientation = options.orientation;
+    this.secondStep = options.secondStep;
+    this.snapToStep = options.snapToStep;
+    this.showInputs = options.showInputs;
+    this.showMeridian = options.showMeridian;
+    this.showSeconds = options.showSeconds;
+    this.template = options.template;
+    this.appendWidgetTo = options.appendWidgetTo;
+    this.showWidgetOnAddonClick = options.showWidgetOnAddonClick;
+    this.icons = options.icons;
+    this.maxHours = options.maxHours;
+    this.explicitMode = options.explicitMode; // If true 123 = 1:23, 12345 = 1:23:45, else invalid.
+
+    this.handleDocumentClick = function (e) {
+      var self = e.data.scope;
+      // This condition was inspired by bootstrap-datepicker.
+      // The element the timepicker is invoked on is the input but it has a sibling for addon/button.
+      if (!(self.$element.parent().find(e.target).length ||
+          self.$widget.is(e.target) ||
+          self.$widget.find(e.target).length)) {
+        self.hideWidget();
+      }
+    };
+
+    this._init();
+  };
+
+  Timepicker.prototype = {
+
+    constructor: Timepicker,
+    _init: function() {
+      var self = this;
+
+      if (this.showWidgetOnAddonClick && (this.$element.parent().hasClass('input-group') && this.$element.parent().hasClass('bootstrap-timepicker'))) {
+        this.$element.parent('.input-group.bootstrap-timepicker').find('.input-group-addon').on({
+          'click.timepicker': $.proxy(this.showWidget, this)
+        });
+        this.$element.on({
+          'focus.timepicker': $.proxy(this.highlightUnit, this),
+          'click.timepicker': $.proxy(this.highlightUnit, this),
+          'keydown.timepicker': $.proxy(this.elementKeydown, this),
+          'blur.timepicker': $.proxy(this.blurElement, this),
+          'mousewheel.timepicker DOMMouseScroll.timepicker': $.proxy(this.mousewheel, this)
+        });
+      } else {
+        if (this.template) {
+          this.$element.on({
+            'focus.timepicker': $.proxy(this.showWidget, this),
+            'click.timepicker': $.proxy(this.showWidget, this),
+            'blur.timepicker': $.proxy(this.blurElement, this),
+            'mousewheel.timepicker DOMMouseScroll.timepicker': $.proxy(this.mousewheel, this)
+          });
+        } else {
+          this.$element.on({
+            'focus.timepicker': $.proxy(this.highlightUnit, this),
+            'click.timepicker': $.proxy(this.highlightUnit, this),
+            'keydown.timepicker': $.proxy(this.elementKeydown, this),
+            'blur.timepicker': $.proxy(this.blurElement, this),
+            'mousewheel.timepicker DOMMouseScroll.timepicker': $.proxy(this.mousewheel, this)
+          });
+        }
+      }
+
+      if (this.template !== false) {
+        this.$widget = $(this.getTemplate()).on('click', $.proxy(this.widgetClick, this));
+      } else {
+        this.$widget = false;
+      }
+
+      if (this.showInputs && this.$widget !== false) {
+        this.$widget.find('input').each(function() {
+          $(this).on({
+            'click.timepicker': function() { $(this).select(); },
+            'keydown.timepicker': $.proxy(self.widgetKeydown, self),
+            'keyup.timepicker': $.proxy(self.widgetKeyup, self)
+          });
+        });
+      }
+
+      this.setDefaultTime(this.defaultTime);
+    },
+
+    blurElement: function() {
+      this.highlightedUnit = null;
+      this.updateFromElementVal();
+    },
+
+    clear: function() {
+      this.hour = '';
+      this.minute = '';
+      this.second = '';
+      this.meridian = '';
+
+      this.$element.val('');
+    },
+
+    decrementHour: function() {
+      if (this.showMeridian) {
+        if (this.hour === 1) {
+          this.hour = 12;
+        } else if (this.hour === 12) {
+          this.hour--;
+
+          return this.toggleMeridian();
+        } else if (this.hour === 0) {
+          this.hour = 11;
+
+          return this.toggleMeridian();
+        } else {
+          this.hour--;
+        }
+      } else {
+        if (this.hour <= 0) {
+          this.hour = this.maxHours - 1;
+        } else {
+          this.hour--;
+        }
+      }
+    },
+
+    decrementMinute: function(step) {
+      var newVal;
+
+      if (step) {
+        newVal = this.minute - step;
+      } else {
+        newVal = this.minute - this.minuteStep;
+      }
+
+      if (newVal < 0) {
+        this.decrementHour();
+        this.minute = newVal + 60;
+      } else {
+        this.minute = newVal;
+      }
+    },
+
+    decrementSecond: function() {
+      var newVal = this.second - this.secondStep;
+
+      if (newVal < 0) {
+        this.decrementMinute(true);
+        this.second = newVal + 60;
+      } else {
+        this.second = newVal;
+      }
+    },
+
+    elementKeydown: function(e) {
+      switch (e.which) {
+      case 9: //tab
+        if (e.shiftKey) {
+          if (this.highlightedUnit === 'hour') {
+            this.hideWidget();
+            break;
+          }
+          this.highlightPrevUnit();
+        } else if ((this.showMeridian && this.highlightedUnit === 'meridian') || (this.showSeconds && this.highlightedUnit === 'second') || (!this.showMeridian && !this.showSeconds && this.highlightedUnit ==='minute')) {
+          this.hideWidget();
+          break;
+        } else {
+          this.highlightNextUnit();
+        }
+        e.preventDefault();
+        this.updateFromElementVal();
+        break;
+      case 27: // escape
+        this.updateFromElementVal();
+        break;
+      case 37: // left arrow
+        e.preventDefault();
+        this.highlightPrevUnit();
+        this.updateFromElementVal();
+        break;
+      case 38: // up arrow
+        e.preventDefault();
+        switch (this.highlightedUnit) {
+        case 'hour':
+          this.incrementHour();
+          this.highlightHour();
+          break;
+        case 'minute':
+          this.incrementMinute();
+          this.highlightMinute();
+          break;
+        case 'second':
+          this.incrementSecond();
+          this.highlightSecond();
+          break;
+        case 'meridian':
+          this.toggleMeridian();
+          this.highlightMeridian();
+          break;
+        }
+        this.update();
+        break;
+      case 39: // right arrow
+        e.preventDefault();
+        this.highlightNextUnit();
+        this.updateFromElementVal();
+        break;
+      case 40: // down arrow
+        e.preventDefault();
+        switch (this.highlightedUnit) {
+        case 'hour':
+          this.decrementHour();
+          this.highlightHour();
+          break;
+        case 'minute':
+          this.decrementMinute();
+          this.highlightMinute();
+          break;
+        case 'second':
+          this.decrementSecond();
+          this.highlightSecond();
+          break;
+        case 'meridian':
+          this.toggleMeridian();
+          this.highlightMeridian();
+          break;
+        }
+
+        this.update();
+        break;
+      }
+    },
+
+    getCursorPosition: function() {
+      var input = this.$element.get(0);
+
+      if ('selectionStart' in input) {// Standard-compliant browsers
+
+        return input.selectionStart;
+      } else if (document.selection) {// IE fix
+        input.focus();
+        var sel = document.selection.createRange(),
+          selLen = document.selection.createRange().text.length;
+
+        sel.moveStart('character', - input.value.length);
+
+        return sel.text.length - selLen;
+      }
+    },
+
+    getTemplate: function() {
+      var template,
+        hourTemplate,
+        minuteTemplate,
+        secondTemplate,
+        meridianTemplate,
+        templateContent;
+
+      if (this.showInputs) {
+        hourTemplate = '<input type="text" class="bootstrap-timepicker-hour" maxlength="2"/>';
+        minuteTemplate = '<input type="text" class="bootstrap-timepicker-minute" maxlength="2"/>';
+        secondTemplate = '<input type="text" class="bootstrap-timepicker-second" maxlength="2"/>';
+        meridianTemplate = '<input type="text" class="bootstrap-timepicker-meridian" maxlength="2"/>';
+      } else {
+        hourTemplate = '<span class="bootstrap-timepicker-hour"></span>';
+        minuteTemplate = '<span class="bootstrap-timepicker-minute"></span>';
+        secondTemplate = '<span class="bootstrap-timepicker-second"></span>';
+        meridianTemplate = '<span class="bootstrap-timepicker-meridian"></span>';
+      }
+
+      templateContent = '<table>'+
+         '<tr>'+
+           '<td><a href="#" data-action="incrementHour"><span class="'+ this.icons.up +'"></span></a></td>'+
+           '<td class="separator">&nbsp;</td>'+
+           '<td><a href="#" data-action="incrementMinute"><span class="'+ this.icons.up +'"></span></a></td>'+
+           (this.showSeconds ?
+             '<td class="separator">&nbsp;</td>'+
+             '<td><a href="#" data-action="incrementSecond"><span class="'+ this.icons.up +'"></span></a></td>'
+           : '') +
+           (this.showMeridian ?
+             '<td class="separator">&nbsp;</td>'+
+             '<td class="meridian-column"><a href="#" data-action="toggleMeridian"><span class="'+ this.icons.up +'"></span></a></td>'
+           : '') +
+         '</tr>'+
+         '<tr>'+
+           '<td>'+ hourTemplate +'</td> '+
+           '<td class="separator">:</td>'+
+           '<td>'+ minuteTemplate +'</td> '+
+           (this.showSeconds ?
+            '<td class="separator">:</td>'+
+            '<td>'+ secondTemplate +'</td>'
+           : '') +
+           (this.showMeridian ?
+            '<td class="separator">&nbsp;</td>'+
+            '<td>'+ meridianTemplate +'</td>'
+           : '') +
+         '</tr>'+
+         '<tr>'+
+           '<td><a href="#" data-action="decrementHour"><span class="'+ this.icons.down +'"></span></a></td>'+
+           '<td class="separator"></td>'+
+           '<td><a href="#" data-action="decrementMinute"><span class="'+ this.icons.down +'"></span></a></td>'+
+           (this.showSeconds ?
+            '<td class="separator">&nbsp;</td>'+
+            '<td><a href="#" data-action="decrementSecond"><span class="'+ this.icons.down +'"></span></a></td>'
+           : '') +
+           (this.showMeridian ?
+            '<td class="separator">&nbsp;</td>'+
+            '<td><a href="#" data-action="toggleMeridian"><span class="'+ this.icons.down +'"></span></a></td>'
+           : '') +
+         '</tr>'+
+       '</table>';
+
+      switch(this.template) {
+      case 'modal':
+        template = '<div class="bootstrap-timepicker-widget modal hide fade in" data-backdrop="'+ (this.modalBackdrop ? 'true' : 'false') +'">'+
+          '<div class="modal-header">'+
+            '<a href="#" class="close" data-dismiss="modal">&times;</a>'+
+            '<h3>Pick a Time</h3>'+
+          '</div>'+
+          '<div class="modal-content">'+
+            templateContent +
+          '</div>'+
+          '<div class="modal-footer">'+
+            '<a href="#" class="btn btn-primary" data-dismiss="modal">OK</a>'+
+          '</div>'+
+        '</div>';
+        break;
+      case 'dropdown':
+        template = '<div class="bootstrap-timepicker-widget dropdown-menu">'+ templateContent +'</div>';
+        break;
+      }
+
+      return template;
+    },
+
+    getTime: function() {
+      if (this.hour === '') {
+        return '';
+      }
+
+      return this.hour + ':' + (this.minute.toString().length === 1 ? '0' + this.minute : this.minute) + (this.showSeconds ? ':' + (this.second.toString().length === 1 ? '0' + this.second : this.second) : '') + (this.showMeridian ? ' ' + this.meridian : '');
+    },
+
+    hideWidget: function() {
+      if (this.isOpen === false) {
+        return;
+      }
+
+      this.$element.trigger({
+        'type': 'hide.timepicker',
+        'time': {
+          'value': this.getTime(),
+          'hours': this.hour,
+          'minutes': this.minute,
+          'seconds': this.second,
+          'meridian': this.meridian
+        }
+      });
+
+      if (this.template === 'modal' && this.$widget.modal) {
+        this.$widget.modal('hide');
+      } else {
+        this.$widget.removeClass('open');
+      }
+
+      $(document).off('mousedown.timepicker, touchend.timepicker', this.handleDocumentClick);
+
+      this.isOpen = false;
+      // show/hide approach taken by datepicker
+      this.$widget.detach();
+    },
+
+    highlightUnit: function() {
+      this.position = this.getCursorPosition();
+      if (this.position >= 0 && this.position <= 2) {
+        this.highlightHour();
+      } else if (this.position >= 3 && this.position <= 5) {
+        this.highlightMinute();
+      } else if (this.position >= 6 && this.position <= 8) {
+        if (this.showSeconds) {
+          this.highlightSecond();
+        } else {
+          this.highlightMeridian();
+        }
+      } else if (this.position >= 9 && this.position <= 11) {
+        this.highlightMeridian();
+      }
+    },
+
+    highlightNextUnit: function() {
+      switch (this.highlightedUnit) {
+      case 'hour':
+        this.highlightMinute();
+        break;
+      case 'minute':
+        if (this.showSeconds) {
+          this.highlightSecond();
+        } else if (this.showMeridian){
+          this.highlightMeridian();
+        } else {
+          this.highlightHour();
+        }
+        break;
+      case 'second':
+        if (this.showMeridian) {
+          this.highlightMeridian();
+        } else {
+          this.highlightHour();
+        }
+        break;
+      case 'meridian':
+        this.highlightHour();
+        break;
+      }
+    },
+
+    highlightPrevUnit: function() {
+      switch (this.highlightedUnit) {
+      case 'hour':
+        if(this.showMeridian){
+          this.highlightMeridian();
+        } else if (this.showSeconds) {
+          this.highlightSecond();
+        } else {
+          this.highlightMinute();
+        }
+        break;
+      case 'minute':
+        this.highlightHour();
+        break;
+      case 'second':
+        this.highlightMinute();
+        break;
+      case 'meridian':
+        if (this.showSeconds) {
+          this.highlightSecond();
+        } else {
+          this.highlightMinute();
+        }
+        break;
+      }
+    },
+
+    highlightHour: function() {
+      var $element = this.$element.get(0),
+          self = this;
+
+      this.highlightedUnit = 'hour';
+
+      if ($element.setSelectionRange) {
+        setTimeout(function() {
+          if (self.hour < 10) {
+            $element.setSelectionRange(0,1);
+          } else {
+            $element.setSelectionRange(0,2);
+          }
+        }, 0);
+      }
+    },
+
+    highlightMinute: function() {
+      var $element = this.$element.get(0),
+          self = this;
+
+      this.highlightedUnit = 'minute';
+
+      if ($element.setSelectionRange) {
+        setTimeout(function() {
+          if (self.hour < 10) {
+            $element.setSelectionRange(2,4);
+          } else {
+            $element.setSelectionRange(3,5);
+          }
+        }, 0);
+      }
+    },
+
+    highlightSecond: function() {
+      var $element = this.$element.get(0),
+          self = this;
+
+      this.highlightedUnit = 'second';
+
+      if ($element.setSelectionRange) {
+        setTimeout(function() {
+          if (self.hour < 10) {
+            $element.setSelectionRange(5,7);
+          } else {
+            $element.setSelectionRange(6,8);
+          }
+        }, 0);
+      }
+    },
+
+    highlightMeridian: function() {
+      var $element = this.$element.get(0),
+          self = this;
+
+      this.highlightedUnit = 'meridian';
+
+      if ($element.setSelectionRange) {
+        if (this.showSeconds) {
+          setTimeout(function() {
+            if (self.hour < 10) {
+              $element.setSelectionRange(8,10);
+            } else {
+              $element.setSelectionRange(9,11);
+            }
+          }, 0);
+        } else {
+          setTimeout(function() {
+            if (self.hour < 10) {
+              $element.setSelectionRange(5,7);
+            } else {
+              $element.setSelectionRange(6,8);
+            }
+          }, 0);
+        }
+      }
+    },
+
+    incrementHour: function() {
+      if (this.showMeridian) {
+        if (this.hour === 11) {
+          this.hour++;
+          return this.toggleMeridian();
+        } else if (this.hour === 12) {
+          this.hour = 0;
+        }
+      }
+      if (this.hour === this.maxHours - 1) {
+        this.hour = 0;
+
+        return;
+      }
+      this.hour++;
+    },
+
+    incrementMinute: function(step) {
+      var newVal;
+
+      if (step) {
+        newVal = this.minute + step;
+      } else {
+        newVal = this.minute + this.minuteStep - (this.minute % this.minuteStep);
+      }
+
+      if (newVal > 59) {
+        this.incrementHour();
+        this.minute = newVal - 60;
+      } else {
+        this.minute = newVal;
+      }
+    },
+
+    incrementSecond: function() {
+      var newVal = this.second + this.secondStep - (this.second % this.secondStep);
+
+      if (newVal > 59) {
+        this.incrementMinute(true);
+        this.second = newVal - 60;
+      } else {
+        this.second = newVal;
+      }
+    },
+
+    mousewheel: function(e) {
+      if (this.disableMousewheel) {
+        return;
+      }
+
+      e.preventDefault();
+      e.stopPropagation();
+
+      var delta = e.originalEvent.wheelDelta || -e.originalEvent.detail,
+          scrollTo = null;
+
+      if (e.type === 'mousewheel') {
+        scrollTo = (e.originalEvent.wheelDelta * -1);
+      }
+      else if (e.type === 'DOMMouseScroll') {
+        scrollTo = 40 * e.originalEvent.detail;
+      }
+
+      if (scrollTo) {
+        e.preventDefault();
+        $(this).scrollTop(scrollTo + $(this).scrollTop());
+      }
+
+      switch (this.highlightedUnit) {
+      case 'minute':
+        if (delta > 0) {
+          this.incrementMinute();
+        } else {
+          this.decrementMinute();
+        }
+        this.highlightMinute();
+        break;
+      case 'second':
+        if (delta > 0) {
+          this.incrementSecond();
+        } else {
+          this.decrementSecond();
+        }
+        this.highlightSecond();
+        break;
+      case 'meridian':
+        this.toggleMeridian();
+        this.highlightMeridian();
+        break;
+      default:
+        if (delta > 0) {
+          this.incrementHour();
+        } else {
+          this.decrementHour();
+        }
+        this.highlightHour();
+        break;
+      }
+
+      return false;
+    },
+
+    /**
+     * Given a segment value like 43, will round and snap the segment
+     * to the nearest "step", like 45 if step is 15. Segment will
+     * "overflow" to 0 if it's larger than 59 or would otherwise
+     * round up to 60.
+     */
+    changeToNearestStep: function (segment, step) {
+      if (segment % step === 0) {
+        return segment;
+      }
+      if (Math.round((segment % step) / step)) {
+        return (segment + (step - segment % step)) % 60;
+      } else {
+        return segment - segment % step;
+      }
+    },
+
+    // This method was adapted from bootstrap-datepicker.
+    place : function() {
+      if (this.isInline) {
+        return;
+      }
+      var widgetWidth = this.$widget.outerWidth(), widgetHeight = this.$widget.outerHeight(), visualPadding = 10, windowWidth =
+        $(window).width(), windowHeight = $(window).height(), scrollTop = $(window).scrollTop();
+
+      var zIndex = parseInt(this.$element.parents().filter(function() { return $(this).css('z-index') !== 'auto'; }).first().css('z-index'), 10) + 10;
+      var offset = this.component ? this.component.parent().offset() : this.$element.offset();
+      var height = this.component ? this.component.outerHeight(true) : this.$element.outerHeight(false);
+      var width = this.component ? this.component.outerWidth(true) : this.$element.outerWidth(false);
+      var left = offset.left, top = offset.top;
+
+      this.$widget.removeClass('timepicker-orient-top timepicker-orient-bottom timepicker-orient-right timepicker-orient-left');
+
+      if (this.orientation.x !== 'auto') {
+        this.$widget.addClass('timepicker-orient-' + this.orientation.x);
+        if (this.orientation.x === 'right') {
+          left -= widgetWidth - width;
+        }
+      } else{
+        // auto x orientation is best-placement: if it crosses a window edge, fudge it sideways
+        // Default to left
+        this.$widget.addClass('timepicker-orient-left');
+        if (offset.left < 0) {
+          left -= offset.left - visualPadding;
+        } else if (offset.left + widgetWidth > windowWidth) {
+          left = windowWidth - widgetWidth - visualPadding;
+        }
+      }
+      // auto y orientation is best-situation: top or bottom, no fudging, decision based on which shows more of the widget
+      var yorient = this.orientation.y, topOverflow, bottomOverflow;
+      if (yorient === 'auto') {
+        topOverflow = -scrollTop + offset.top - widgetHeight;
+        bottomOverflow = scrollTop + windowHeight - (offset.top + height + widgetHeight);
+        if (Math.max(topOverflow, bottomOverflow) === bottomOverflow) {
+          yorient = 'top';
+        } else {
+          yorient = 'bottom';
+        }
+      }
+      this.$widget.addClass('timepicker-orient-' + yorient);
+      if (yorient === 'top'){
+        top += height;
+      } else{
+        top -= widgetHeight + parseInt(this.$widget.css('padding-top'), 10);
+      }
+
+      this.$widget.css({
+        top : top,
+        left : left,
+        zIndex : zIndex
+      });
+    },
+
+    remove: function() {
+      $('document').off('.timepicker');
+      if (this.$widget) {
+        this.$widget.remove();
+      }
+      delete this.$element.data().timepicker;
+    },
+
+    setDefaultTime: function(defaultTime) {
+      if (!this.$element.val()) {
+        if (defaultTime === 'current') {
+          var dTime = new Date(),
+            hours = dTime.getHours(),
+            minutes = dTime.getMinutes(),
+            seconds = dTime.getSeconds(),
+            meridian = 'AM';
+
+          if (seconds !== 0) {
+            seconds = Math.ceil(dTime.getSeconds() / this.secondStep) * this.secondStep;
+            if (seconds === 60) {
+              minutes += 1;
+              seconds = 0;
+            }
+          }
+
+          if (minutes !== 0) {
+            minutes = Math.ceil(dTime.getMinutes() / this.minuteStep) * this.minuteStep;
+            if (minutes === 60) {
+              hours += 1;
+              minutes = 0;
+            }
+          }
+
+          if (this.showMeridian) {
+            if (hours === 0) {
+              hours = 12;
+            } else if (hours >= 12) {
+              if (hours > 12) {
+                hours = hours - 12;
+              }
+              meridian = 'PM';
+            } else {
+              meridian = 'AM';
+            }
+          }
+
+          this.hour = hours;
+          this.minute = minutes;
+          this.second = seconds;
+          this.meridian = meridian;
+
+          this.update();
+
+        } else if (defaultTime === false) {
+          this.hour = 0;
+          this.minute = 0;
+          this.second = 0;
+          this.meridian = 'AM';
+        } else {
+          this.setTime(defaultTime);
+        }
+      } else {
+        this.updateFromElementVal();
+      }
+    },
+
+    setTime: function(time, ignoreWidget) {
+      if (!time) {
+        this.clear();
+        return;
+      }
+
+      var timeMode,
+          timeArray,
+          hour,
+          minute,
+          second,
+          meridian;
+
+      if (typeof time === 'object' && time.getMonth){
+        // this is a date object
+        hour    = time.getHours();
+        minute  = time.getMinutes();
+        second  = time.getSeconds();
+
+        if (this.showMeridian){
+          meridian = 'AM';
+          if (hour > 12){
+            meridian = 'PM';
+            hour = hour % 12;
+          }
+
+          if (hour === 12){
+            meridian = 'PM';
+          }
+        }
+      } else {
+        timeMode = ((/a/i).test(time) ? 1 : 0) + ((/p/i).test(time) ? 2 : 0); // 0 = none, 1 = AM, 2 = PM, 3 = BOTH.
+        if (timeMode > 2) { // If both are present, fail.
+          this.clear();
+          return;
+        }
+
+        timeArray = time.replace(/[^0-9\:]/g, '').split(':');
+
+        hour = timeArray[0] ? timeArray[0].toString() : timeArray.toString();
+
+        if(this.explicitMode && hour.length > 2 && (hour.length % 2) !== 0 ) {
+          this.clear();
+          return;
+        }
+
+        minute = timeArray[1] ? timeArray[1].toString() : '';
+        second = timeArray[2] ? timeArray[2].toString() : '';
+
+        // adaptive time parsing
+        if (hour.length > 4) {
+          second = hour.slice(-2);
+          hour = hour.slice(0, -2);
+        }
+
+        if (hour.length > 2) {
+          minute = hour.slice(-2);
+          hour = hour.slice(0, -2);
+        }
+
+        if (minute.length > 2) {
+          second = minute.slice(-2);
+          minute = minute.slice(0, -2);
+        }
+
+        hour = parseInt(hour, 10);
+        minute = parseInt(minute, 10);
+        second = parseInt(second, 10);
+
+        if (isNaN(hour)) {
+          hour = 0;
+        }
+        if (isNaN(minute)) {
+          minute = 0;
+        }
+        if (isNaN(second)) {
+          second = 0;
+        }
+
+        // Adjust the time based upon unit boundary.
+        // NOTE: Negatives will never occur due to time.replace() above.
+        if (second > 59) {
+          second = 59;
+        }
+
+        if (minute > 59) {
+          minute = 59;
+        }
+
+        if (hour >= this.maxHours) {
+          // No day/date handling.
+          hour = this.maxHours - 1;
+        }
+
+        if (this.showMeridian) {
+          if (hour > 12) {
+            // Force PM.
+            timeMode = 2;
+            hour -= 12;
+          }
+          if (!timeMode) {
+            timeMode = 1;
+          }
+          if (hour === 0) {
+            hour = 12; // AM or PM, reset to 12.  0 AM = 12 AM.  0 PM = 12 PM, etc.
+          }
+          meridian = timeMode === 1 ? 'AM' : 'PM';
+        } else if (hour < 12 && timeMode === 2) {
+          hour += 12;
+        } else {
+          if (hour >= this.maxHours) {
+            hour = this.maxHours - 1;
+          } else if ((hour < 0) || (hour === 12 && timeMode === 1)){
+            hour = 0;
+          }
+        }
+      }
+
+      this.hour = hour;
+      if (this.snapToStep) {
+        this.minute = this.changeToNearestStep(minute, this.minuteStep);
+        this.second = this.changeToNearestStep(second, this.secondStep);
+      } else {
+        this.minute = minute;
+        this.second = second;
+      }
+      this.meridian = meridian;
+
+      this.update(ignoreWidget);
+    },
+
+    showWidget: function() {
+      if (this.isOpen) {
+        return;
+      }
+
+      if (this.$element.is(':disabled')) {
+        return;
+      }
+
+      // show/hide approach taken by datepicker
+      this.$widget.appendTo(this.appendWidgetTo);
+      $(document).on('mousedown.timepicker, touchend.timepicker', {scope: this}, this.handleDocumentClick);
+
+      this.$element.trigger({
+        'type': 'show.timepicker',
+        'time': {
+          'value': this.getTime(),
+          'hours': this.hour,
+          'minutes': this.minute,
+          'seconds': this.second,
+          'meridian': this.meridian
+        }
+      });
+
+      this.place();
+      if (this.disableFocus) {
+        this.$element.blur();
+      }
+
+      // widget shouldn't be empty on open
+      if (this.hour === '') {
+        if (this.defaultTime) {
+          this.setDefaultTime(this.defaultTime);
+        } else {
+          this.setTime('0:0:0');
+        }
+      }
+
+      if (this.template === 'modal' && this.$widget.modal) {
+        this.$widget.modal('show').on('hidden', $.proxy(this.hideWidget, this));
+      } else {
+        if (this.isOpen === false) {
+          this.$widget.addClass('open');
+        }
+      }
+
+      this.isOpen = true;
+    },
+
+    toggleMeridian: function() {
+      this.meridian = this.meridian === 'AM' ? 'PM' : 'AM';
+    },
+
+    update: function(ignoreWidget) {
+      this.updateElement();
+      if (!ignoreWidget) {
+        this.updateWidget();
+      }
+
+      this.$element.trigger({
+        'type': 'changeTime.timepicker',
+        'time': {
+          'value': this.getTime(),
+          'hours': this.hour,
+          'minutes': this.minute,
+          'seconds': this.second,
+          'meridian': this.meridian
+        }
+      });
+    },
+
+    updateElement: function() {
+      this.$element.val(this.getTime()).change();
+    },
+
+    updateFromElementVal: function() {
+      this.setTime(this.$element.val());
+    },
+
+    updateWidget: function() {
+      if (this.$widget === false) {
+        return;
+      }
+
+      var hour = this.hour,
+          minute = this.minute.toString().length === 1 ? '0' + this.minute : this.minute,
+          second = this.second.toString().length === 1 ? '0' + this.second : this.second;
+
+      if (this.showInputs) {
+        this.$widget.find('input.bootstrap-timepicker-hour').val(hour);
+        this.$widget.find('input.bootstrap-timepicker-minute').val(minute);
+
+        if (this.showSeconds) {
+          this.$widget.find('input.bootstrap-timepicker-second').val(second);
+        }
+        if (this.showMeridian) {
+          this.$widget.find('input.bootstrap-timepicker-meridian').val(this.meridian);
+        }
+      } else {
+        this.$widget.find('span.bootstrap-timepicker-hour').text(hour);
+        this.$widget.find('span.bootstrap-timepicker-minute').text(minute);
+
+        if (this.showSeconds) {
+          this.$widget.find('span.bootstrap-timepicker-second').text(second);
+        }
+        if (this.showMeridian) {
+          this.$widget.find('span.bootstrap-timepicker-meridian').text(this.meridian);
+        }
+      }
+    },
+
+    updateFromWidgetInputs: function() {
+      if (this.$widget === false) {
+        return;
+      }
+
+      var t = this.$widget.find('input.bootstrap-timepicker-hour').val() + ':' +
+              this.$widget.find('input.bootstrap-timepicker-minute').val() +
+              (this.showSeconds ? ':' + this.$widget.find('input.bootstrap-timepicker-second').val() : '') +
+              (this.showMeridian ? this.$widget.find('input.bootstrap-timepicker-meridian').val() : '')
+      ;
+
+      this.setTime(t, true);
+    },
+
+    widgetClick: function(e) {
+      e.stopPropagation();
+      e.preventDefault();
+
+      var $input = $(e.target),
+          action = $input.closest('a').data('action');
+
+      if (action) {
+        this[action]();
+      }
+      this.update();
+
+      if ($input.is('input')) {
+        $input.get(0).setSelectionRange(0,2);
+      }
+    },
+
+    widgetKeydown: function(e) {
+      var $input = $(e.target),
+          name = $input.attr('class').replace('bootstrap-timepicker-', '');
+
+      switch (e.which) {
+      case 9: //tab
+        if (e.shiftKey) {
+          if (name === 'hour') {
+            return this.hideWidget();
+          }
+        } else if ((this.showMeridian && name === 'meridian') || (this.showSeconds && name === 'second') || (!this.showMeridian && !this.showSeconds && name === 'minute')) {
+          return this.hideWidget();
+        }
+        break;
+      case 27: // escape
+        this.hideWidget();
+        break;
+      case 38: // up arrow
+        e.preventDefault();
+        switch (name) {
+        case 'hour':
+          this.incrementHour();
+          break;
+        case 'minute':
+          this.incrementMinute();
+          break;
+        case 'second':
+          this.incrementSecond();
+          break;
+        case 'meridian':
+          this.toggleMeridian();
+          break;
+        }
+        this.setTime(this.getTime());
+        $input.get(0).setSelectionRange(0,2);
+        break;
+      case 40: // down arrow
+        e.preventDefault();
+        switch (name) {
+        case 'hour':
+          this.decrementHour();
+          break;
+        case 'minute':
+          this.decrementMinute();
+          break;
+        case 'second':
+          this.decrementSecond();
+          break;
+        case 'meridian':
+          this.toggleMeridian();
+          break;
+        }
+        this.setTime(this.getTime());
+        $input.get(0).setSelectionRange(0,2);
+        break;
+      }
+    },
+
+    widgetKeyup: function(e) {
+      if ((e.which === 65) || (e.which === 77) || (e.which === 80) || (e.which === 46) || (e.which === 8) || (e.which >= 48 && e.which <= 57) || (e.which >= 96 && e.which <= 105)) {
+        this.updateFromWidgetInputs();
+      }
+    }
+  };
+
+  //TIMEPICKER PLUGIN DEFINITION
+  $.fn.timepicker = function(option) {
+    var args = Array.apply(null, arguments);
+    args.shift();
+    return this.each(function() {
+      var $this = $(this),
+        data = $this.data('timepicker'),
+        options = typeof option === 'object' && option;
+
+      if (!data) {
+        $this.data('timepicker', (data = new Timepicker(this, $.extend({}, $.fn.timepicker.defaults, options, $(this).data()))));
+      }
+
+      if (typeof option === 'string') {
+        data[option].apply(data, args);
+      }
+    });
+  };
+
+  $.fn.timepicker.defaults = {
+    defaultTime: 'current',
+    disableFocus: false,
+    disableMousewheel: false,
+    isOpen: false,
+    minuteStep: 15,
+    modalBackdrop: false,
+    orientation: { x: 'auto', y: 'auto'},
+    secondStep: 15,
+    snapToStep: false,
+    showSeconds: false,
+    showInputs: true,
+    showMeridian: true,
+    template: 'dropdown',
+    appendWidgetTo: 'body',
+    showWidgetOnAddonClick: true,
+    icons: {
+      up: 'glyphicon glyphicon-chevron-up',
+      down: 'glyphicon glyphicon-chevron-down'
+    },
+    maxHours: 24,
+    explicitMode: false
+  };
+
+  $.fn.timepicker.Constructor = Timepicker;
+
+  $(document).on(
+    'focus.timepicker.data-api click.timepicker.data-api',
+    '[data-provide="timepicker"]',
+    function(e){
+      var $this = $(this);
+      if ($this.data('timepicker')) {
+        return;
+      }
+      e.preventDefault();
+      // component click requires us to explicitly show it
+      $this.timepicker();
+    }
+  );
+
+})(jQuery, window, document);
+
 /*!
  * Waves v0.7.5
  * http://fian.my.id/Waves

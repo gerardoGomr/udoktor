@@ -170,10 +170,10 @@ jQuery(document).ready(function($) {
             let errors = '';
             if(jqXHR.status === 422) {
                 $.each(jqXHR.responseJSON, function(key, value) {
-                    errors += value + '<br>';
+                    errors += '-' + value + "\n";
                 });
             }
-            swal('¡Error!', 'Tuvimos un inconveniente al crear su cuenta:' + errors, 'warning');
+            swal('¡Error!', "Tuvimos un inconveniente al crear su cuenta:\n\n" + errors, 'warning');
         });
     }
 

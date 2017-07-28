@@ -1,5 +1,5 @@
 @php
-use Udoktor\Domain\Users\User;
+    use Udoktor\Domain\Users\User;
 @endphp
 @if(Auth::user()->hasServices())
     <div class="row clearfix">
@@ -69,4 +69,6 @@ use Udoktor\Domain\Users\User;
             </tfoot>
         @endif
     </table>
+@else
+    <h4>No se ha agregado algún servicio.</h4>
 @endif

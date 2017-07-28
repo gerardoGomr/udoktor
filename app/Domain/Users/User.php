@@ -10,9 +10,11 @@ use Udoktor\Domain\Persons\Person;
 use Udoktor\Domain\Regions\AdministrativeUnit;
 use Udoktor\Domain\Regions\Location;
 use Udoktor\Exceptions\AddingComponentsForNonServiceProviderRoleException;
+use Udoktor\Exceptions\InvalidDiaryScheduleTypeException;
 use Udoktor\Exceptions\InvalidPriceTypeException;
 use Udoktor\Exceptions\InvalidRoleAssignmenException;
 use Udoktor\Exceptions\InvalidVerificationTokenException;
+use Udoktor\Exceptions\ScheduleForUserIsCoveredException;
 
 /**
  * Class User
@@ -134,6 +136,29 @@ class User extends Person implements Authenticatable
      */
     private $priceType;
 
+    /**
+     * how user's diary's schedules are setted
+     *
+     * Posible values: FIXED SCHEDULE OR INTERVAL SCHEDULE
+     *
+     * @var integer
+     */
+    private $diaryScheduleType;
+
+    /**
+     * the min amount of time that a service lasts
+     *
+     * @var integer
+     */
+    private $minServiceDuration;
+
+    /**
+     * the schedules assigned to service provider
+     *
+     * @var ICollection
+     */
+    private $schedules;
+
     const CLIENT           = 1;
     const SERVICE_PROVIDER = 2;
     const ADMIN            = 3;
@@ -153,6 +178,18 @@ class User extends Person implements Authenticatable
     const RECOMMENDED_PRICE = 2;
 
     /**
+     * user's diary has fixed schedules
+     *
+     * @var integer
+     */
+    const FIXED_SCHEDULE = 1;
+
+    /**
+     * user's diary has schedules as intervals
+     */
+    const INTERVAL_SCHEDULE = 2;
+
+    /**
      * User Constructor
      *
      * @param FullName $fullName
@@ -161,8 +198,10 @@ class User extends Person implements Authenticatable
      * @param string $contactNumber
      * @param int $role
      * @param AdministrativeUnit $aUnit
+     * @param integer $priceType
+     * @param integer $schedule type
      */
-    public function __construct(FullName $fullName, $email, $password, $contactNumber, $role, AdministrativeUnit $aUnit, $priceType = self::RECOMMENDED_PRICE)
+    public function __construct(FullName $fullName, $email, $password, $contactNumber, $role, AdministrativeUnit $aUnit, $priceType = self::RECOMMENDED_PRICE, $diaryScheduleType = self::FIXED_SCHEDULE)
     {
         $this->email              = $email;
         $this->password           = $password;
@@ -174,8 +213,9 @@ class User extends Person implements Authenticatable
             throw new InvalidRoleAssignmenException('El rol que se solicita no existe.');
         }
 
-        $this->role      = $role;
-        $this->priceType = $priceType;
+        $this->role              = $role;
+        $this->priceType         = $priceType;
+        $this->diaryScheduleType = $diaryScheduleType;
 
         parent::__construct($fullName);
     }
@@ -189,7 +229,7 @@ class User extends Person implements Authenticatable
      *
      * @return void
      */
-    public function addComponentsForServiceProvider(Classification $classification, ICollection $services)
+    public function addComponentsForServiceProvider(Classification $classification, ICollection $services, ICollection $schedules)
     {
         if ($this->role !== self::SERVICE_PROVIDER) {
             throw new AddingComponentsForNonServiceProviderRoleException('Solamente se pueden agregar estos componentes a usuarios con rol de prestador de servicio.');
@@ -198,6 +238,7 @@ class User extends Person implements Authenticatable
 
         $this->classification = $classification;
         $this->services       = $services;
+        $this->schedules      = $schedules;
     }
 
     /**
@@ -382,6 +423,16 @@ class User extends Person implements Authenticatable
     }
 
     /**
+     * returns the diary schedule type
+     *
+     * @return integer
+     */
+    public function getDiaryScheduleType()
+    {
+        return $this->diaryScheduleType;
+    }
+
+    /**
      * checks if the service provider has services
      *
      * @return bool
@@ -488,7 +539,15 @@ class User extends Person implements Authenticatable
      */
     public function hasCompletedProfile()
     {
-        return $this->hasCompletedProfile;
+        if ($this->hasCompletedProfile) {
+            return true;
+        }
+
+        if ($this->services->count() === 0 || $this->schedules->count() === 0) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -675,5 +734,126 @@ class User extends Person implements Authenticatable
         }
 
         return null;
+    }
+
+    /**
+     * checks if the user has any schedule
+     *
+     * @return bool
+     */
+    public function hasSchedules()
+    {
+        return $this->schedules->count() > 0;
+    }
+
+    /**
+     * checks if the user has a fixed schedule
+     *
+     * @return bool
+     */
+    public function hasFixedSchedules()
+    {
+        return $this->diaryScheduleType === self::FIXED_SCHEDULE;
+    }
+
+    /**
+     * checks if the user has a interval schedule
+     *
+     * @return bool
+     */
+    public function hasIntervalSchedules()
+    {
+        return $this->diaryScheduleType === self::INTERVAL_SCHEDULE;
+    }
+
+    /**
+     * change the diary type to user. Also restarts the schedules added to none
+     *
+     * @param integer $diaryScheduleType
+     *
+     * @return void
+     *
+     * @throws InvalidDiaryScheduleTypeException when $diaryScheduleType is not either fixed or interval
+     */
+    public function changeDiaryType($diaryScheduleType)
+    {
+        if ($diaryScheduleType !== self::FIXED_SCHEDULE && $diaryScheduleType !== self::INTERVAL_SCHEDULE) {
+            throw new InvalidDiaryScheduleTypeException('El tipo de diario ' . (string) $diaryScheduleType . ' no puede ser asignado al prestador de servicio.');
+        }
+
+        $this->schedules->clear();
+        $this->diaryScheduleType  = $diaryScheduleType;
+        $this->minServiceDuration = $diaryScheduleType === self::INTERVAL_SCHEDULE ? 20 : 0;
+    }
+
+    /**
+     * returns the minutes that a service lasts
+     *
+     * @return integer
+     */
+    public function getMinServiceDuration()
+    {
+        return $this->minServiceDuration;
+    }
+
+    /**
+     * modifies the min service lasting
+     *
+     * @param integer $servicesLasting
+     *
+     * @return void
+     */
+    public function modifyServicesLasting($servicesLasting)
+    {
+        $this->minServiceDuration = $servicesLasting;
+    }
+
+    /**
+     * add a new schedule to user by current diary schedule type
+     *
+     * @param string $startHour
+     * @param string|null $endHour
+     * @param string|null $clientsLimit
+     *
+     * @throws ScheduleForUserIsCoveredException when the interval is already covered
+     */
+    public function addSchedule($startHour, $endHour = null, $clientsLimit = null)
+    {
+        if ($this->diaryScheduleType === self::FIXED_SCHEDULE) {
+            // validate there is not another schedule on the interval
+            $startHour = strtotime($startHour);
+
+            foreach ($this->schedules as $schedule) {
+                if ($schedule->exists($startHour)) {
+                    throw new ScheduleForUserIsCoveredException("El horario de $startHour ya está cubierto.");
+                }
+            }
+
+            $this->schedules->add(new Schedule($this, $startHour, null, (int) $clientsLimit));
+        }
+
+        if ($this->diaryScheduleType === self::INTERVAL_SCHEDULE) {
+            // validate there is not another schedule on the interval
+            $startHour = strtotime($startHour);
+            $endHour   = strtotime($endHour);
+
+            foreach ($this->schedules as $schedule) {
+                if ($schedule->exists($startHour, $endHour)) {
+                    throw new ScheduleForUserIsCoveredException('El horario de ' . date('H:i', $startHour) . ' - ' . date('H:i', $endHour) . ' ya está cubierto.');
+                }
+            }
+
+            $this->schedules->add(new Schedule($this, $startHour, $endHour));
+        }
+    }
+
+    /**
+     * returns all schedules from user
+     *
+     * @return IColecttion
+     */
+    public function getSchedules()
+    {
+        return $this->schedules;
     }
 }

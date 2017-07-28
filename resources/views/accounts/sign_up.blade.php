@@ -156,7 +156,7 @@
                 </div>
                 <div class="row clearfix">
                     <div class="col-md-offset-3 col-sm-offset-4">
-                        <div class="g-recaptcha" data-sitekey="6LebuygUAAAAAALfGes-6BvCroAdMm6k9TqjmuO8"></div>
+                        <div class="g-recaptcha" data-sitekey="{{ env('CAPTCHA_KEY') }}"></div>
                     </div>
                 </div>
                 <br>
@@ -195,8 +195,8 @@
                             <div class="form-line">
                                 <input type="text" name="servicios" id="servicios" class="form-control required">
                             </div>
-
-                            <p class="form-control-static text-muted">Escriba algún servicio que usted brinde. Ejemplo: aplicación de inyecciones</p>
+                            <p class="form-control-static text-muted">Servicios disponibles:</p>
+                            <p class="form-control-static text-muted">{!! $servicesString !!}</p>
                             <input type="hidden" id="services" value="{{ base64_encode($servicesJson) }}">
                         </div>
                     </div>

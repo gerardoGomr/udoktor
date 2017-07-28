@@ -43,4 +43,17 @@ class SignUpRequest extends FormRequest
             'servicios'      => 'required_if:tipoCuenta,2'
         ];
     }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'email.unique'                       => 'Este correo ya está en uso',
+            'servicios.required_if'   => 'Por favor, especifique un servicio',
+        ];
+    }
 }
