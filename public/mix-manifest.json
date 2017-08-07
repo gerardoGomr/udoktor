@@ -11,5 +11,7 @@
   "/js/service_provider/profile.js": "/js/service_provider/profile.js",
   "/js/service_provider/map.js": "/js/service_provider/map.js",
   "/js/service_provider/services.js": "/js/service_provider/services.js",
-  "/js/service_provider/diary_schedules.js": "/js/service_provider/diary_schedules.js"
+  "/js/service_provider/diary_schedules.js": "/js/service_provider/diary_schedules.js",
+  "/js/clients/services.js": "/js/clients/services.js",
+  "/js/clients/map.js": "/js/clients/map.js"
 }

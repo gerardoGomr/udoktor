@@ -148,14 +148,11 @@ class UsersController extends Controller
     public function setNotifications(Request $request)
     {
         Auth::user()->clearNotifications();
-        $notifications = [];
 
-        if ($request->input('newDate') === '1') {
-            Auth::user()->addNotification('newDate');
-        }
-
-        if ($request->input('dateCancelled') === '1') {
-            Auth::user()->addNotification('dateCancelled');
+        if ($request->has('notifications')) {
+            foreach ($request->input('notifications') as $notification) {
+                Auth::user()->addNotification($notification);
+            }
         }
 
         try {

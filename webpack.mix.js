@@ -50,8 +50,8 @@ mix.sass('resources/assets/sass/style.scss', 'public/css/app.css')
         'resources/assets/css/materialize.css'
     ], 'public/css/all.css')
     .scripts([
-        resourcesDirectory + 'jquery/jquery.min.js',
-        resourcesDirectory + 'bootstrap/js/bootstrap.min.js',
+        resourcesDirectory + 'jquery/jquery.js',
+        resourcesDirectory + 'bootstrap/js/bootstrap.js',
         resourcesDirectory + 'ckeditor/ckeditor.js',
         resourcesDirectory + 'bootstrap-select/js/bootstrap-select.js',
         resourcesDirectory + 'bootstrap-tagsinput/bootstrap-tagsinput.js',
@@ -63,9 +63,9 @@ mix.sass('resources/assets/sass/style.scss', 'public/css/app.css')
         resourcesDirectory + 'jquery-validation/additional-methods.js',
         resourcesDirectory + 'jquery-validation/localization/messages_es.js',
         resourcesDirectory + 'jquery-validation/jquery.form.js',
-        resourcesDirectory + 'materialize-css/js/materialize.min.js',
+        resourcesDirectory + 'materialize-css/js/materialize.js',
         resourcesDirectory + 'multi-select/js/jquery.multi-select.js',
-        resourcesDirectory + 'sweetalert/sweetalert.min.js',
+        resourcesDirectory + 'sweetalert/sweetalert.js',
         resourcesDirectory + 'jquery-slimscroll/jquery.slimscroll.js',
         resourcesDirectory + 'fullcalendar-3.4.0/lib/moment.min.js',
         resourcesDirectory + 'fullcalendar-3.4.0/fullcalendar.js',
@@ -73,8 +73,8 @@ mix.sass('resources/assets/sass/style.scss', 'public/css/app.css')
         resourcesDirectory + 'bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js',
         resourcesDirectory + 'bootstrap-timepicker/js/bootstrap-timepicker.js',
         resourcesDirectory + 'node-waves/waves.js',
-        resourcesDirectory + 'raphael/raphael.min.js',
-        resourcesDirectory + 'morrisjs/morris.min.js',
+        resourcesDirectory + 'raphael/raphael.js',
+        resourcesDirectory + 'morrisjs/morris.js',
         'resources/assets/js/pages/ui/tooltips-popovers.js',
         'resources/assets/js/demo.js'
     ], 'public/js/all.js')
@@ -85,7 +85,9 @@ mix.sass('resources/assets/sass/style.scss', 'public/css/app.css')
     .scripts('resources/assets/js/service_provider/profile.js', 'public/js/service_provider/profile.js')
     .scripts('resources/assets/js/service_provider/map.js', 'public/js/service_provider/map.js')
     .scripts('resources/assets/js/service_provider/services.js', 'public/js/service_provider/services.js')
-    .scripts('resources/assets/js/service_provider/diary_schedules.js', 'public/js/service_provider/diary_schedules.js');
+    .scripts('resources/assets/js/service_provider/diary_schedules.js', 'public/js/service_provider/diary_schedules.js')
+    .scripts('resources/assets/js/clients/services.js', 'public/js/clients/services.js')
+    .scripts('resources/assets/js/clients/map.js', 'public/js/clients/map.js');
 
 // copying assets from resources to public
 for (let directory in directories) {

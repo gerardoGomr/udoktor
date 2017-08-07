@@ -15,7 +15,7 @@
 
                 if (Auth::user()->isClient()) {
                     $cuenta = 'Cliente';
-                    $url    = 'cliente';
+                    $url    = 'clientes';
                 }
             @endphp
             <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ Auth::user()->getFullName()->fullName() }}</div>

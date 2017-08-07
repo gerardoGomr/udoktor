@@ -26,7 +26,7 @@ class HomeController extends Controller
                 return redirect('prestador-servicios');
 
             } else if (Auth::user()->isClient()) {
-                return redirect('cliente');
+                return redirect('clientes');
             }
         } else {
             Auth::logout();

@@ -23,15 +23,21 @@ class ProfileViewsFactory
      */
     public static function make()
     {
-        if (Auth::user()->isServiceProvider()) {
-            $countries        = EntityManager::getRepository(AdministrativeUnit::class)->findBy(['parentUnit' => null]);
-            $state            = EntityManager::getRepository(AdministrativeUnit::class)->find(Auth::user()->getAdministrativeUnit()->getParentUnit()->getId());
-            $cities           = EntityManager::getRepository(AdministrativeUnit::class)->findBy(['parentUnit' => $state->getId()]);
+        $user              = Auth::user();
+        $countries         = EntityManager::getRepository(AdministrativeUnit::class)->findBy(['parentUnit' => null]);
+        $state             = EntityManager::getRepository(AdministrativeUnit::class)->find(Auth::user()->getAdministrativeUnit()->getParentUnit()->getId());
+        $cities            = EntityManager::getRepository(AdministrativeUnit::class)->findBy(['parentUnit' => $state->getId()]);
+        $profilePictureUrl = static::checkUsersProfilePicture();
+        $notifications     = explode(',', Auth::user()->getNotifications());
+
+        if ($user->isServiceProvider()) {
             $classifications  = EntityManager::getRepository(Classification::class)->findBy(['active' => true]);
-            $profilePictureUrl = static::checkUsersProfilePicture();
-            $notifications     = explode(',', Auth::user()->getNotifications());
 
             return view('service_provider.profile', compact('countries', 'state', 'cities', 'classifications', 'profilePictureUrl', 'notifications'));
+        }
+
+        if ($user->isClient()) {
+            return view('clients.profile', compact('countries', 'state', 'cities', 'profilePictureUrl', 'notifications'));
         }
     }
 

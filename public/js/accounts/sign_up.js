@@ -173,7 +173,7 @@ jQuery(document).ready(function($) {
                     errors += '-' + value + "\n";
                 });
             }
-            swal('¡Error!', "Tuvimos un inconveniente al crear su cuenta\n:" + errors, 'warning');
+            swal('¡Error!', "Tuvimos un inconveniente al crear su cuenta:\n\n" + errors, 'warning');
         });
     }
 

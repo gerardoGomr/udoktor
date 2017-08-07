@@ -17,9 +17,6 @@ Route::group(['middleware' => ['auth', 'picture']], function () {
     // service provider profile
     Route::group(['prefix' => 'prestador-servicios/perfil'], function () {
         Route::get('/', 'UsersController@index');
-        Route::put('/', 'UsersController@updateProfile');
-        Route::put('picture', 'UsersController@changeProfileImage');
-        Route::put('notificaciones', 'UsersController@setNotifications');
         Route::put('ubicacion', 'UsersController@updateLocation');
     });
 
@@ -46,6 +43,20 @@ Route::group(['middleware' => ['auth', 'picture']], function () {
         // citas
         Route::get('agenda/citas', 'AppointmentsController@index');
     });
+
+    Route::group(['prefix' => 'clientes', 'namespace' => 'Clients'], function () {
+        Route::get('/', 'ServicesController@index');
+    });
+
+    // service provider profile
+    Route::group(['prefix' => 'clientes/perfil'], function () {
+        Route::get('/', 'UsersController@index');
+    });
+
+    // profile
+    Route::put('perfil', 'UsersController@updateProfile');
+    Route::put('perfil/picture', 'UsersController@changeProfileImage');
+    Route::put('perfil/notificaciones', 'UsersController@setNotifications');
 });
 
 // login

@@ -4,6 +4,7 @@ namespace Udoktor\Infrastructure\Repositories\Users;
 use Doctrine\Common\Persistence\ObjectRepository;
 use LaravelDoctrine\ORM\Facades\EntityManager;
 use PDOException;
+use Udoktor\Domain\Regions\AdministrativeUnit;
 use Udoktor\Domain\Users\Repositories\UsersRepository;
 use Udoktor\Domain\Users\User;
 
@@ -86,5 +87,35 @@ class DoctrineUsersRepository implements UsersRepository
         } catch (PDOException $e) {
             throw $e;
         }*/
+    }
+
+    /**
+     * find users by their location
+     *
+     * @param AdministrativeUnit $location
+     * @param integer|null $role
+     *
+     * @return array
+     */
+    public function getByLocation(AdministrativeUnit $location, $role = null)
+    {
+        try {
+
+            $withRole = '';
+            $params   = ['locationId' => $location->getId()];
+            if (!is_null($role)) {
+                $withRole       = ' AND u.role = :role';
+                $params['role'] = $role;
+            }
+
+            $users = EntityManager::createQuery('SELECT u, a FROM Udoktor\Domain\Users\User u JOIN u.administrativeUnit a WHERE a.id = :locationId' . $withRole)
+                ->setParameters($params)
+                ->getResult();
+
+            return $users;
+
+        } catch (PDOException $e) {
+            throw $e;
+        }
     }
 }

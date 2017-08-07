@@ -104,7 +104,7 @@ jQuery(document).ready(function($) {
     // click on notifications
     $notifications.on('click', function () {
         $.ajax({
-            url:        '/prestador-servicios/perfil/notificaciones',
+            url:        '/perfil/notificaciones',
             type:       'POST',
             dataType:   'json',
             data:       collectDataFromNotifications(),
@@ -133,7 +133,7 @@ jQuery(document).ready(function($) {
     $updateProfile.on('click', function () {
         if ($generalDataForm.valid()) {
             $.ajax({
-                url:        '/prestador-servicios/perfil',
+                url:        '/perfil',
                 type:       'POST',
                 dataType:   'json',
                 data:       $generalDataForm.serialize(),
@@ -218,9 +218,18 @@ function validateForm($form) {
  * @return Object
  */
 function collectDataFromNotifications () {
-    return {
-        newDate:       $('#newDate').prop('checked') ? 1 : 0,
-        dateCancelled: $('#dateCancelled').prop('checked') ? 1 : 0,
+    let data = {
         _method:       'PUT',
+        notifications: []
     };
+
+    $('input[name="notifications[]"]').each(function() {
+        let $current = $(this);
+
+        if ($current.prop('checked')) {
+            data.notifications.push($current.val());
+        }
+    });
+
+    return data;
 }

@@ -32,10 +32,10 @@
                     </div>
                     <br><br><hr>
                     <p class="font-14 col-teal">Notificaciones:</p>
-                    <input type="checkbox" name="newDate" id="newDate" {{ in_array('newDate', $notifications) ? 'checked' : '' }} class="filled-in">
+                    <input type="checkbox" name="notifications[]" id="newDate" {{ in_array('newDate', $notifications) ? 'checked' : '' }} class="filled-in" value="newDate">
                     <label for="newDate">&nbsp; Nueva cita</label>
                     <br>
-                    <input type="checkbox" name="dateCancelled" id="dateCancelled" {{ in_array('dateCancelled', $notifications) ? 'checked' : '' }} class="filled-in">
+                    <input type="checkbox" name="notifications[]" id="dateCancelled" {{ in_array('dateCancelled', $notifications) ? 'checked' : '' }} class="filled-in" value="dateCancelled">
                     <label for="dateCancelled">&nbsp; Cita cancelada</label>
                     <br>
                     <button type="button" id="notifications" class="btn btn-sm bg-red waves-effect align-center"><i class="material-icons">cached</i> Actualizar</button>
